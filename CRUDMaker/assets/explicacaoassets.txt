@@ -1,0 +1,1 @@
+Contém todos os recursos estáticos que a aplicação utiliza, como imagens, ícones, arquivos de texto, etc.

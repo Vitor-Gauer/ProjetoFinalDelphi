@@ -1,0 +1,3 @@
+Contém as unidades (units) que gerenciam a lógica de negócio e a interação entre a interface de usuário (View) e a camada de dados (Model). 
+Em Delphi, você pode criar uma unit para cada área funcional do seu aplicativo. Por exemplo, U_ControllerUsuario.pas conteria a lógica para manipular dados de usuário.
+
