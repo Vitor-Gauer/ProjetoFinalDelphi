@@ -28,7 +28,8 @@ uses
   UViewVisualizadorRelatorio in 'src\view\UViewVisualizadorRelatorio.pas',
   UViewModalTermos in 'src\view\UViewModalTermos.pas',
   UAppConstants in 'src\utils\UAppConstants.pas',
-  Unit1 in 'src\utils\Unit1.pas';
+  UAppUtils in 'src\utils\UAppUtils.pas',
+  UServerPinger in 'src\utils\UServerPinger.pas';
 
 {$R *.res}
 
