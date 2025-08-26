@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Documentação do Sistema</title>
+    <title>Documentação do Sistema GridFlow</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
 </head>
@@ -11,7 +11,7 @@
     <div class="max-w-4xl mx-auto">
         <header class="text-center mb-12">
             <h1 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-sky-500">
-                Documentação do Sistema
+                Documentação do Sistema GridFlow
             </h1>
             <p class="mt-2 text-lg text-gray-400">
                 Uma visão geral completa dos requisitos, diagramas e funcionalidades do sistema.
@@ -21,18 +21,17 @@
         <main class="space-y-12">
             <!-- Botões de navegação -->
             <div class="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-4 mb-8">
-                <button id="btn-login" class="px-4 py-2 rounded-lg font-semibold text-white transition-colors duration-300 hover:bg-gray-700 bg-purple-600" onclick="showDiagramGroup('group-login')">Login / Dashboard</button>
-                <button id="btn-cruds" class="px-4 py-2 rounded-lg font-semibold text-white transition-colors duration-300 hover:bg-gray-700 bg-gray-800" onclick="showDiagramGroup('group-cruds')">CRUDs</button>
-                <button id="btn-reports" class="px-4 py-2 rounded-lg font-semibold text-white transition-colors duration-300 hover:bg-gray-700 bg-gray-800" onclick="showDiagramGroup('group-reports')">Relatórios</button>
-                <button id="btn-admin" class="px-4 py-2 rounded-lg font-semibold text-white transition-colors duration-300 hover:bg-gray-700 bg-gray-800" onclick="showDiagramGroup('group-admin')">Admin</button>
-                <button id="btn-db" class="px-4 py-2 rounded-lg font-semibold text-white transition-colors duration-300 hover:bg-gray-700 bg-gray-800" onclick="showDiagramGroup('group-db')">Banco de Dados</button>
-                <button id="btn-requirements" class="px-4 py-2 rounded-lg font-semibold text-white transition-colors duration-300 hover:bg-gray-700 bg-gray-800" onclick="showDiagramGroup('group-requirements')">Requisitos do Sistema</button>
+                <button id="btn-layouts" class="px-4 py-2 rounded-lg font-semibold text-white transition-colors duration-300 hover:bg-gray-700 bg-purple-600" onclick="showDiagramGroup('group-layouts')">Designs de Layout</button>
+                <button id="btn-conceptual-flows" class="px-4 py-2 rounded-lg font-semibold text-white transition-colors duration-300 hover:bg-gray-700 bg-gray-800" onclick="showDiagramGroup('group-conceptual-flows')">Fluxos Conceituais</button>
+                <button id="btn-data-structures" class="px-4 py-2 rounded-lg font-semibold text-white transition-colors duration-300 hover:bg-gray-700 bg-gray-800" onclick="showDiagramGroup('group-data-structures')">Estruturas de Dados</button>
+                <button id="btn-types" class="px-4 py-2 rounded-lg font-semibold text-white transition-colors duration-300 hover:bg-gray-700 bg-gray-800" onclick="showDiagramGroup('group-types')">Tipos de Planilhas/Relatórios</button>
+                <button id="btn-architecture" class="px-4 py-2 rounded-lg font-semibold text-white transition-colors duration-300 hover:bg-gray-700 bg-gray-800" onclick="showDiagramGroup('group-architecture')">Estrutura de Arquivos</button>
             </div>
 
-            <!-- Grupo de Diagramas: Login e Dashboard -->
-            <div id="group-login" class="space-y-12">
+            <!-- Grupo de Diagramas: Layouts e Telas -->
+            <div id="group-layouts" class="space-y-12">
                 <div class="bg-gray-800 rounded-xl shadow-lg p-6">
-                    <h2 class="text-2xl font-bold text-sky-400 mb-4">Tela de Login (RF3, RF8, RF9)</h2>
+                    <h2 class="text-2xl font-bold text-sky-400 mb-4">Tela de Login</h2>
                     <pre class="bg-gray-900 text-gray-300 p-4 rounded-lg overflow-x-auto">
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 | +-----------------------------------------------------------+ |
@@ -47,10 +46,10 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 |                                                             |
 |   [ Botão Entrar ]    [ Botão Cadastrar ]                   |
 |                                                             |
-| [ Esqueci a Senha ] (RF14)                                  |
+| [ Esqueci a Senha ]                                         |
 |                                                             |
-| (Aviso: O login está demorando mais que o esperado...) (RF8) |
-| (Aviso: Você errou a senha 3 vezes. Programa será fechado.) (RF9) |
+| (Aviso: O login está demorando mais que o esperado...)      |
+| (Aviso: Você errou a senha 3 vezes. Programa será fechado.) |
 |+------------------------------------------------------------+ |
 ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯
 </pre>
@@ -100,13 +99,13 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 </pre>
                 </div>
                 <div class="bg-gray-800 rounded-xl shadow-lg p-6">
-                    <h2 class="text-2xl font-bold text-sky-400 mb-4">Tela Dashboard Inicial (RF4, RF5)</h2>
+                    <h2 class="text-2xl font-bold text-sky-400 mb-4">Tela Dashboard Inicial</h2>
                     <pre class="bg-gray-900 text-gray-300 p-4 rounded-lg overflow-x-auto">
 +------------------------------------------------+
 | Dashboard                                      |
 +------------------------------------------------+
 | [Ícone] Dashboard    [Ícone] CRUDs     [Ícone] Relatórios  [Ícone] Sair |
-|                                                                    [ Alterar Senha ] (RF14)
+|                                                                    [ Alterar Senha ]
 +------------------------------------------------+
 | Cartão: CRUDs Criados                          |
 | Quantidade: 3 de 10                            |
@@ -125,19 +124,15 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 +------------------------------------------------+
 </pre>
                 </div>
-            </div>
-
-            <!-- Grupo de Diagramas: CRUDs -->
-            <div id="group-cruds" class="space-y-12 hidden">
                 <div class="bg-gray-800 rounded-xl shadow-lg p-6">
-                    <h2 class="text-2xl font-bold text-sky-400 mb-4">Tela de Listagem de CRUDs (RF1, RF16)</h2>
+                    <h2 class="text-2xl font-bold text-sky-400 mb-4">Tela de Listagem de CRUDs</h2>
                     <pre class="bg-gray-900 text-gray-300 p-4 rounded-lg overflow-x-auto">
 +------------------------------------------------+
 | CRUDs                                          |
 +------------------------------------------------+
 | [ Botão Novo CRUD ] (desativado se =10 CRUDs)  |
 |                                                |
-| [ Campo de Busca Avançada ] (RF16)             |
+| [ Campo de Busca Avançada ]                    |
 |                                                |
 +------------------------------------------------+
 | Tabela:                                        |
@@ -178,13 +173,13 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 </pre>
                 </div>
                 <div class="bg-gray-800 rounded-xl shadow-lg p-6">
-                    <h2 class="text-2xl font-bold text-sky-400 mb-4">Tela de Visualização do CRUD (Gerenciar) (RF7)</h2>
+                    <h2 class="text-2xl font-bold text-sky-400 mb-4">Tela de Visualização do CRUD (Gerenciar)</h2>
                     <pre class="bg-gray-900 text-gray-300 p-4 rounded-lg overflow-x-auto">
 +----------------------------------------------------------+
 | Gerenciar: [Nome do CRUD]                                |
 +----------------------------------------------------------+
 | [ Botão Novo [Item]]                                     |
-| [ Botão Exportar para JSON ] (RF7)                       |
+| [ Botão Exportar para JSON ]                             |
 +----------------------------------------------------------+
 | Tabela de dados:                                         |
 | +----------------------------------------------+         |
@@ -196,12 +191,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 +----------------------------------------------------------+
 </pre>
                 </div>
-            </div>
-
-            <!-- Grupo de Diagramas: Relatórios -->
-            <div id="group-reports" class="space-y-12 hidden">
                 <div class="bg-gray-800 rounded-xl shadow-lg p-6">
-                    <h2 class="text-2xl font-bold text-sky-400 mb-4">Tela de Listagem de Relatórios (RF2)</h2>
+                    <h2 class="text-2xl font-bold text-sky-400 mb-4">Tela de Listagem de Relatórios</h2>
                     <pre class="bg-gray-900 text-gray-300 p-4 rounded-lg overflow-x-auto">
 +----------------------------------------------------------+
 | Relatórios                                               |
@@ -258,7 +249,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 </pre>
                 </div>
                 <div class="bg-gray-800 rounded-xl shadow-lg p-6">
-                    <h2 class="text-2xl font-bold text-sky-400 mb-4">Tela de Visualização do Relatório (RF17)</h2>
+                    <h2 class="text-2xl font-bold text-sky-400 mb-4">Tela de Visualização do Relatório</h2>
                     <pre class="bg-gray-900 text-gray-300 p-4 rounded-lg overflow-x-auto">
 +----------------------------------------------------------+
 | Relatório: [Nome do Relatório]                           |
@@ -269,39 +260,34 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 | Campo1 = Valor1                                          |
 | Campo2 > Valor2                                          |
 |                                                          |
-| [ Botão Exportar PDF ] (RF17)                            |
-| [ Botão Exportar CSV ] (RF17)                            |
+| [ Botão Exportar PDF ]                                   |
+| [ Botão Exportar CSV ]                                   |
 |                                                          |
 | [ Botão Voltar ]                                         |
 +----------------------------------------------------------+
 </pre>
                 </div>
-            </div>
-
-            <!-- Grupo de Diagramas: Admin -->
-            <div id="group-admin" class="space-y-12 hidden">
                 <div class="bg-gray-800 rounded-xl shadow-lg p-6">
-                    <h2 class="text-2xl font-bold text-sky-400 mb-4">Tela de Ativação de CRUD Pública (RF11)</h2>
+                    <h2 class="text-2xl font-bold text-sky-400 mb-4">Tela de Ativação de CRUD Pública</h2>
                     <pre class="bg-gray-900 text-gray-300 p-4 rounded-lg overflow-x-auto">
 +----------------------------------------------------------+
 | Gerenciar: [Nome do CRUD]                                |
 +----------------------------------------------------------+
-| [ Botão Tornar Público ] (RF11a)                         |
+| [ Botão Tornar Público ]                                 |
 |                                                          |
 | **Pop-up de Consentimento Legal** |
 | +------------------------------------------------------+ |
 | | Aviso Legal: Você concorda com os termos...          | |
 | |                                                      | |
-| | Temporizador: [ 15 segundos ] (RF11c)                | |
+| | Temporizador: [ 15 segundos ]                        | |
 | |                                                      | |
-| | [ Botão Aceitar e Publicar (Desabilitado) ] (RF11d)  | |
+| | [ Botão Aceitar e Publicar (Desabilitado) ]          | |
 | +------------------------------------------------------+ |
 +----------------------------------------------------------+
 </pre>
                 </div>
-
                 <div class="bg-gray-800 rounded-xl shadow-lg p-6">
-                    <h2 class="text-2xl font-bold text-sky-400 mb-4">Tela da View Admin (RF6, RF18, RF19, RF20)</h2>
+                    <h2 class="text-2xl font-bold text-sky-400 mb-4">Tela da View Admin</h2>
                     <pre class="bg-gray-900 text-gray-300 p-4 rounded-lg overflow-x-auto">
 +------------------------------------------------+
 | Admin View                                     |
@@ -311,397 +297,223 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 +------------------------------------------------+
 | Seções Administrativas:                        |
 |                                                |
-| [ Gerenciamento de Usuários ] (RF18, RF19)     |
-| [ Visualização de Logs de Atividade ] (RF15)   |
-| [ Painel de Denúncias ] (RF20)                 |
+| [ Gerenciamento de Usuários ]                  |
+| [ Visualização de Logs de Atividade ]          |
+| [ Painel de Denúncias ]                        |
 |                                                |
 +------------------------------------------------+
 </pre>
                 </div>
             </div>
 
-            <!-- Grupo de Diagramas: Banco de Dados -->
-            <div id="group-db" class="space-y-12 hidden">
+            <!-- Grupo de Diagramas: Fluxos Conceituais -->
+            <div id="group-conceptual-flows" class="space-y-12 hidden">
                 <div class="bg-gray-800 rounded-xl shadow-lg p-6">
-                    <h2 class="text-2xl font-bold text-sky-400 mb-4">Diagrama do Banco de Dados (PostgreSQL)</h2>
+                    <h2 class="text-2xl font-bold text-sky-400 mb-4">Fluxo de Login e Autenticação</h2>
                     <pre class="bg-gray-900 text-gray-300 p-4 rounded-lg overflow-x-auto">
-TABLE users
----------------------------------------------------------------------------------------------------
-| user_id                  | BIGINT PRIMARY KEY     | Chave primária. Auto-incremento.            |
-| username                 | VARCHAR(255) UNIQUE    | Nome de usuário único.                      |
-| password_hash            | VARCHAR(255)           | Hash da senha (hashing com salt).           |
-| salt                     | VARCHAR(255)           | Salt para o hashing da senha.               |
-| user_type                | VARCHAR(50)            | Tipo de usuário ('admin', 'usuario').       |
-| is_banned                | BOOLEAN                | Indica se o usuário está banido.            |
-| failed_login_attempts    | INTEGER                | Contador de tentativas de login falhas.     |
-| last_login_attempt_at    | TIMESTAMP              | Data/hora da última tentativa de login.     |
----------------------------------------------------------------------------------------------------
-
-TABLE permissions
----------------------------------------------------------------------------------------------------
-| permission_id            | BIGINT PRIMARY KEY     | Chave primária.                             |
-| user_id                  | BIGINT NOT NULL        | Chave estrangeira para a tabela 'users'.    |
-| resource_id              | BIGINT NOT NULL        | ID do recurso (ex: CRUD).                   |
-| read_permission          | BOOLEAN                | Permissão de leitura.                       |
-| create_permission        | BOOLEAN                | Permissão de criação.                       |
-| update_permission        | BOOLEAN                | Permissão de atualização.                   |
-| delete_permission        | BOOLEAN                | Permissão de exclusão.                      |
----------------------------------------------------------------------------------------------------
-FOREIGN KEY (user_id) REFERENCES users (user_id)
-
-TABLE user_logs
----------------------------------------------------------------------------------------------------
-| log_id                   | BIGINT PRIMARY KEY     | Chave primária.                             |
-| user_id                  | BIGINT NOT NULL        | Chave estrangeira para a tabela 'users'.    |
-| action                   | TEXT                   | Descrição da ação (ex: 'LOGIN', 'CREATE').  |
-| timestamp                | TIMESTAMP              | Data e hora da ação.                        |
-| ip_address               | VARCHAR(45)            | Endereço IP de onde a ação foi realizada.   |
----------------------------------------------------------------------------------------------------
-FOREIGN KEY (user_id) REFERENCES users (user_id)
-
-TABLE crud_configs
----------------------------------------------------------------------------------------------------
-| crud_id                  | BIGINT PRIMARY KEY     | Chave primária.                             |
-| name                     | VARCHAR(255) NOT NULL  | Nome do CRUD.                               |
-| description              | TEXT                   | Descrição do CRUD.                          |
-| linked_table_name        | VARCHAR(255) NOT NULL  | Nome da tabela vinculada no banco de dados. |
-| is_public                | BOOLEAN                | Indica se o CRUD está público.              |
-| terms_accepted           | BOOLEAN                | Indica se os termos de responsabilidade foram aceitos. |
----------------------------------------------------------------------------------------------------
-
-TABLE report_configs
----------------------------------------------------------------------------------------------------
-| report_id                | BIGINT PRIMARY KEY     | Chave primária.                             |
-| name                     | VARCHAR(255) NOT NULL  | Nome do relatório.                          |
-| description              | TEXT                   | Descrição do relatório.                     |
-| source_id                | BIGINT NOT NULL        | Chave estrangeira para a fonte de dados.    |
-| report_type              | VARCHAR(50)            | Tipo de relatório ('barra', 'tabela').      |
-| config_json              | JSONB                  | JSON com as configurações do relatório.     |
-| created_by_user_id       | BIGINT                 | Chave estrangeira para o usuário que criou. |
----------------------------------------------------------------------------------------------------
-FOREIGN KEY (created_by_user_id) REFERENCES users (user_id)
++-------------------------------------------------------------+
+|                Fluxo de Autenticação                        |
++-------------------------------------------------------------+
+|                                                             |
+| [Início] -> Escolher Modo de Login -> [Modo Público]        |
+|                                                             |
+|           [Modo Público]                                    |
+|           1. Envia credenciais (usuário/senha) ao servidor (Docker).|
+|           2. Servidor valida no PostgreSQL.                 |
+|           3. Se sucesso, autentica usuário.                 |
+|           4. Se falha, conta tentativas.                    |
+|           5. Após 3 falhas, encerra o programa.             |
+|           6. Após 5 tentativas sem resposta do servidor, exibe alerta.|
+|                                                             |
+|           [Modo Privado]                                    |
+|           1. Credenciais verificadas em arquivo JSON local. |
+|           2. Se sucesso, autentica localmente.              |
+|           3. Não há conexão com o servidor.                 |
+|                                                             |
+| (Exibe Termo de Responsabilidade Legal no login público.)   |
+|                                                             |
++-------------------------------------------------------------+
+</pre>
+                </div>
+                <div class="bg-gray-800 rounded-xl shadow-lg p-6">
+                    <h2 class="text-2xl font-bold text-sky-400 mb-4">Visões do Sistema (Views)</h2>
+                    <pre class="bg-gray-900 text-gray-300 p-4 rounded-lg overflow-x-auto">
++-------------------------------------------------------------+
+|                 view_admin (Interna)                        |
++-------------------------------------------------------------+
+| •  Acessível apenas na versão interna da empresa.           |
+| •  Requer login bem-sucedido de nível 'admin' no PostgreSQL.|
+| •  Envia 'ping' ao servidor após login bem-sucedido.        |
+| •  Pode visualizar e filtrar todas as Planilhas e Relatórios|
+|    no PostgreSQL.                                           |
++-------------------------------------------------------------+
+|                                                             |
++-------------------------------------------------------------+
+|                  view_usuario (Público)                     |
++-------------------------------------------------------------+
+| •  Acessível em qualquer versão da aplicação.               |
+| •  Acesso por login público (PostgreSQL) ou privado (JSON). |
+| •  Funcionalidades:                                         |
+|    • Gerenciar Planilhas e Relatórios.                      |
+|    • Limite de 10 Planilhas em modo público.                |
+|    • Exportar dados para arquivos JSON.                     |
++-------------------------------------------------------------+
+</pre>
+                </div>
+                <div class="bg-gray-800 rounded-xl shadow-lg p-6">
+                    <h2 class="text-2xl font-bold text-sky-400 mb-4">Fluxo de Dados</h2>
+                    <pre class="bg-gray-900 text-gray-300 p-4 rounded-lg overflow-x-auto">
++--------------------------------------------------------------------------------------------------------------------------------+
+|                                                          Fluxo de Dados                                                        |
++--------------------------------------------------------------------------------------------------------------------------------+
+|                                                                                                                                |
+|                                                                    +-----------------+                                         |
+|                                                                    |   Arquivo JSON  |                                         |
+|                                                                    |     (Local)     |                                         |
+|                                                                    +-------^---------+                                         |
+|                                                                            |                                                     |
+|                                                                     Modo Privado                                                 |
+|                                                                            |                                                     |
+| +-----------------------------------------------------+   <----------------+------------------>  +-----------------------------+ |
+| | Aplicação Delphi 12                                 |   Acesso e Sincronização                 |   Banco de Dados            | |
+| |   (GridFlow)                                        |                                          |   PostgreSQL (Servidor)     | |
+| +-----------------------------------------------------+   <----------------+------------------>  +-----------------------------+ |
+|                                                                            |                                                     |
+|                                                                     Modo Público                                                 |
+|                                                                            |                                                     |
+|                                                                    +-------v---------+                                         |
+|                                                                    | Servidor Docker |                                         |
+|                                                                    |   (API/DB)      |                                         |
+|                                                                    +-----------------+                                         |
+|                                                                                                                                |
+|                                                                                                                                |
+| - A aplicação Delphi é o ponto central.                                                                                        |
+| - No Modo Privado, lê/escreve diretamente no JSON.                                                                             |
+| - No Modo Público, se comunica com o Servidor Docker, que interage com o PostgreSQL.                                           |
++--------------------------------------------------------------------------------------------------------------------------------+
 </pre>
                 </div>
             </div>
 
-            <!-- Grupo de Requisitos -->
-            <div id="group-requirements" class="space-y-12 hidden">
+            <!-- Grupo de Diagramas: Estruturas de Dados -->
+            <div id="group-data-structures" class="space-y-12 hidden">
                 <div class="bg-gray-800 rounded-xl shadow-lg p-6">
-                    <h2 class="text-2xl font-bold text-sky-400 mb-4">Requisitos do Sistema</h2>
-                    <h3 class="text-xl font-semibold text-teal-400 mt-6 mb-4">Requisitos Funcionais (RF)</h3>
-                    
-                    <div class="space-y-6">
-                        <div class="bg-gray-700 p-4 rounded-md">
-                            <h4 class="text-lg font-bold text-gray-200">RF1: CRUD</h4>
-                            <p class="text-gray-400 mt-2">O sistema deve permitir a criação, leitura, atualização e exclusão de dados.</p>
-                            <ul class="list-disc list-inside ml-4 mt-2 text-gray-400">
-                                <li><strong>RF1a:</strong> O sistema deve permitir a criação de novos registros de dados através de um formulário ou interface específica.</li>
-                                <li><strong>RF1b:</strong> O sistema deve exibir registros de dados existentes em uma lista ou tabela de forma clara e organizada.</li>
-                                <li><strong>RF1c:</strong> O sistema deve permitir a modificação de registros de dados existentes, garantindo a integridade dos dados.</li>
-                                <li><strong>RF1d:</strong> O sistema deve permitir a exclusão de registros de dados, com uma confirmação antes da ação para evitar perdas acidentais.</li>
-                            </ul>
-                        </div>
-                        <div class="bg-gray-700 p-4 rounded-md">
-                            <h4 class="text-lg font-bold text-gray-200">RF2: Geração e Gerenciamento de Relatórios</h4>
-                            <p class="text-gray-400 mt-2">O sistema deve permitir a geração e o gerenciamento de relatórios.</p>
-                            <ul class="list-disc list-inside ml-4 mt-2 text-gray-400">
-                                <li><strong>RF2a:</strong> O sistema deve fornecer uma interface para que o usuário selecione os critérios de um relatório (ex: período, tipo de dados).</li>
-                                <li><strong>RF2b:</strong> O sistema deve processar os dados e gerar um relatório com base nos critérios selecionados.</li>
-                                <li><strong>RF2c:</strong> O sistema deve permitir que relatórios gerados sejam salvos para acesso futuro.</li>
-                            </ul>
-                        </div>
-                        <div class="bg-gray-700 p-4 rounded-md">
-                            <h4 class="text-lg font-bold text-gray-200">RF3: Autenticação de Usuários</h4>
-                            <p class="text-gray-400 mt-2">O sistema deve autenticar usuários com nome de usuário e senha.</p>
-                            <ul class="list-disc list-inside ml-4 mt-2 text-gray-400">
-                                <li><strong>RF3a:</strong> O sistema deve ter uma tela de login onde o usuário insere suas credenciais.</li>
-                                <li><strong>RF3b:</strong> O sistema deve validar as credenciais do usuário comparando-as com os dados armazenados de forma segura.</li>
-                            </ul>
-                        </div>
-                        <div class="bg-gray-700 p-4 rounded-md">
-                            <h4 class="text-lg font-bold text-gray-200">RF4: Verificação de Nível de Acesso</h4>
-                            <p class="text-gray-400 mt-2">O sistema deve verificar o nível de acesso (admin ou usuário) do usuário autenticado.</p>
-                            <ul class="list-disc list-inside ml-4 mt-2 text-gray-400">
-                                <li><strong>RF4a:</strong> Após a autenticação, o sistema deve consultar a permissão associada ao usuário.</li>
-                                <li><strong>RF4b:</strong> O sistema deve usar o nível de acesso verificado para determinar qual interface deve ser exibida.</li>
-                            </ul>
-                        </div>
-                        <div class="bg-gray-700 p-4 rounded-md">
-                            <h4 class="text-lg font-bold text-gray-200">RF5: Interfaces Diferenciadas</h4>
-                            <p class="text-gray-400 mt-2">O sistema deve exibir interfaces diferentes (view_admin e view_usuario) com base no nível de acesso.</p>
-                            <ul class="list-disc list-inside ml-4 mt-2 text-gray-400">
-                                <li><strong>RF5a:</strong> A interface view_usuario deve conter apenas as funcionalidades e informações relevantes para o usuário comum.</li>
-                                <li><strong>RF5b:</strong> A interface view_admin deve conter todas as funcionalidades e informações de gerenciamento, incluindo as opções de CRUD e relatórios.</li>
-                            </ul>
-                        </div>
-                        <div class="bg-gray-700 p-4 rounded-md">
-                            <h4 class="text-lg font-bold text-gray-200">RF6: Acesso do Administrador</h4>
-                            <p class="text-gray-400 mt-2">A view_admin deve permitir a visualização de todas as operações CRUD e relatórios.</p>
-                            <ul class="list-disc list-inside ml-4 mt-2 text-gray-400">
-                                <li><strong>RF6a:</strong> A view_admin deve exibir links ou botões claros para acessar todas as telas de CRUD.</li>
-                                <li><strong>RF6b:</strong> A view_admin deve ter uma seção dedicada para a geração e visualização de todos os relatórios disponíveis.</li>
-                            </ul>
-                        </div>
-                        <div class="bg-gray-700 p-4 rounded-md">
-                            <h4 class="text-lg font-bold text-gray-200">RF7: Exportação de Dados para JSON</h4>
-                            <p class="text-gray-400 mt-2">O sistema deve exportar dados de CRUDs para o formato JSON.</p>
-                            <ul class="list-disc list-inside ml-4 mt-2 text-gray-400">
-                                <li><strong>RF7a:</strong> O sistema deve oferecer um botão ou opção para "Exportar para JSON" nas telas de visualização de CRUD.</li>
-                                <li><strong>RF7b:</strong> O sistema deve converter os dados selecionados para a estrutura JSON e iniciar o download do arquivo.</li>
-                            </ul>
-                        </div>
-                        <div class="bg-gray-700 p-4 rounded-md">
-                            <h4 class="text-lg font-bold text-gray-200">RF8: Temporizador de Login</h4>
-                            <p class="text-gray-400 mt-2">O sistema deve iniciar um temporizador após a tentativa de login e notificar o usuário se a resposta demorar.</p>
-                            <ul class="list-disc list-inside ml-4 mt-2 text-gray-400">
-                                <li><strong>RF8a:</strong> O sistema deve iniciar um contador em segundo plano imediatamente após o envio das credenciais de login.</li>
-                                <li><strong>RF8b:</strong> Se o tempo exceder um limite pré-definido (ex: 5 segundos), o sistema deve exibir uma mensagem ao usuário, como "O login está demorando mais que o esperado...".</li>
-                            </ul>
-                        </div>
-                        <div class="bg-gray-700 p-4 rounded-md">
-                            <h4 class="text-lg font-bold text-gray-200">RF9: Limite de Tentativas de Login</h4>
-                            <p class="text-gray-400 mt-2">O sistema deve limitar o número de tentativas de login e fechar o programa se o limite for atingido.</p>
-                            <ul class="list-disc list-inside ml-4 mt-2 text-gray-400">
-                                <li><strong>RF9a:</strong> O sistema deve manter um contador de tentativas de login falhas por usuário ou endereço IP.</li>
-                                <li><strong>RF9b:</strong> Se o contador atingir um limite pré-definido (ex: 3 tentativas), o sistema deve bloquear temporariamente o acesso ou fechar o programa.</li>
-                            </ul>
-                        </div>
-                        <div class="bg-gray-700 p-4 rounded-md">
-                            <h4 class="text-lg font-bold text-gray-200">RF10: Modos de Execução</h4>
-                            <p class="text-gray-400 mt-2">O sistema deve ter a opção de ser executado nos modos "Privado" ou "Público".</p>
-                            <ul class="list-disc list-inside ml-4 mt-2 text-gray-400">
-                                <li><strong>RF10a:</strong> Durante a inicialização, o sistema deve perguntar ao usuário qual modo de execução ele deseja.</li>
-                                <li><strong>RF10b:</strong> O modo "Privado" deve restringir o acesso a todas as CRUDs, exigindo autenticação total.</li>
-                                <li><strong>RF10c:</strong> O modo "Público" deve permitir acesso limitado a algumas funcionalidades sem autenticação.</li>
-                            </ul>
-                        </div>
-                        <div class="bg-gray-700 p-4 rounded-md">
-                            <h4 class="text-lg font-bold text-gray-200">RF11: Ativação de CRUDs Públicas com Consentimento Legal</h4>
-                            <p class="text-gray-400 mt-2">O sistema deve exigir a ativação manual de cada CRUD pública através de um botão, com um pop-up de aviso legal e um temporizador de espera.</p>
-                            <ul class="list-disc list-inside ml-4 mt-2 text-gray-400">
-                                <li><strong>RF11a:</strong> O sistema deve apresentar um botão ou toggle "Tornar Público" para cada CRUD ou conjunto de dados que pode ser publicado.</li>
-                                <li><strong>RF11b:</strong> Ao clicar no botão, o sistema deve exibir um pop-up com um resumo claro das responsabilidades legais e um termo de consentimento que o usuário deve aceitar.</li>
-                                <li><strong>RF11c:</strong> O pop-up deve iniciar um temporizador de 15 segundos. A opção de aceitar e continuar com a postagem só deve ser habilitada após a espera de 15 segundos, para garantir que o usuário leia a mensagem.</li>
-                                <li><strong>RF11d:</strong> Após o temporizador, o usuário deve clicar em "Aceitar e Publicar" para confirmar a ação. A postagem só será tornada pública após essa confirmação.</li>
-                                <li><strong>RF11e:</strong> O sistema deve registrar no log de atividades (RF15) que o usuário consentiu com os termos de responsabilidade legal e publicou a CRUD, incluindo a data e o horário da ação.</li>
-                            </ul>
-                        </div>
-                        <div class="bg-gray-700 p-4 rounded-md">
-                            <h4 class="text-lg font-bold text-gray-200">RF12: Instruções de Importação/Exportação</h4>
-                            <p class="text-gray-400 mt-2">O sistema deve fornecer instruções claras para a exportação e importação de dados.</p>
-                            <ul class="list-disc list-inside ml-4 mt-2 text-gray-400">
-                                <li><strong>RF12a:</strong> O sistema deve ter uma seção de ajuda ou um tooltip que explique o processo de importação e exportação de dados.</li>
-                                <li><strong>RF12b:</strong> As instruções devem detalhar o formato e a estrutura esperada do arquivo de dados (ex: JSON).</li>
-                            </ul>
-                        </div>
-                        <div class="bg-gray-700 p-4 rounded-md">
-                            <h4 class="text-lg font-bold text-gray-200">RF13: Aceitação de Termos</h4>
-                            <p class="text-gray-400 mt-2">O sistema deve aceitar as respostas do usuário para as perguntas de responsabilidade legal e CRUDs públicas.</p>
-                            <ul class="list-disc list-inside ml-4 mt-2 text-gray-400">
-                                <li><strong>RF13a:</strong> O sistema deve apresentar termos e condições ou perguntas de responsabilidade legal ao usuário, provavelmente no primeiro acesso.</li>
-                                <li><strong>RF13b:</strong> O sistema deve registrar a aceitação do usuário para futuras verificações.</li>
-                            </ul>
-                        </div>
-                        <div class="bg-gray-700 p-4 rounded-md">
-                            <h4 class="text-lg font-bold text-gray-200">RF14: Alteração e Redefinição de Senha</h4>
-                            <p class="text-gray-400 mt-2">O sistema deve permitir que usuários alterem suas próprias senhas e deve incluir um fluxo de "esqueci a senha" para redefinição.</p>
-                            <ul class="list-disc list-inside ml-4 mt-2 text-gray-400">
-                                <li><strong>RF14a:</strong> A view_usuario e view_admin devem ter uma opção para "Alterar Senha".</li>
-                                <li><strong>RF14b:</strong> A tela de login deve ter uma opção "Esqueci a Senha" que inicia o processo de redefinição.</li>
-                                <li><strong>RF14c:</strong> O sistema deve validar a nova senha com base em regras de segurança (ex: tamanho mínimo, caracteres especiais).</li>
-                            </ul>
-                        </div>
-                        <div class="bg-gray-700 p-4 rounded-md">
-                            <h4 class="text-lg font-bold text-gray-200">RF15: Histórico de Ações</h4>
-                            <p class="text-gray-400 mt-2">O sistema deve registrar um log de atividades do usuário (login, logout, CRUDs), e o administrador deve poder visualizar esse log.</p>
-                            <ul class="list-disc list-inside ml-4 mt-2 text-gray-400">
-                                <li><strong>RF15a:</strong> O sistema deve registrar a data, hora, usuário e a ação realizada em um banco de dados ou arquivo de log.</li>
-                                <li><strong>RF15b:</strong> A view_admin deve ter uma tela para exibir o log de atividades de forma filtrável e organizada.</li>
-                            </ul>
-                        </div>
-                        <div class="bg-gray-700 p-4 rounded-md">
-                            <h4 class="text-lg font-bold text-gray-200">RF16: Busca Avançada</h4>
-                            <p class="text-gray-400 mt-2">O sistema deve fornecer uma funcionalidade de busca avançada que permite filtrar dados por múltiplos critérios.</p>
-                            <ul class="list-disc list-inside ml-4 mt-2 text-gray-400">
-                                <li><strong>RF16a:</strong> O sistema deve ter um campo de busca que aceite múltiplos critérios (ex: nome: "Fulano" ou data > "2023-01-01").</li>
-                                <li><strong>RF16b:</strong> A busca deve ser rápida e eficiente, mesmo com grandes volumes de dados.</li>
-                            </ul>
-                        </div>
-                        <div class="bg-gray-700 p-4 rounded-md">
-                            <h4 class="text-lg font-bold text-gray-200">RF17: Geração de Relatórios em Múltiplos Formatos</h4>
-                            <p class="text-gray-400 mt-2">O sistema deve permitir a exportação de relatórios para os formatos PDF e CSV.</p>
-                            <ul class="list-disc list-inside ml-4 mt-2 text-gray-400">
-                                <li><strong>RF17a:</strong> A tela de relatórios deve ter opções claras para exportar para PDF e CSV.</li>
-                                <li><strong>RF17b:</strong> A exportação para PDF deve formatar o relatório para impressão, enquanto a exportação para CSV deve criar um arquivo de texto com valores separados por vírgula.</li>
-                            </ul>
-                        </div>
-                        <div class="bg-gray-700 p-4 rounded-md">
-                            <h4 class="text-lg font-bold text-gray-200">RF18: Permissões Granulares</h4>
-                            <p class="text-gray-400 mt-2">O sistema deve permitir que o administrador atribua permissões específicas a usuários, como permissão de "leitura" em uma CRUD específica.</p>
-                            <ul class="list-disc list-inside ml-4 mt-2 text-gray-400">
-                                <li><strong>RF18a:</strong> A view_admin deve ter uma tela de "Gerenciamento de Usuários" para editar as permissões.</li>
-                                <li><strong>RF18b:</strong> O administrador deve poder selecionar se um usuário tem permissão para Criar, Ler, Atualizar ou Excluir para cada tipo de dado (CRUD).</li>
-                            </ul>
-                        </div>
-                        <div class="bg-gray-700 p-4 rounded-md">
-                            <h4 class="text-lg font-bold text-gray-200">RF19: Gerenciamento de Usuários Públicos</h4>
-                            <p class="text-gray-400 mt-2">A view_admin deve ter uma funcionalidade para banir usuários do modo "Público".</p>
-                            <ul class="list-disc list-inside ml-4 mt-2 text-gray-400">
-                                <li><strong>RF19a:</strong> O sistema deve armazenar uma lista de usuários banidos no modo "Público" para negar futuras tentativas de login ou acesso.</li>
-                                <li><strong>RF19b:</strong> O admin deve poder adicionar e remover usuários da lista de banidos.</li>
-                            </ul>
-                        </div>
-                        <div class="bg-gray-700 p-4 rounded-md">
-                            <h4 class="text-lg font-bold text-gray-200">RF20: Sistema de Denúncias</h4>
-                            <p class="text-gray-400 mt-2">O sistema deve permitir que usuários reportem atividades de outros usuários considerados "malfeitores".</p>
-                            <ul class="list-disc list-inside ml-4 mt-2 text-gray-400">
-                                <li><strong>RF20a:</strong> O sistema deve ter um mecanismo para coletar informações sobre a denúncia (motivo, usuário denunciado, etc.).</li>
-                                <li><strong>RF20b:</strong> A view_admin deve incluir um painel para que o administrador possa revisar e agir sobre as denúncias recebidas.</li>
-                                <li><strong>RF20c:</strong> O sistema deve notificar o usuário que fez a denúncia sobre o status da sua solicitação.</li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <h3 class="text-xl font-semibold text-teal-400 mt-8 mb-4">Requisitos Não Funcionais (RNF)</h3>
-                    
-                    <div class="space-y-6">
-                        <div class="bg-gray-700 p-4 rounded-md">
-                            <h4 class="text-lg font-bold text-gray-200">RNF1: Modularidade e Expansibilidade</h4>
-                            <p class="text-gray-400 mt-2">O sistema deve ser construído com interfaces para ser facilmente expandido.</p>
-                            <ul class="list-disc list-inside ml-4 mt-2 text-gray-400">
-                                <li><strong>RNF1a:</strong> O sistema deve utilizar uma arquitetura baseada em módulos, onde cada módulo (ex: autenticação, relatórios, CRUDs) é independente.</li>
-                                <li><strong>RNF1b:</strong> Cada funcionalidade principal deve ser definida por uma interface, permitindo a substituição de implementações sem afetar o restante do sistema.</li>
-                            </ul>
-                        </div>
-                        <div class="bg-gray-700 p-4 rounded-md">
-                            <h4 class="text-lg font-bold text-gray-200">RNF2: Segurança de Credenciais</h4>
-                            <p class="text-gray-400 mt-2">Deve haver mecanismos para verificar credenciais e alertar sobre acessos suspeitos.</p>
-                            <ul class="list-disc list-inside ml-4 mt-2 text-gray-400">
-                                <li><strong>RNF2a:</strong> As senhas de usuários devem ser armazenadas de forma segura, usando técnicas como hashing com salt.</li>
-                                <li><strong>RNF2b:</strong> O sistema deve monitorar e registrar tentativas de login falhas, alertando o administrador sobre padrões suspeitos (ex: múltiplas tentativas em um curto período de tempo de diferentes IPs).</li>
-                            </ul>
-                        </div>
-                        <div class="bg-gray-700 p-4 rounded-md">
-                            <h4 class="text-lg font-bold text-gray-200">RNF3: Proteção de Dados Privados</h4>
-                            <p class="text-gray-400 mt-2">Chaves e dados privados devem ser inacessíveis e protegidos.</p>
-                            <ul class="list-disc list-inside ml-4 mt-2 text-gray-400">
-                                <li><strong>RNF3a:</strong> O sistema deve garantir que dados sensíveis (chaves de API, segredos) não sejam expostos em arquivos de configuração ou código-fonte.</li>
-                                <li><strong>RNF3b:</strong> Acesso a dados privados deve ser restrito, com um controle de acesso rigoroso que impede que usuários não autorizados visualizem essas informações.</li>
-                            </ul>
-                        </div>
-                        <div class="bg-gray-700 p-4 rounded-md">
-                            <h4 class="text-lg font-bold text-gray-200">RNF4: Confiabilidade e Feedback</h4>
-                            <p class="text-gray-400 mt-2">O sistema deve fornecer feedback claro e confiável sobre o status do login.</p>
-                            <ul class="list-disc list-inside ml-4 mt-2 text-gray-400">
-                                <li><strong>RNF4a:</strong> O sistema deve exibir mensagens de erro específicas e amigáveis (ex: "Nome de usuário ou senha inválidos"), em vez de mensagens genéricas.</li>
-                                <li><strong>RNF4b:</strong> Durante o processo de login, o sistema deve fornecer um indicador visual (ex: um spinner de carregamento) para mostrar que a requisição está em andamento.</li>
-                            </ul>
-                        </div>
-                        <div class="bg-gray-700 p-4 rounded-md">
-                            <h4 class="text-lg font-bold text-gray-200">RNF5: Alta Disponibilidade</h4>
-                            <p class="text-gray-400 mt-2">Para usuários internos, o sistema deve ser altamente disponível e enviar pings de aviso se houver problemas.</p>
-                            <ul class="list-disc list-inside ml-4 mt-2 text-gray-400">
-                                <li><strong>RNF5a:</strong> O sistema deve ter um mecanismo de heartbeat ou "ping" para monitorar a disponibilidade de seus serviços principais.</li>
-                                <li><strong>RNF5b:</strong> Se um serviço crítico falhar, o sistema deve enviar automaticamente uma notificação de alerta (ex: e-mail, mensagem) para a equipe de suporte.</li>
-                            </ul>
-                        </div>
-                        <div class="bg-gray-700 p-4 rounded-md">
-                            <h4 class="text-lg font-bold text-gray-200">RNF6: Limite de Dados na Versão Pública</h4>
-                            <p class="text-gray-400 mt-2">A versão pública do sistema deve ter um limite imposto na quantidade de dados.</p>
-                            <ul class="list-disc list-inside ml-4 mt-2 text-gray-400">
-                                <li><strong>RNF6a:</strong> O sistema deve limitar o número de registros que podem ser criados ou visualizados na versão "Pública".</li>
-                                <li><strong>RNF6b:</strong> O sistema deve exibir uma mensagem clara ao usuário quando o limite de dados for atingido, orientando-o sobre as limitações da versão.</li>
-                            </ul>
-                        </div>
-                        <div class="bg-gray-700 p-4 rounded-md">
-                            <h4 class="text-lg font-bold text-gray-200">RNF7: Ausência da View Admin</h4>
-                            <p class="text-gray-400 mt-2">A versão pública do sistema não deve conter a interface de administração (view_admin).</p>
-                            <ul class="list-disc list-inside ml-4 mt-2 text-gray-400">
-                                <li><strong>RNF7a:</strong> O sistema deve desabilitar completamente o carregamento da view_admin quando estiver no modo "Público".</li>
-                                <li><strong>RNF7b:</strong> Tentativas de acesso direto a URLs ou endpoints da view_admin no modo "Público" devem ser bloqueadas e retornar um erro de acesso negado.</li>
-                            </ul>
-                        </div>
-                        <div class="bg-gray-700 p-4 rounded-md">
-                            <h4 class="text-lg font-bold text-gray-200">RNF8: Responsividade</h4>
-                            <p class="text-gray-400 mt-2">As interfaces de usuário devem se adaptar a diferentes tamanhos de tela (desktops, tablets e celulares) sem perda de funcionalidade ou usabilidade.</p>
-                            <ul class="list-disc list-inside ml-4 mt-2 text-gray-400">
-                                <li><strong>RNF8a:</strong> O layout da interface deve ser fluido e ajustável, utilizando media queries ou frameworks CSS modernos.</li>
-                                <li><strong>RNF8b:</strong> Todos os elementos interativos devem ser facilmente clicáveis ou tocáveis em telas menores.</li>
-                            </ul>
-                        </div>
-                        <div class="bg-gray-700 p-4 rounded-md">
-                            <h4 class="text-lg font-bold text-gray-200">RNF9: Desempenho Otimizado</h4>
-                            <p class="text-gray-400 mt-2">As consultas e operações de CRUDs devem ser executadas em um tempo aceitável, mesmo com grandes volumes de dados.</p>
-                            <ul class="list-disc list-inside ml-4 mt-2 text-gray-400">
-                                <li><strong>RNF9a:</strong> O tempo de resposta para operações de leitura (leitura de dados, geração de relatórios) deve ser inferior a 2 segundos para a maioria dos casos de uso.</li>
-                                <li><strong>RNF9b:</strong> As operações de CRUD devem ser executadas de forma assíncrona para não bloquear a interface do usuário.</li>
-                            </ul>
-                        </div>
-                        <div class="bg-gray-700 p-4 rounded-md">
-                            <h4 class="text-lg font-bold text-gray-200">RNF10: Mecanismo de Backup e Recuperação</h4>
-                            <p class="text-gray-400 mt-2">O sistema deve ter a capacidade de realizar backups automáticos dos dados e permitir a restauração completa.</p>
-                            <ul class="list-disc list-inside ml-4 mt-2 text-gray-400">
-                                <li><strong>RNF10a:</strong> O sistema deve ser configurado para realizar backups completos dos dados em intervalos regulares (ex: diariamente).</li>
-                                <li><strong>RNF10b:</strong> O processo de restauração deve ser simples e bem documentado, permitindo que a equipe de suporte recupere os dados rapidamente em caso de falha.</li>
-                            </ul>
-                        </div>
-                        <div class="bg-gray-700 p-4 rounded-md">
-                            <h4 class="text-lg font-bold text-gray-200">RNF11: Auditabilidade</h4>
-                            <p class="text-gray-400 mt-2">A arquitetura do sistema deve facilitar a auditoria de segurança.</p>
-                            <ul class="list-disc list-inside ml-4 mt-2 text-gray-400">
-                                <li><strong>RNF11a:</strong> O sistema deve manter logs de todas as operações sensíveis (ex: alterações de permissões, exclusões de dados).</li>
-                                <li><strong>RNF11b:</strong> Os logs de auditoria devem ser imutáveis e protegidos contra modificações.</li>
-                            </ul>
-                        </div>
-                        <div class="bg-gray-700 p-4 rounded-md">
-                            <h4 class="text-lg font-bold text-gray-200">RNF12: Documentação Técnica Completa</h4>
-                            <p class="text-gray-400 mt-2">Deve haver documentação clara e atualizada sobre a arquitetura do sistema, APIs, e como realizar a manutenção e o desenvolvimento futuro.</p>
-                            <ul class="list-disc list-inside ml-4 mt-2 text-gray-400">
-                                <li><strong>RNF12a:</strong> A documentação deve incluir diagramas de arquitetura, descrições de interfaces e módulos.</li>
-                                <li><strong>RNF12b:</strong> A documentação da API deve ser detalhada, incluindo exemplos de requisições e respostas.</li>
-                            </ul>
-                        </div>
-                        <div class="bg-gray-700 p-4 rounded-md">
-                            <h4 class="text-lg font-bold text-gray-200">RNF13: Interoperabilidade</h4>
-                            <p class="text-gray-400 mt-2">O sistema deve ser capaz de se comunicar e trocar dados com outros sistemas por meio de APIs ou outros protocolos de comunicação padrão.</p>
-                            <ul class="list-disc list-inside ml-4 mt-2 text-gray-400">
-                                <li><strong>RNF13a:</strong> O sistema deve expor uma API RESTful para permitir a integração com sistemas externos.</li>
-                                <li><strong>RNF13b:</strong> A API deve ser documentada e segura, usando tokens de autenticação ou chaves de API.</li>
-                            </ul>
-                        </div>
-                        <div class="bg-gray-700 p-4 rounded-md">
-                            <h4 class="text-lg font-bold text-gray-200">RNF14: Acessibilidade</h4>
-                            <p class="text-gray-400 mt-2">A interface de usuário deve ser projetada de acordo com as diretrizes de acessibilidade para a web (como as WCAG).</p>
-                            <ul class="list-disc list-inside ml-4 mt-2 text-gray-400">
-                                <li><strong>RNF14a:</strong> A interface deve ser navegável usando apenas o teclado.</li>
-                                <li><strong>RNF14b:</strong> Todos os elementos visuais devem ter um contraste de cores adequado e as imagens devem ter descrições (alt text) para leitores de tela.</li>
-                            </ul>
-                        </div>
-                        <div class="bg-gray-700 p-4 rounded-md">
-                            <h4 class="text-lg font-bold text-gray-200">RNF15: Localizabilidade</h4>
-                            <p class="text-gray-400 mt-2">Deve ser possível adaptar a interface de usuário, mensagens e formatos de data/hora para diferentes idiomas e regiões.</p>
-                            <ul class="list-disc list-inside ml-4 mt-2 text-gray-400">
-                                <li><strong>RNF15a:</strong> O código deve separar o texto da interface em arquivos de recursos (.json, .properties, etc.) para facilitar a tradução.</li>
-                                <li><strong>RNF15b:</strong> O sistema deve formatar datas, números e moedas de acordo com as convenções da região do usuário.</li>
-                            </ul>
-                        </div>
-                        <div class="bg-gray-700 p-4 rounded-md">
-                            <h4 class="text-lg font-bold text-gray-200">RNF16: Manutenibilidade</h4>
-                            <p class="text-gray-400 mt-2">O código-fonte deve ser limpo, bem comentado e seguir padrões de design estabelecidos.</p>
-                            <ul class="list-disc list-inside ml-4 mt-2 text-gray-400">
-                                <li><strong>RNF16a:</strong> O código deve ter uma estrutura lógica e consistente, facilitando a leitura e compreensão por novos desenvolvedores.</li>
-                                <li><strong>RNF16b:</strong> O sistema deve ter um conjunto de testes unitários e de integração para garantir que novas alterações não introduzam bugs.</li>
-                            </ul>
-                        </div>
-                        <div class="bg-gray-700 p-4 rounded-md">
-                            <h4 class="text-lg font-bold text-gray-200">RNF17: Escalabilidade</h4>
-                            <p class="text-gray-400 mt-2">A arquitetura do sistema deve ser projetada para lidar com um aumento futuro no número de usuários, volume de dados e requisições.</p>
-                            <ul class="list-disc list-inside ml-4 mt-2 text-gray-400">
-                                <li><strong>RNF17a:</strong> O sistema deve ser capaz de ser implantado em múltiplos servidores para distribuir a carga (escalabilidade horizontal).</li>
-                                <li><strong>RNF17b:</strong> O banco de dados deve ser otimizado (ex: índices) para garantir que o desempenho não degrade com o aumento do volume de dados.</li>
-                            </ul>
-                        </div>
-                    </div>
+                    <h2 class="text-2xl font-bold text-sky-400 mb-4">Estruturas de Dados (Delphi Records)</h2>
+                    <pre class="bg-gray-900 text-gray-300 p-4 rounded-lg overflow-x-auto">
++-------------------------------------------------------------+
+|                     TLoginDTO                               |
++-------------------------------------------------------------+
+| •  Finalidade: Carregar credenciais (usuário e senha).      |
+| •  Uso: Validação no login público (PostgreSQL) e privado   |
+|    (JSON local).                                            |
++-------------------------------------------------------------+
+|                                                             |
++-------------------------------------------------------------+
+|                       TPlanilha                             |
++-------------------------------------------------------------+
+| •  Finalidade: Representar uma planilha.                    |
+| •  Campos: Nome e caminho do arquivo.                       |
++-------------------------------------------------------------+
+|                                                             |
++-------------------------------------------------------------+
+|                      TLogEntry                              |
++-------------------------------------------------------------+
+| •  Finalidade: Registrar entradas de log.                   |
+| •  Campos: ID do usuário, tipo de usuário ('admin'/'usuario')|
+|    ação, e nível de acesso necessário para a ação.          |
++-------------------------------------------------------------+
+</pre>
+                </div>
+            </div>
+
+            <!-- Grupo de Diagramas: Tipos de Planilhas e Relatórios -->
+            <div id="group-types" class="space-y-12 hidden">
+                <div class="bg-gray-800 rounded-xl shadow-lg p-6">
+                    <h2 class="text-2xl font-bold text-sky-400 mb-4">Tipos de Planilhas e Relatórios</h2>
+                    <pre class="bg-gray-900 text-gray-300 p-4 rounded-lg overflow-x-auto">
++-------------------------------------------------------------+
+|                  Tipos de Planilhas (Vistas)                |
++-------------------------------------------------------------+
+| •  Planilhas: Lista e gerencia planilhas.                   |
+| •  Relatórios: Lista e gerencia relatórios.                 |
+| •  Planilhas com seus Relatórios: Associa relatórios a planilhas.|
+| •  Seleção para Compartilhamento: Funcionalidades para exportar|
+|    planilhas e relatórios específicos ou em conjunto.       |
+| •  Editores: Interfaces completas para criação/edição.      |
++-------------------------------------------------------------+
+|                                                             |
++-------------------------------------------------------------+
+|                  Tipos de Relatórios                        |
++-------------------------------------------------------------+
+| •  Análise de Dados:                                        |
+|    • Analítico: Focado em análise de estoque, desempenho.   |
+|    • Quantidade de dados em colunas.                        |
+| •  Visualização de Dados:                                   |
+|    • Gráfico/Visual: Gráfico de Gantt, etc.                 |
+| •  Logs e Auditoria:                                        |
+|    • Relatório de Auditoria: Log detalhado de atividades.   |
+| •  Alertas:                                                 |
+|    • Riscos/Alertas: Produtos com estoque baixo, pagamentos atrasados.|
++-------------------------------------------------------------+
+</pre>
+                </div>
+            </div>
+
+            <!-- Grupo de Arquitetura de Arquivos -->
+            <div id="group-architecture" class="space-y-12 hidden">
+                <div class="bg-gray-800 rounded-xl shadow-lg p-6">
+                    <h2 class="text-2xl font-bold text-sky-400 mb-4">Estrutura de Arquivos e Pastas</h2>
+                    <p class="text-gray-400 mb-4">Abaixo está o diagrama da estrutura de diretórios do projeto, detalhando a função de cada pasta e seus principais arquivos.</p>
+                    <pre class="bg-gray-900 text-gray-300 p-4 rounded-lg overflow-x-auto" style="font-family: 'Fira Code', monospace;">
+GridFlow/
+└── CRUDMaker/
+    ├── assets/
+    │   ├── icons/
+    │   └── images/
+    │
+    ├── bin/
+    ├── libs/
+    ├── packages/
+    │
+    └── src/
+        ├── model/
+        │   ├── TLoginDTO.pas
+        │   ├── TUsuarioDTO.pas
+        │   ├── TPlanilhaDTO.pas
+        │   ├── TRelatorioDTO.pas
+        │   ├── TLogEntryDTO.pas
+        │   ├── TAceiteTermoDTO.pas
+        │   ├── TDBConnection.pas
+        │   ├── TPostgresDAO.pas
+        │   ├── TJSONDataHandler.pas
+        │   └── TSecurityDataHandler.pas
+        │
+        ├── service/
+        │   ├── TAuthService.pas
+        │   ├── TPlanilhaService.pas
+        │   ├── TRelatorioService.pas
+        │   ├── TLogService.pas
+        │   ├── TExportacaoService.pas
+        │   └── TConfigService.pas
+        │
+        ├── controller/
+        │   └── (controladores específicos por funcionalidade)
+        │
+        ├── view/
+        │   ├── TViewLogin.pas
+        │   ├── TViewPrincipal.pas
+        │   ├── TViewEditorPlanilha.pas
+        │   ├── TViewEditorRelatorio.pas
+        │   ├── TViewGerenciadorDados.pas
+        │   ├── TViewCompartilhamento.pas
+        │   ├── TViewVisualizadorRelatorio.pas
+        │   └── TViewModalTermos.pas
+        │
+        └── utils/
+            ├── TAppConstants.pas
+            ├── TAppUtils.pas
+            └── TServerPinger.pas
+</pre>
                 </div>
             </div>
         </main>
