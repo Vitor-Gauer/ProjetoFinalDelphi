@@ -134,9 +134,7 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="src\view\GridFlow.pas">
-            <Form>FGridFlow</Form>
-        </DCCReference>
+        <DCCReference Include="src\view\UGridFlow.pas"/>
         <DCCReference Include="src\model\ULoginDTO.pas"/>
         <DCCReference Include="src\model\UUsuarioDTO.pas"/>
         <DCCReference Include="src\model\UPlanilhaDTO.pas"/>
