@@ -2,7 +2,7 @@ program CRUDMaker;
 
 uses
   Vcl.Forms,
-  GridFlow in 'src\view\GridFlow.pas',
+  UGridFlow in 'src\view\UGridFlow.pas',
   ULoginDTO in 'src\model\ULoginDTO.pas',
   UUsuarioDTO in 'src\model\UUsuarioDTO.pas',
   UPlanilhaDTO in 'src\model\UPlanilhaDTO.pas',
