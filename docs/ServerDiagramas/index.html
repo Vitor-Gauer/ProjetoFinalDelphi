@@ -10,16 +10,10 @@
 <body class="bg-gray-900 text-gray-300 p-8">
     <div class="max-w-4xl mx-auto">
         <header class="text-center mb-12">
-            <h1 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-sky-500">
-                Documentação do Sistema GridFlow
-            </h1>
-            <p class="mt-2 text-lg text-gray-400">
-                Uma visão geral completa dos requisitos, diagramas e funcionalidades do sistema.
-            </p>
+            <h1 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-sky-500">Documentação do Sistema GridFlow</h1>
+            <p class="mt-2 text-lg text-gray-400">Uma visão geral completa dos requisitos, diagramas e funcionalidades do sistema.</p>
         </header>
-
         <main class="space-y-12">
-            <!-- Botões de navegação -->
             <div class="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-4 mb-8">
                 <button id="btn-layouts" class="px-4 py-2 rounded-lg font-semibold text-white transition-colors duration-300 hover:bg-gray-700 bg-purple-600" onclick="showDiagramGroup('group-layouts')">Designs de Layout</button>
                 <button id="btn-conceptual-flows" class="px-4 py-2 rounded-lg font-semibold text-white transition-colors duration-300 hover:bg-gray-700 bg-gray-800" onclick="showDiagramGroup('group-conceptual-flows')">Fluxos Conceituais</button>
@@ -28,7 +22,6 @@
                 <button id="btn-architecture" class="px-4 py-2 rounded-lg font-semibold text-white transition-colors duration-300 hover:bg-gray-700 bg-gray-800" onclick="showDiagramGroup('group-architecture')">Estrutura de Arquivos</button>
             </div>
 
-            <!-- Grupo de Diagramas: Layouts e Telas -->
             <div id="group-layouts" class="space-y-12">
                 <div class="bg-gray-800 rounded-xl shadow-lg p-6">
                     <h2 class="text-2xl font-bold text-sky-400 mb-4">Tela de Login</h2>
@@ -105,7 +98,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 | Dashboard                                      |
 +------------------------------------------------+
 | [Ícone] Dashboard    [Ícone] CRUDs     [Ícone] Relatórios  [Ícone] Sair |
-|                                                                    [ Alterar Senha ]
+| [ Alterar Senha ]
 +------------------------------------------------+
 | Cartão: CRUDs Criados                          |
 | Quantidade: 3 de 10                            |
@@ -158,7 +151,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 |                                                          |
 | Seleção de Tabela (*)                                    |
 | [Dropdown: clientes, produtos, vendas, etc.]             |
-|                                                          |
+|
 | Configuração de Campos                                   |
 | +----------------------------------------------------+   |
 | | Nome do Campo | Tipo de Campo | Obrigatório | Exibir | Chave | |
@@ -257,8 +250,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 | [Gráfico ou tabela gerado com base na configuração]      |
 |                                                          |
 | Filtros Aplicados:                                       |
-| Campo1 = Valor1                                          |
-| Campo2 > Valor2                                          |
+| | Campo1 = Valor1                                          |
+| | Campo2 > Valor2                                          |
 |                                                          |
 | [ Botão Exportar PDF ]                                   |
 | [ Botão Exportar CSV ]                                   |
@@ -293,7 +286,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 | Admin View                                     |
 +------------------------------------------------+
 | [Ícone] Dashboard    [Ícone] CRUDs     [Ícone] Relatórios  [Ícone] Sair |
-|                                                                    [ Alterar Senha ]
+| [ Alterar Senha ]
 +------------------------------------------------+
 | Seções Administrativas:                        |
 |                                                |
@@ -306,13 +299,12 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
                 </div>
             </div>
 
-            <!-- Grupo de Diagramas: Fluxos Conceituais -->
             <div id="group-conceptual-flows" class="space-y-12 hidden">
                 <div class="bg-gray-800 rounded-xl shadow-lg p-6">
                     <h2 class="text-2xl font-bold text-sky-400 mb-4">Fluxo de Login e Autenticação</h2>
                     <pre class="bg-gray-900 text-gray-300 p-4 rounded-lg overflow-x-auto">
 +-------------------------------------------------------------+
-|                Fluxo de Autenticação                        |
+| Fluxo de Autenticação                        |
 +-------------------------------------------------------------+
 |                                                             |
 | [Início] -> Escolher Modo de Login -> [Modo Público]        |
@@ -339,17 +331,17 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
                     <h2 class="text-2xl font-bold text-sky-400 mb-4">Visões do Sistema (Views)</h2>
                     <pre class="bg-gray-900 text-gray-300 p-4 rounded-lg overflow-x-auto">
 +-------------------------------------------------------------+
-|                 view_admin (Interna)                        |
+| view_admin (Interna)                        |
 +-------------------------------------------------------------+
 | •  Acessível apenas na versão interna da empresa.           |
 | •  Requer login bem-sucedido de nível 'admin' no PostgreSQL.|
-| •  Envia 'ping' ao servidor após login bem-sucedido.        |
+| •  Envia 'ping' ao servidor após login bem-sucedido. |
 | •  Pode visualizar e filtrar todas as Planilhas e Relatórios|
 |    no PostgreSQL.                                           |
 +-------------------------------------------------------------+
 |                                                             |
 +-------------------------------------------------------------+
-|                  view_usuario (Público)                     |
+| view_usuario (Público)                     |
 +-------------------------------------------------------------+
 | •  Acessível em qualquer versão da aplicação.               |
 | •  Acesso por login público (PostgreSQL) ou privado (JSON). |
@@ -364,7 +356,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
                     <h2 class="text-2xl font-bold text-sky-400 mb-4">Fluxo de Dados</h2>
                     <pre class="bg-gray-900 text-gray-300 p-4 rounded-lg overflow-x-auto">
 +--------------------------------------------------------------------------------------------------------------------------------+
-|                                                          Fluxo de Dados                                                        |
+| Fluxo de Dados                                                        |
 +--------------------------------------------------------------------------------------------------------------------------------+
 |                                                                                                                                |
 |                                                                    +-----------------+                                         |
@@ -375,8 +367,8 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 |                                                                     Modo Privado                                                 |
 |                                                                            |                                                     |
 | +-----------------------------------------------------+   <----------------+------------------>  +-----------------------------+ |
-| | Aplicação Delphi 12                                 |   Acesso e Sincronização                 |   Banco de Dados            | |
-| |   (GridFlow)                                        |                                          |   PostgreSQL (Servidor)     | |
+| | Aplicação Delphi 12                                 |                    Acesso e Sincronização                 | Banco de Dados            | |
+| | (GridFlow)                                        |                                                         |   PostgreSQL (Servidor)     | |
 | +-----------------------------------------------------+   <----------------+------------------>  +-----------------------------+ |
 |                                                                            |                                                     |
 |                                                                     Modo Público                                                 |
@@ -395,13 +387,12 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
                 </div>
             </div>
 
-            <!-- Grupo de Diagramas: Estruturas de Dados -->
             <div id="group-data-structures" class="space-y-12 hidden">
                 <div class="bg-gray-800 rounded-xl shadow-lg p-6">
                     <h2 class="text-2xl font-bold text-sky-400 mb-4">Estruturas de Dados (Delphi Records)</h2>
                     <pre class="bg-gray-900 text-gray-300 p-4 rounded-lg overflow-x-auto">
 +-------------------------------------------------------------+
-|                     TLoginDTO                               |
+| TLoginDTO                               |
 +-------------------------------------------------------------+
 | •  Finalidade: Carregar credenciais (usuário e senha).      |
 | •  Uso: Validação no login público (PostgreSQL) e privado   |
@@ -409,7 +400,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 +-------------------------------------------------------------+
 |                                                             |
 +-------------------------------------------------------------+
-|                       TPlanilha                             |
+| TPlanilha                             |
 +-------------------------------------------------------------+
 | •  Finalidade: Representar uma planilha.                    |
 | •  Campos: Nome e caminho do arquivo.                       |
@@ -426,13 +417,12 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
                 </div>
             </div>
 
-            <!-- Grupo de Diagramas: Tipos de Planilhas e Relatórios -->
             <div id="group-types" class="space-y-12 hidden">
                 <div class="bg-gray-800 rounded-xl shadow-lg p-6">
                     <h2 class="text-2xl font-bold text-sky-400 mb-4">Tipos de Planilhas e Relatórios</h2>
                     <pre class="bg-gray-900 text-gray-300 p-4 rounded-lg overflow-x-auto">
 +-------------------------------------------------------------+
-|                  Tipos de Planilhas (Vistas)                |
+| Tipos de Planilhas (Vistas)                |
 +-------------------------------------------------------------+
 | •  Planilhas: Lista e gerencia planilhas.                   |
 | •  Relatórios: Lista e gerencia relatórios.                 |
@@ -443,7 +433,7 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 +-------------------------------------------------------------+
 |                                                             |
 +-------------------------------------------------------------+
-|                  Tipos de Relatórios                        |
+| Tipos de Relatórios                        |
 +-------------------------------------------------------------+
 | •  Análise de Dados:                                        |
 |    • Analítico: Focado em análise de estoque, desempenho.   |
@@ -459,7 +449,6 @@ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
                 </div>
             </div>
 
-            <!-- Grupo de Arquitetura de Arquivos -->
             <div id="group-architecture" class="space-y-12 hidden">
                 <div class="bg-gray-800 rounded-xl shadow-lg p-6">
                     <h2 class="text-2xl font-bold text-sky-400 mb-4">Estrutura de Arquivos e Pastas</h2>
@@ -477,52 +466,137 @@ GridFlow/
     │
     └── src/
         ├── model/
-        │   ├── TLoginDTO.pas
-        │   ├── TUsuarioDTO.pas
-        │   ├── TPlanilhaDTO.pas
-        │   ├── TRelatorioDTO.pas
-        │   ├── TLogEntryDTO.pas
-        │   ├── TAceiteTermoDTO.pas
-        │   ├── TDBConnection.pas
-        │   ├── TPostgresDAO.pas
-        │   ├── TJSONDataHandler.pas
-        │   └── TSecurityDataHandler.pas
+        │   ├── ULoginDTO.pas
+        │   ├── UUsuarioDTO.pas
+        │   ├── UPlanilhaDTO.pas
+        │   ├── URelatorioDTO.pas
+        │   ├── ULogEntryDTO.pas
+        │   ├── UAceiteTermoDTO.pas
+        │   ├── UDBConnection.pas
+        │   ├── UPostgresDAO.pas
+        │   ├── UJSONDataHandler.pas
+        │   └── USecurityDataHandler.pas
         │
         ├── service/
-        │   ├── TAuthService.pas
-        │   ├── TPlanilhaService.pas
-        │   ├── TRelatorioService.pas
-        │   ├── TLogService.pas
-        │   ├── TExportacaoService.pas
-        │   └── TConfigService.pas
+        │   ├── UAuthService.pas
+        │   ├── UPlanilhaService.pas
+        │   ├── URelatorioService.pas
+        │   ├── ULogService.pas
+        │   ├── UExportacaoService.pas
+        │   └── UConfigService.pas
         │
         ├── controller/
         │   └── (controladores específicos por funcionalidade)
         │
         ├── view/
-        │   ├── TViewLogin.pas
-        │   ├── TViewPrincipal.pas
-        │   ├── TViewEditorPlanilha.pas
-        │   ├── TViewEditorRelatorio.pas
-        │   ├── TViewGerenciadorDados.pas
-        │   ├── TViewCompartilhamento.pas
-        │   ├── TViewVisualizadorRelatorio.pas
-        │   └── TViewModalTermos.pas
+        │   ├── UViewLogin.pas
+        │   ├── UViewPrincipal.pas
+        │   ├── UViewEditorPlanilha.pas
+        │   ├── UViewEditorRelatorio.pas
+        │   ├── UViewGerenciadorDados.pas
+        │   ├── UViewCompartilhamento.pas
+        │   ├── UViewVisualizadorRelatorio.pas
+        │   └── UViewModalTermos.pas
         │
         └── utils/
-            ├── TAppConstants.pas
-            ├── TAppUtils.pas
-            └── TServerPinger.pas
+            ├── UAppConstants.pas
+            ├── UAppUtils.pas
+            └── UServerPinger.pas
 </pre>
+
+                    <div class="mt-6 text-gray-300 space-y-4">
+                        <h3 class="text-xl font-bold text-teal-400">src/model/ (Camada de Modelo)</h3>
+                        <p>Responsável por definir e gerenciar os dados da aplicação, além de lidar com acesso a dados.</p>
+                        <ul class="list-disc list-inside">
+                            <li><strong>ULoginDTO.pas</strong> → Objeto para carregar usuário e senha, repassando-os para serviços de autenticação.</li>
+                            <li><strong>UUsuarioDTO.pas</strong> → Representa informações de usuário, usado para transferir dados entre camadas.</li>
+                            <li><strong>UPlanilhaDTO.pas</strong> → Representa uma planilha, armazenando título e conteúdo.</li>
+                            <li><strong>URelatorioDTO.pas</strong> → Encapsula os dados de um relatório.</li>
+                            <li><strong>ULogEntryDTO.pas</strong> → Representa entradas de log do sistema.</li>
+                            <li><strong>UAceiteTermoDTO.pas</strong> → Registra informações sobre aceite de termos de uso.</li>
+                            <li><strong>UDBConnection.pas</strong> → Gerencia a conexão FireDAC com o banco PostgreSQL.</li>
+                            <li><strong>UPostgresDAO.pas</strong> → Implementa a camada de acesso ao banco PostgreSQL.</li>
+                            <li><strong>UJSONDataHandler.pas</strong> → Converte DTOs para JSON e vice-versa.</li>
+                            <li><strong>USecurityDataHandler.pas</strong> → Implementa segurança, hash de senhas e verificação.</li>
+                        </ul>
+
+                        <h3 class="text-xl font-bold text-teal-400 mt-6">src/service/ (Camada de Serviço)</h3>
+                        <p>Contém a lógica de negócio, utilizando os modelos e manipulando os dados.</p>
+                        <ul class="list-disc list-inside">
+                            <li><strong>UAuthService.pas</strong> → Realiza autenticação, valida credenciais, consulta banco.</li>
+                            <li><strong>UPlanilhaService.pas</strong> → Lida com criação, leitura, edição e exclusão de planilhas.</li>
+                            <li><strong>URelatorioService.pas</strong> → Gera relatórios com base nos dados.</li>
+                            <li><strong>ULogService.pas</strong> → Registra eventos e ações do sistema.</li>
+                            <li><strong>UExportacaoService.pas</strong> → Exporta dados para CSV e PDF.</li>
+                            <li><strong>UConfigService.pas</strong> → Carrega e gerencia as configurações globais da aplicação.</li>
+                        </ul>
+
+                        <h3 class="text-xl font-bold text-teal-400 mt-6">src/view/ (Camada de Visão)</h3>
+                        <p>Interface gráfica com o usuário, captura entradas e exibe dados.</p>
+                        <ul class="list-disc list-inside">
+                            <li><strong>UViewLogin.pas</strong> → Tela de login.</li>
+                            <li><strong>UViewPrincipal.pas</strong> → Tela principal da aplicação.</li>
+                            <li><strong>UViewEditorPlanilha.pas</strong> → Editor para planilhas.</li>
+                            <li><strong>UViewEditorRelatorio.pas</strong> → Editor para relatórios.</li>
+                            <li><strong>UViewGerenciadorDados.pas</strong> → Permite gerenciar dados salvos.</li>
+                            <li><strong>UViewCompartilhamento.pas</strong> → Funcionalidade de compartilhar planilhas e relatórios.</li>
+                            <li><strong>UViewVisualizadorRelatorio.pas</strong> → Visualiza relatórios gerados.</li>
+                            <li><strong>UViewModalTermos.pas</strong> → Exibe e gerencia aceite de termos.</li>
+                        </ul>
+
+                        <h3 class="text-xl font-bold text-teal-400 mt-6">src/utils/ (Camada de Utilitários)</h3>
+                        <ul class="list-disc list-inside">
+                            <li><strong>UAppConstants.pas</strong> → Define constantes globais.</li>
+                            <li><strong>UAppUtils.pas</strong> → Funções auxiliares reutilizáveis.</li>
+                            <li><strong>UServerPinger.pas</strong> → Verifica disponibilidade do servidor.</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </main>
-        
         <footer class="mt-12 pt-8 border-t border-gray-700 text-center text-gray-500">
             <p>Documento gerado para fins de referência e visualização.</p>
         </footer>
     </div>
 
-    <script src="js/script.js"></script>
+    <script>
+        function showDiagramGroup(groupId) {
+            // Esconde todos os grupos
+            const groups = document.querySelectorAll('[id^="group-"]');
+            groups.forEach(group => {
+                // A exceção é o grupo de layouts, que não deve ser escondido ao carregar a página
+                if (group.id !== 'group-layouts' || document.body.dataset.pageLoaded) {
+                    group.classList.add('hidden');
+                }
+            });
+
+            // Mostra apenas o grupo clicado
+            const selectedGroup = document.getElementById(groupId);
+            if (selectedGroup) {
+                selectedGroup.classList.remove('hidden');
+            }
+
+            // Atualiza cores dos botões
+            const buttons = document.querySelectorAll('[id^="btn-"]');
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-purple-600');
+                btn.classList.add('bg-gray-800');
+            });
+            // Marca o botão ativo
+            const activeBtn = document.querySelector(`[onclick="showDiagramGroup('${groupId}')"]`);
+            if (activeBtn) {
+                activeBtn.classList.remove('bg-gray-800');
+                activeBtn.classList.add('bg-purple-600');
+            }
+            
+            // Marca que a página já teve interação
+            document.body.dataset.pageLoaded = true;
+        }
+
+        // Garante que a primeira aba ('Designs de Layout') seja exibida ao carregar a página
+        document.addEventListener('DOMContentLoaded', () => {
+            showDiagramGroup('group-layouts');
+        });
+    </script>
 </body>
 </html>

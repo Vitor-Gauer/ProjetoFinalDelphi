@@ -2,7 +2,7 @@ program CRUDMaker;
 
 uses
   Vcl.Forms,
-  GridFlow in 'src\view\GridFlow.pas' {FGridFlow},
+  GridFlow in 'src\view\GridFlow.pas',
   ULoginDTO in 'src\model\ULoginDTO.pas',
   UUsuarioDTO in 'src\model\UUsuarioDTO.pas',
   UPlanilhaDTO in 'src\model\UPlanilhaDTO.pas',
@@ -19,16 +19,17 @@ uses
   ULogService in 'src\service\ULogService.pas',
   UExportacaoService in 'src\service\UExportacaoService.pas',
   UConfigService in 'src\service\UConfigService.pas',
-  UViewLogin in 'src\view\UViewLogin.pas',
-  UViewPrincipal in 'src\view\UViewPrincipal.pas',
-  UViewEditorPlanilha in 'src\view\UViewEditorPlanilha.pas',
-  UViewEditorRelatorio in 'src\view\UViewEditorRelatorio.pas',
-  UViewGerenciadorDados in 'src\view\UViewGerenciadorDados.pas',
-  UViewCompartilhamento in 'src\view\UViewCompartilhamento.pas',
-  UViewVisualizadorRelatorio in 'src\view\UViewVisualizadorRelatorio.pas',
-  UViewModalTermos in 'src\view\UViewModalTermos.pas',
   UAppConstants in 'src\utils\UAppConstants.pas',
-  Unit1 in 'src\utils\Unit1.pas';
+  UAppUtils in 'src\utils\UAppUtils.pas',
+  UServerPinger in 'src\utils\UServerPinger.pas',
+  UViewModalTermos in 'src\view\UViewModalTermos.pas',
+  UViewCompartilhamento in 'src\view\UViewCompartilhamento.pas',
+  UViewGerenciadorDados in 'src\view\UViewGerenciadorDados.pas',
+  UViewEditorRelatorio in 'src\view\UViewEditorRelatorio.pas',
+  UViewEditorPlanilha in 'src\view\UViewEditorPlanilha.pas',
+  UViewPrincipal in 'src\view\UViewPrincipal.pas',
+  UViewLogin in 'src\view\UViewLogin.pas',
+  UViewVisualizadorRelatorio in 'src\view\UViewVisualizadorRelatorio.pas';
 
 {$R *.res}
 
@@ -36,5 +37,13 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TFGridFlow, FGridFlow);
+  Application.CreateForm(TViewModalTermos, ViewModalTermos);
+  Application.CreateForm(TViewCompartilhamento, ViewCompartilhamento);
+  Application.CreateForm(TViewLogin, ViewLogin);
+  Application.CreateForm(TViewPrincipal, ViewPrincipal);
+  Application.CreateForm(TViewEditorPlanilha, ViewEditorPlanilha);
+  Application.CreateForm(TViewEditorRelatorio, ViewEditorRelatorio);
+  Application.CreateForm(TViewGerenciadorDados, ViewGerenciadorDados);
+  Application.CreateForm(TViewVisualizadorRelatorio, ViewVisualizadorRelatorio);
   Application.Run;
 end.
