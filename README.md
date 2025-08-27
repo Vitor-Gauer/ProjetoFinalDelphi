@@ -1,6 +1,6 @@
 # GridFlow - Sistema de Planilhas e Relatórios em Delphi 12
 
-![Logo GridFlow](https://i.ibb.co/5hdhgTjd/Logo.png)
+![Logo GridFlow](https://i.ibb.co/xSYp0NzB/LogoInv.png)
 
 > **GridFlow** é uma aplicação para criação, edição e gerenciamento de planilhas e relatórios. Desenvolvida em **Delphi 12 Community Edition**, utiliza PostgreSQL para dados públicos e arquivos JSON locais para dados privados, oferecendo um modelo híbrido seguro e modular.
 
