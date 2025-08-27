@@ -153,17 +153,41 @@
         <DCCReference Include="src\service\ULogService.pas"/>
         <DCCReference Include="src\service\UExportacaoService.pas"/>
         <DCCReference Include="src\service\UConfigService.pas"/>
-        <DCCReference Include="src\view\UViewLogin.pas"/>
-        <DCCReference Include="src\view\UViewPrincipal.pas"/>
-        <DCCReference Include="src\view\UViewEditorPlanilha.pas"/>
-        <DCCReference Include="src\view\UViewEditorRelatorio.pas"/>
-        <DCCReference Include="src\view\UViewGerenciadorDados.pas"/>
-        <DCCReference Include="src\view\UViewCompartilhamento.pas"/>
-        <DCCReference Include="src\view\UViewVisualizadorRelatorio.pas"/>
-        <DCCReference Include="src\view\UViewModalTermos.pas"/>
         <DCCReference Include="src\utils\UAppConstants.pas"/>
         <DCCReference Include="src\utils\UAppUtils.pas"/>
         <DCCReference Include="src\utils\UServerPinger.pas"/>
+        <DCCReference Include="src\view\UViewModalTermos.pas">
+            <Form>Form1</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="src\view\UViewCompartilhamento.pas">
+            <Form>Form2</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="src\view\UViewGerenciadorDados.pas">
+            <Form>Form3</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="src\view\UViewEditorRelatorio.pas">
+            <Form>Form4</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="src\view\UViewEditorPlanilha.pas">
+            <Form>Form5</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="src\view\UViewPrincipal.pas">
+            <Form>Form6</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="src\view\UViewLogin.pas">
+            <Form>Form7</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="src\view\UViewVisualizadorRelatorio.pas">
+            <Form>Form8</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
