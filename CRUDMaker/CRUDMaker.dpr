@@ -2,7 +2,6 @@ program CRUDMaker;
 
 uses
   Vcl.Forms,
-  UGridFlow in 'src\view\UGridFlow.pas',
   ULoginDTO in 'src\model\ULoginDTO.pas',
   UUsuarioDTO in 'src\model\UUsuarioDTO.pas',
   UPlanilhaDTO in 'src\model\UPlanilhaDTO.pas',
@@ -22,21 +21,21 @@ uses
   UAppConstants in 'src\utils\UAppConstants.pas',
   UAppUtils in 'src\utils\UAppUtils.pas',
   UServerPinger in 'src\utils\UServerPinger.pas',
-  UViewModalTermos in 'src\view\UViewModalTermos.pas',
-  UViewCompartilhamento in 'src\view\UViewCompartilhamento.pas',
-  UViewGerenciadorDados in 'src\view\UViewGerenciadorDados.pas',
-  UViewEditorRelatorio in 'src\view\UViewEditorRelatorio.pas',
-  UViewEditorPlanilha in 'src\view\UViewEditorPlanilha.pas',
-  UViewPrincipal in 'src\view\UViewPrincipal.pas',
-  UViewLogin in 'src\view\UViewLogin.pas',
-  UViewVisualizadorRelatorio in 'src\view\UViewVisualizadorRelatorio.pas';
+  UViewModalTermos in 'src\view\UViewModalTermos.pas' {Form1},
+  UViewCompartilhamento in 'src\view\UViewCompartilhamento.pas' {Form2},
+  UViewGerenciadorDados in 'src\view\UViewGerenciadorDados.pas' {Form3},
+  UViewEditorRelatorio in 'src\view\UViewEditorRelatorio.pas' {Form4},
+  UViewEditorPlanilha in 'src\view\UViewEditorPlanilha.pas' {Form5},
+  UViewPrincipal in 'src\view\UViewPrincipal.pas' {Form6},
+  UViewLogin in 'src\view\UViewLogin.pas' {Form7},
+  UViewVisualizadorRelatorio in 'src\view\UViewVisualizadorRelatorio.pas' {Form8},
+  UGridFlow in 'src\view\UGridFlow.pas' {Form10};
 
 {$R *.res}
 
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
-  Application.CreateForm(TFGridFlow, FGridFlow);
   Application.CreateForm(TViewModalTermos, ViewModalTermos);
   Application.CreateForm(TViewCompartilhamento, ViewCompartilhamento);
   Application.CreateForm(TViewLogin, ViewLogin);
@@ -45,5 +44,6 @@ begin
   Application.CreateForm(TViewEditorRelatorio, ViewEditorRelatorio);
   Application.CreateForm(TViewGerenciadorDados, ViewGerenciadorDados);
   Application.CreateForm(TViewVisualizadorRelatorio, ViewVisualizadorRelatorio);
+  Application.CreateForm(TFGridFlow, FGridFlow);
   Application.Run;
 end.
