@@ -29,7 +29,8 @@ uses
   UViewPrincipal in 'src\view\UViewPrincipal.pas' {Form6},
   UViewLogin in 'src\view\UViewLogin.pas' {Form7},
   UViewVisualizadorRelatorio in 'src\view\UViewVisualizadorRelatorio.pas' {Form8},
-  UGridFlow in 'src\view\UGridFlow.pas' {Form10};
+  UGridFlow in 'src\view\UGridFlow.pas' {Form10},
+  UViewController in 'src\controller\UViewController.pas';
 
 {$R *.res}
 

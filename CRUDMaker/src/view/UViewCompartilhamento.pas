@@ -1,4 +1,4 @@
-unit UViewCompartilhamento;
+﻿unit UViewCompartilhamento;
 
 interface
 
@@ -8,31 +8,32 @@ uses
 
 type
   TViewCompartilhamento = class(TForm)
-    PageControlCompartilhar: TPageControl;
-    TabSheetCompPlanilhas: TTabSheet;
-    PanelCompPlanTop: TPanel;
-    CheckBoxSelecionarTodasPlan: TCheckBox;
-    ListBoxCompPlanilhas: TListBox;
-    PanelCompPlanBotoes: TPanel;
-    ButtonExportarPlanilhas: TButton;
-    TabSheetCompRelatorios: TTabSheet;
-    PanelCompRelTop: TPanel;
-    CheckBoxSelecionarTodosRel: TCheckBox;
-    ListBoxCompRelatorios: TListBox;
-    PanelCompRelBotoes: TPanel;
-    ButtonExportarRelatorios: TButton;
-    TabSheetCompAssociacoes: TTabSheet;
-    PanelCompAssocTop: TPanel;
-    CheckBoxSelecionarTodasAssoc: TCheckBox;
-    ListBoxCompAssociacoes: TListBox;
-    PanelCompAssocBotoes: TPanel;
-    ButtonExportarAssociacoes: TButton;
-    PanelCompartilharBottom: TPanel;
-    StatusBarCompartilhar: TStatusBar;
+    ControleAbasCompartilhar: TPageControl;
+    AbaCompPlanilhas: TTabSheet;
+    PainelCompPlanTopo: TPanel;
+    CaixaSelecaoTodasPlan: TCheckBox;
+    ListaCompPlanilhas: TListBox;
+    PainelCompPlanBotoes: TPanel;
+    BotaoExportarPlanilhas: TButton;
+    AbaCompRelatorios: TTabSheet;
+    PainelCompRelTopo: TPanel;
+    CaixaSelecaoTodosRel: TCheckBox;
+    ListaCompRelatorios: TListBox;
+    PainelCompRelBotoes: TPanel;
+    BotaoExportarRelatorios: TButton;
+    AbaCompAssociacoes: TTabSheet;
+    PainelCompAssocTopo: TPanel;
+    CaixaSelecaoTodasAssoc: TCheckBox;
+    ListaCompAssociacoes: TListBox;
+    PainelCompAssocBotoes: TPanel;
+    BotaoExportarAssociacoes: TButton;
+    PainelCompartilharRodape: TPanel;
+    BarraStatusCompartilhar: TStatusBar;
+    procedure BotaoExportarPlanilhasClick(Sender: TObject);
+    procedure BotaoExportarRelatoriosClick(Sender: TObject);
+    procedure BotaoExportarAssociacoesClick(Sender: TObject);
   private
-    { Private declarations }
   public
-    { Public declarations }
   end;
 
 var
@@ -41,5 +42,20 @@ var
 implementation
 
 {$R *.dfm}
+
+procedure TViewCompartilhamento.BotaoExportarPlanilhasClick(Sender: TObject);
+begin
+  ShowMessage('Funcionalidade de exportar planilhas acionada.');
+end;
+
+procedure TViewCompartilhamento.BotaoExportarRelatoriosClick(Sender: TObject);
+begin
+  ShowMessage('Funcionalidade de exportar relatórios acionada.');
+end;
+
+procedure TViewCompartilhamento.BotaoExportarAssociacoesClick(Sender: TObject);
+begin
+  ShowMessage('Funcionalidade de exportar associações acionada.');
+end;
 
 end.

@@ -12,24 +12,24 @@ object ViewCompartilhamento: TViewCompartilhamento
   Font.Style = []
   Position = poScreenCenter
   TextHeight = 15
-  object PageControlCompartilhar: TPageControl
+  object ControleAbasCompartilhar: TPageControl
     Left = 0
     Top = 0
     Width = 800
     Height = 478
-    ActivePage = TabSheetCompPlanilhas
+    ActivePage = AbaCompPlanilhas
     Align = alClient
     TabOrder = 0
-    object TabSheetCompPlanilhas: TTabSheet
+    object AbaCompPlanilhas: TTabSheet
       Caption = 'Sele'#231#227'o de Planilha'
-      object PanelCompPlanTop: TPanel
+      object PainelCompPlanTopo: TPanel
         Left = 0
         Top = 0
         Width = 792
         Height = 40
         Align = alTop
         TabOrder = 0
-        object CheckBoxSelecionarTodasPlan: TCheckBox
+        object CaixaSelecaoTodasPlan: TCheckBox
           Left = 10
           Top = 10
           Width = 150
@@ -38,7 +38,7 @@ object ViewCompartilhamento: TViewCompartilhamento
           TabOrder = 0
         end
       end
-      object ListBoxCompPlanilhas: TListBox
+      object ListaCompPlanilhas: TListBox
         Left = 0
         Top = 40
         Width = 792
@@ -48,14 +48,14 @@ object ViewCompartilhamento: TViewCompartilhamento
         MultiSelect = True
         TabOrder = 1
       end
-      object PanelCompPlanBotoes: TPanel
+      object PainelCompPlanBotoes: TPanel
         Left = 0
         Top = 418
         Width = 792
         Height = 30
         Align = alBottom
         TabOrder = 2
-        object ButtonExportarPlanilhas: TButton
+        object BotaoExportarPlanilhas: TButton
           Left = 10
           Top = 2
           Width = 150
@@ -65,17 +65,17 @@ object ViewCompartilhamento: TViewCompartilhamento
         end
       end
     end
-    object TabSheetCompRelatorios: TTabSheet
+    object AbaCompRelatorios: TTabSheet
       Caption = 'Sele'#231#227'o de Relat'#243'rio'
       ImageIndex = 1
-      object PanelCompRelTop: TPanel
+      object PainelCompRelTopo: TPanel
         Left = 0
         Top = 0
         Width = 792
         Height = 40
         Align = alTop
         TabOrder = 0
-        object CheckBoxSelecionarTodosRel: TCheckBox
+        object CaixaSelecaoTodosRel: TCheckBox
           Left = 10
           Top = 10
           Width = 150
@@ -84,24 +84,25 @@ object ViewCompartilhamento: TViewCompartilhamento
           TabOrder = 0
         end
       end
-      object ListBoxCompRelatorios: TListBox
+      object ListaCompRelatorios: TListBox
         Left = 0
         Top = 40
         Width = 792
-        Height = 378
+        Height = 367
         Align = alClient
         ItemHeight = 15
         MultiSelect = True
         TabOrder = 1
       end
-      object PanelCompRelBotoes: TPanel
+      object PainelCompRelBotoes: TPanel
         Left = 0
         Top = 418
         Width = 792
         Height = 30
         Align = alBottom
         TabOrder = 2
-        object ButtonExportarRelatorios: TButton
+        ExplicitTop = 407
+        object BotaoExportarRelatorios: TButton
           Left = 10
           Top = 2
           Width = 150
@@ -111,17 +112,17 @@ object ViewCompartilhamento: TViewCompartilhamento
         end
       end
     end
-    object TabSheetCompAssociacoes: TTabSheet
+    object AbaCompAssociacoes: TTabSheet
       Caption = 'Planilhas com Relat'#243'rios'
       ImageIndex = 2
-      object PanelCompAssocTop: TPanel
+      object PainelCompAssocTopo: TPanel
         Left = 0
         Top = 0
         Width = 792
         Height = 40
         Align = alTop
         TabOrder = 0
-        object CheckBoxSelecionarTodasAssoc: TCheckBox
+        object CaixaSelecaoTodasAssoc: TCheckBox
           Left = 10
           Top = 10
           Width = 150
@@ -130,24 +131,25 @@ object ViewCompartilhamento: TViewCompartilhamento
           TabOrder = 0
         end
       end
-      object ListBoxCompAssociacoes: TListBox
+      object ListaCompAssociacoes: TListBox
         Left = 0
         Top = 40
         Width = 792
-        Height = 378
+        Height = 367
         Align = alClient
         ItemHeight = 15
         MultiSelect = True
         TabOrder = 1
       end
-      object PanelCompAssocBotoes: TPanel
+      object PainelCompAssocBotoes: TPanel
         Left = 0
         Top = 418
         Width = 792
         Height = 30
         Align = alBottom
         TabOrder = 2
-        object ButtonExportarAssociacoes: TButton
+        ExplicitTop = 407
+        object BotaoExportarAssociacoes: TButton
           Left = 10
           Top = 2
           Width = 150
@@ -158,14 +160,14 @@ object ViewCompartilhamento: TViewCompartilhamento
       end
     end
   end
-  object PanelCompartilharBottom: TPanel
+  object PainelCompartilharRodape: TPanel
     Left = 0
     Top = 478
     Width = 800
     Height = 22
     Align = alBottom
     TabOrder = 1
-    object StatusBarCompartilhar: TStatusBar
+    object BarraStatusCompartilhar: TStatusBar
       Left = 1
       Top = 1
       Width = 798

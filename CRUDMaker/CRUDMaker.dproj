@@ -188,6 +188,18 @@
         <DCCReference Include="src\view\UGridFlow.pas">
             <Form>Form10</Form>
         </DCCReference>
+        <DCCReference Include="src\controller\UViewController.pas"/>
+        <None Include="src\controller\explicacaocontroller.txt"/>
+        <None Include="src\controller\__history\UViewController.pas.~10~"/>
+        <None Include="src\controller\__history\UViewController.pas.~11~"/>
+        <None Include="src\controller\__history\UViewController.pas.~12~"/>
+        <None Include="src\controller\__history\UViewController.pas.~13~"/>
+        <None Include="src\controller\__history\UViewController.pas.~14~"/>
+        <None Include="src\controller\__history\UViewController.pas.~5~"/>
+        <None Include="src\controller\__history\UViewController.pas.~6~"/>
+        <None Include="src\controller\__history\UViewController.pas.~7~"/>
+        <None Include="src\controller\__history\UViewController.pas.~8~"/>
+        <None Include="src\controller\__history\UViewController.pas.~9~"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -229,6 +241,72 @@
                 <DeployFile LocalName="Win64\Debug\CRUDMaker.rsm" Configuration="Debug" Class="DebugSymbols">
                     <Platform Name="Win64">
                         <RemoteName>CRUDMaker.rsm</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="src\controller\__history\UViewController.pas.~10~" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="src\controller\__history\UViewController.pas.~11~" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="src\controller\__history\UViewController.pas.~12~" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="src\controller\__history\UViewController.pas.~13~" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="src\controller\__history\UViewController.pas.~14~" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="src\controller\__history\UViewController.pas.~5~" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="src\controller\__history\UViewController.pas.~6~" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="src\controller\__history\UViewController.pas.~7~" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="src\controller\__history\UViewController.pas.~8~" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="src\controller\__history\UViewController.pas.~9~" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="src\controller\explicacaocontroller.txt" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win64">
+                        <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

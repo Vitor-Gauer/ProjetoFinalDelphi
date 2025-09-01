@@ -12,21 +12,21 @@ object ViewVisualizadorRelatorio: TViewVisualizadorRelatorio
   Font.Style = []
   Position = poScreenCenter
   TextHeight = 15
-  object PanelVisualizadorTop: TPanel
+  object PainelVisualizadorTopo: TPanel
     Left = 0
     Top = 0
     Width = 800
     Height = 50
     Align = alTop
     TabOrder = 0
-    object LabelNomeRelatorio: TLabel
+    object RotuloNomeRelatorio: TLabel
       Left = 10
       Top = 15
       Width = 100
       Height = 15
       Caption = 'Nome do Relat'#243'rio'
     end
-    object ButtonImprimir: TButton
+    object BotaoImprimir: TButton
       Left = 690
       Top = 10
       Width = 100
@@ -35,7 +35,7 @@ object ViewVisualizadorRelatorio: TViewVisualizadorRelatorio
       TabOrder = 0
     end
   end
-  object RichEditVisualizador: TRichEdit
+  object EditorVisualizador: TRichEdit
     Left = 0
     Top = 50
     Width = 800
@@ -50,14 +50,14 @@ object ViewVisualizadorRelatorio: TViewVisualizadorRelatorio
     ScrollBars = ssVertical
     TabOrder = 1
   end
-  object PanelVisualizadorBottom: TPanel
+  object PainelVisualizadorRodape: TPanel
     Left = 0
     Top = 478
     Width = 800
     Height = 22
     Align = alBottom
     TabOrder = 2
-    object StatusBarVisualizador: TStatusBar
+    object BarraStatusVisualizador: TStatusBar
       Left = 1
       Top = 1
       Width = 798

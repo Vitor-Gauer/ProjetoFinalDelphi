@@ -12,28 +12,28 @@ object ViewEditorRelatorio: TViewEditorRelatorio
   Font.Style = []
   Position = poScreenCenter
   TextHeight = 15
-  object PanelRelatorioTop: TPanel
+  object PainelRelatorioTopo: TPanel
     Left = 0
     Top = 0
     Width = 800
     Height = 100
     Align = alTop
     TabOrder = 0
-    object LabelTituloRelatorio: TLabel
+    object RotuloTituloRelatorio: TLabel
       Left = 10
       Top = 15
-      Width = 30
+      Width = 34
       Height = 15
       Caption = 'T'#237'tulo:'
     end
-    object LabelTipoRelatorio: TLabel
+    object RotuloTipoRelatorio: TLabel
       Left = 10
       Top = 55
-      Width = 28
+      Width = 27
       Height = 15
       Caption = 'Tipo:'
     end
-    object EditTituloRelatorio: TEdit
+    object EditarTituloRelatorio: TEdit
       Left = 50
       Top = 12
       Width = 300
@@ -46,22 +46,23 @@ object ViewEditorRelatorio: TViewEditorRelatorio
       Width = 200
       Height = 23
       Style = csDropDownList
-      ItemIndex = 0
       TabOrder = 1
-      Text = 'Ordenador'
-      Items.Strings = (
-        'Ordenador'
-        'Anal'#237'tico'
-        'Gr'#225'fico/Visual'
-        'Riscos/Alertas')
     end
-    object ButtonSalvarRelatorio: TButton
-      Left = 690
+    object BotaoSalvarRelatorio: TButton
+      Left = 580
       Top = 35
       Width = 100
       Height = 30
       Caption = 'Salvar'
       TabOrder = 2
+    end
+    object BotaoCancelarRelatorio: TButton
+      Left = 690
+      Top = 35
+      Width = 100
+      Height = 30
+      Caption = 'Cancelar'
+      TabOrder = 3
     end
   end
   object MemoConfiguracaoRelatorio: TMemo
@@ -75,14 +76,14 @@ object ViewEditorRelatorio: TViewEditorRelatorio
     ScrollBars = ssVertical
     TabOrder = 1
   end
-  object PanelRelatorioBottom: TPanel
+  object PainelRelatorioRodape: TPanel
     Left = 0
     Top = 478
     Width = 800
     Height = 22
     Align = alBottom
     TabOrder = 2
-    object StatusBarRelatorio: TStatusBar
+    object BarraStatusRelatorio: TStatusBar
       Left = 1
       Top = 1
       Width = 798

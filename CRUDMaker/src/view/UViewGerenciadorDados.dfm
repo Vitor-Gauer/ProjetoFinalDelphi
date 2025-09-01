@@ -12,24 +12,24 @@ object ViewGerenciadorDados: TViewGerenciadorDados
   Font.Style = []
   Position = poScreenCenter
   TextHeight = 15
-  object PageControlGerenciador: TPageControl
+  object ControleAbasGerenciador: TPageControl
     Left = 0
     Top = 0
     Width = 800
     Height = 478
-    ActivePage = TabSheetGerPlanilhas
+    ActivePage = AbaGerPlanilhas
     Align = alClient
     TabOrder = 0
-    object TabSheetGerPlanilhas: TTabSheet
+    object AbaGerPlanilhas: TTabSheet
       Caption = 'Planilhas'
-      object PanelGerPlanilhasTop: TPanel
+      object PainelGerPlanilhasTopo: TPanel
         Left = 0
         Top = 0
         Width = 792
         Height = 40
         Align = alTop
         TabOrder = 0
-        object ButtonNovaPlanilha: TButton
+        object BotaoNovaPlanilha: TButton
           Left = 10
           Top = 5
           Width = 120
@@ -38,7 +38,7 @@ object ViewGerenciadorDados: TViewGerenciadorDados
           TabOrder = 0
         end
       end
-      object DBGridGerPlanilhas: TDBGrid
+      object GradeGerPlanilhas: TDBGrid
         Left = 0
         Top = 40
         Width = 792
@@ -52,17 +52,17 @@ object ViewGerenciadorDados: TViewGerenciadorDados
         TitleFont.Style = []
       end
     end
-    object TabSheetGerRelatorios: TTabSheet
+    object AbaGerRelatorios: TTabSheet
       Caption = 'Relat'#243'rios'
       ImageIndex = 1
-      object PanelGerRelatoriosTop: TPanel
+      object PainelGerRelatoriosTopo: TPanel
         Left = 0
         Top = 0
         Width = 792
         Height = 40
         Align = alTop
         TabOrder = 0
-        object ButtonNovoRelatorio: TButton
+        object BotaoNovoRelatorio: TButton
           Left = 10
           Top = 5
           Width = 120
@@ -71,11 +71,11 @@ object ViewGerenciadorDados: TViewGerenciadorDados
           TabOrder = 0
         end
       end
-      object DBGridGerRelatorios: TDBGrid
+      object GradeGerRelatorios: TDBGrid
         Left = 0
         Top = 40
         Width = 792
-        Height = 408
+        Height = 397
         Align = alClient
         TabOrder = 1
         TitleFont.Charset = DEFAULT_CHARSET
@@ -85,17 +85,17 @@ object ViewGerenciadorDados: TViewGerenciadorDados
         TitleFont.Style = []
       end
     end
-    object TabSheetGerAssociacoes: TTabSheet
+    object AbaGerAssociacoes: TTabSheet
       Caption = 'Associa'#231#245'es'
       ImageIndex = 2
-      object PanelGerAssociacoesTop: TPanel
+      object PainelGerAssociacoesTopo: TPanel
         Left = 0
         Top = 0
         Width = 792
         Height = 40
         Align = alTop
         TabOrder = 0
-        object ButtonNovaAssociacao: TButton
+        object BotaoNovaAssociacao: TButton
           Left = 10
           Top = 5
           Width = 150
@@ -104,11 +104,11 @@ object ViewGerenciadorDados: TViewGerenciadorDados
           TabOrder = 0
         end
       end
-      object DBGridGerAssociacoes: TDBGrid
+      object GradeGerAssociacoes: TDBGrid
         Left = 0
         Top = 40
         Width = 792
-        Height = 408
+        Height = 397
         Align = alClient
         TabOrder = 1
         TitleFont.Charset = DEFAULT_CHARSET
@@ -119,14 +119,14 @@ object ViewGerenciadorDados: TViewGerenciadorDados
       end
     end
   end
-  object PanelGerenciadorBottom: TPanel
+  object PainelGerenciadorRodape: TPanel
     Left = 0
     Top = 478
     Width = 800
     Height = 22
     Align = alBottom
     TabOrder = 1
-    object StatusBarGerenciador: TStatusBar
+    object BarraStatusGerenciador: TStatusBar
       Left = 1
       Top = 1
       Width = 798
