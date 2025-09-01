@@ -1,4 +1,4 @@
-unit UViewLogin;
+﻿unit UViewLogin;
 
 interface
 
@@ -7,19 +7,29 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls;
 
 type
+  TOnLoginEvent = procedure(const AUsuario, ASenha: string; AModoPublico: Boolean) of object;
+  TOnCancelarLoginEvent = procedure of object;
+
   TViewLogin = class(TForm)
-    PanelLogin: TPanel;
-    LabelUsuario: TLabel;
-    LabelSenha: TLabel;
-    EditUsuario: TEdit;
-    EditSenha: TEdit;
-    ButtonLogin: TButton;
+    PainelLogin: TPanel;
+    RotuloUsuario: TLabel;
+    RotuloSenha: TLabel;
+    EditarUsuario: TEdit;
+    EditarSenha: TEdit;
+    BotaoLogin: TButton;
+    BotaoCancelar: TButton;
+    GrupoBoxModo: TGroupBox;
     RadioButtonPublico: TRadioButton;
     RadioButtonPrivado: TRadioButton;
+    procedure BotaoLoginClick(Sender: TObject);
+    procedure BotaoCancelarClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
-    { Private declarations }
+    FOnLogin: TOnLoginEvent;
+    FOnCancelarLogin: TOnCancelarLoginEvent;
   public
-    { Public declarations }
+    property OnLogin: TOnLoginEvent read FOnLogin write FOnLogin;
+    property OnCancelarLogin: TOnCancelarLoginEvent read FOnCancelarLogin write FOnCancelarLogin;
   end;
 
 var
@@ -28,5 +38,23 @@ var
 implementation
 
 {$R *.dfm}
+
+procedure TViewLogin.FormCreate(Sender: TObject);
+begin
+  RadioButtonPrivado.Checked := True;
+end;
+
+procedure TViewLogin.BotaoLoginClick(Sender: TObject);
+begin
+  if Assigned(FOnLogin) then
+    FOnLogin(EditarUsuario.Text, EditarSenha.Text, RadioButtonPublico.Checked);
+end;
+
+procedure TViewLogin.BotaoCancelarClick(Sender: TObject);
+begin
+  if Assigned(FOnCancelarLogin) then
+    FOnCancelarLogin;
+  Self.Close;
+end;
 
 end.

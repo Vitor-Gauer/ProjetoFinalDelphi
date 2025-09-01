@@ -12,76 +12,66 @@ object ViewPrincipal: TViewPrincipal
   Font.Style = []
   Position = poScreenCenter
   TextHeight = 15
-  object PanelTop: TPanel
+  object PainelTopo: TPanel
     Left = 0
     Top = 0
     Width = 900
     Height = 60
     Align = alTop
-    TabOrder = 0
-    object LabelBemVindo: TLabel
+    TabOrder = 1
+    object RotuloBemVindo: TLabel
       Left = 10
       Top = 20
-      Width = 100
+      Width = 108
       Height = 15
       Caption = 'Bem-vindo, Usu'#225'rio!'
     end
-    object ButtonLogout: TButton
-      Left = 790
-      Top = 15
-      Width = 100
-      Height = 30
-      Caption = 'Sair'
-      TabOrder = 0
-    end
   end
-  object PageControlMain: TPageControl
+  object ControleAbasPrincipal: TPageControl
     Left = 0
     Top = 60
     Width = 900
     Height = 468
-    ActivePage = TabSheetPlanilhas
+    ActivePage = AbaPlanilhas
     Align = alClient
-    TabOrder = 1
-    object TabSheetPlanilhas: TTabSheet
+    TabOrder = 0
+    object AbaPlanilhas: TTabSheet
       Caption = 'Planilhas'
-      object Splitter1: TSplitter
+      object Divisor1: TSplitter
         Left = 200
         Top = 0
-        Height = 437
-        ExplicitLeft = 248
-        ExplicitTop = 88
-        ExplicitHeight = 100
+        Height = 438
+        ExplicitHeight = 437
       end
-      object PanelPlanilhasEsquerda: TPanel
+      object PainelEsquerdoPlanilhas: TPanel
         Left = 0
         Top = 0
         Width = 200
-        Height = 437
+        Height = 438
         Align = alLeft
         TabOrder = 0
-        object ListBoxPlanilhas: TListBox
+        object ListaPlanilhas: TListBox
           Left = 1
           Top = 1
           Width = 198
-          Height = 435
+          Height = 436
           Align = alClient
           ItemHeight = 15
           TabOrder = 0
         end
       end
-      object PanelPlanilhasDireita: TPanel
+      object PainelDireitoPlanilhas: TPanel
         Left = 203
         Top = 0
         Width = 689
-        Height = 437
+        Height = 438
         Align = alClient
         TabOrder = 1
-        object DBGridPlanilha: TDBGrid
+        object GradePlanilha: TDBGrid
           Left = 1
           Top = 1
           Width = 687
-          Height = 405
+          Height = 406
           Align = alClient
           TabOrder = 0
           TitleFont.Charset = DEFAULT_CHARSET
@@ -90,14 +80,14 @@ object ViewPrincipal: TViewPrincipal
           TitleFont.Name = 'Segoe UI'
           TitleFont.Style = []
         end
-        object PanelPlanilhaBotoes: TPanel
+        object PainelBotoesPlanilha: TPanel
           Left = 1
-          Top = 406
+          Top = 407
           Width = 687
           Height = 30
           Align = alBottom
           TabOrder = 1
-          object ButtonEditarPlanilha: TButton
+          object BotaoEditarPlanilha: TButton
             Left = 10
             Top = 2
             Width = 100
@@ -105,7 +95,7 @@ object ViewPrincipal: TViewPrincipal
             Caption = 'Editar'
             TabOrder = 0
           end
-          object ButtonExcluirPlanilha: TButton
+          object BotaoExcluirPlanilha: TButton
             Left = 120
             Top = 2
             Width = 100
@@ -113,7 +103,7 @@ object ViewPrincipal: TViewPrincipal
             Caption = 'Excluir'
             TabOrder = 1
           end
-          object ButtonNovoRelatorioPlanilha: TButton
+          object BotaoCriarRelatorioPlanilha: TButton
             Left = 230
             Top = 2
             Width = 150
@@ -124,25 +114,22 @@ object ViewPrincipal: TViewPrincipal
         end
       end
     end
-    object TabSheetRelatorios: TTabSheet
+    object AbaRelatorios: TTabSheet
       Caption = 'Relat'#243'rios'
       ImageIndex = 1
-      object Splitter2: TSplitter
+      object Divisor2: TSplitter
         Left = 200
         Top = 0
         Height = 437
-        ExplicitLeft = 280
-        ExplicitTop = 168
-        ExplicitHeight = 100
       end
-      object PanelRelatoriosEsquerda: TPanel
+      object PainelEsquerdoRelatorios: TPanel
         Left = 0
         Top = 0
         Width = 200
         Height = 437
         Align = alLeft
         TabOrder = 0
-        object ListBoxRelatorios: TListBox
+        object ListaRelatorios: TListBox
           Left = 1
           Top = 1
           Width = 198
@@ -152,13 +139,14 @@ object ViewPrincipal: TViewPrincipal
           TabOrder = 0
         end
       end
-      object PanelRelatoriosDireita: TPanel
+      object PainelDireitoRelatorios: TPanel
         Left = 203
         Top = 0
         Width = 689
-        Height = 437
+        Height = 438
         Align = alClient
         TabOrder = 1
+        ExplicitHeight = 437
         object MemoVisualizadorRelatorio: TMemo
           Left = 1
           Top = 1
@@ -168,14 +156,14 @@ object ViewPrincipal: TViewPrincipal
           ScrollBars = ssVertical
           TabOrder = 0
         end
-        object PanelRelatorioBotoes: TPanel
+        object PainelBotoesRelatorio: TPanel
           Left = 1
           Top = 406
           Width = 687
           Height = 30
           Align = alBottom
           TabOrder = 1
-          object ButtonEditarRelatorio: TButton
+          object BotaoEditarRelatorio: TButton
             Left = 10
             Top = 2
             Width = 100
@@ -183,7 +171,7 @@ object ViewPrincipal: TViewPrincipal
             Caption = 'Editar'
             TabOrder = 0
           end
-          object ButtonExcluirRelatorio: TButton
+          object BotaoExcluirRelatorio: TButton
             Left = 120
             Top = 2
             Width = 100
@@ -191,7 +179,7 @@ object ViewPrincipal: TViewPrincipal
             Caption = 'Excluir'
             TabOrder = 1
           end
-          object ButtonVisualizarRelatorio: TButton
+          object BotaoVisualizarRelatorio: TButton
             Left = 230
             Top = 2
             Width = 100
@@ -202,10 +190,10 @@ object ViewPrincipal: TViewPrincipal
         end
       end
     end
-    object TabSheetAssociacoes: TTabSheet
+    object AbaAssociacoes: TTabSheet
       Caption = 'Planilhas & Relat'#243'rios'
       ImageIndex = 2
-      object DBGridAssociacoes: TDBGrid
+      object GradeAssociacoes: TDBGrid
         Left = 0
         Top = 0
         Width = 892
@@ -220,12 +208,37 @@ object ViewPrincipal: TViewPrincipal
       end
     end
   end
-  object StatusBarPrincipal: TStatusBar
+  object BarraStatusPrincipal: TStatusBar
     Left = 0
     Top = 528
     Width = 900
     Height = 22
     Panels = <>
     SimplePanel = True
+  end
+  object MainMenuPrincipal: TMainMenu
+    Left = 24
+    Top = 16
+    object MenuItemArquivo: TMenuItem
+      Caption = '&Arquivo'
+      object MenuItemSair: TMenuItem
+        Caption = 'Sai&r'
+      end
+    end
+    object MenuItemFerramentas: TMenuItem
+      Caption = '&Ferramentas'
+      object MenuItemGerenciarDados: TMenuItem
+        Caption = '&Gerenciar Dados'
+      end
+      object MenuItemCompartilhar: TMenuItem
+        Caption = '&Compartilhar'
+      end
+    end
+    object MenuItemAjuda: TMenuItem
+      Caption = '&Ajuda'
+      object MenuItemSobre: TMenuItem
+        Caption = '&Sobre'
+      end
+    end
   end
 end

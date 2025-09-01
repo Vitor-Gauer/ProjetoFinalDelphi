@@ -12,6 +12,14 @@ object FGridFlow: TFGridFlow
   Font.Style = []
   Position = poScreenCenter
   TextHeight = 15
+  object StatusBar1: TStatusBar
+    Left = 0
+    Top = 478
+    Width = 800
+    Height = 22
+    Panels = <>
+    SimplePanel = True
+  end
   object MainMenu1: TMainMenu
     Left = 24
     Top = 16
@@ -45,13 +53,5 @@ object FGridFlow: TFGridFlow
     object Ajuda1: TMenuItem
       Caption = '&Ajuda'
     end
-  end
-  object StatusBar1: TStatusBar
-    Left = 0
-    Top = 478
-    Width = 800
-    Height = 22
-    Panels = <>
-    SimplePanel = True
   end
 end

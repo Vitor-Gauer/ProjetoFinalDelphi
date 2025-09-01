@@ -1,4 +1,4 @@
-unit UViewGerenciadorDados;
+﻿unit UViewGerenciadorDados;
 
 interface
 
@@ -9,25 +9,26 @@ uses
 
 type
   TViewGerenciadorDados = class(TForm)
-    PageControlGerenciador: TPageControl;
-    TabSheetGerPlanilhas: TTabSheet;
-    PanelGerPlanilhasTop: TPanel;
-    ButtonNovaPlanilha: TButton;
-    DBGridGerPlanilhas: TDBGrid;
-    TabSheetGerRelatorios: TTabSheet;
-    PanelGerRelatoriosTop: TPanel;
-    ButtonNovoRelatorio: TButton;
-    DBGridGerRelatorios: TDBGrid;
-    TabSheetGerAssociacoes: TTabSheet;
-    PanelGerAssociacoesTop: TPanel;
-    ButtonNovaAssociacao: TButton;
-    DBGridGerAssociacoes: TDBGrid;
-    PanelGerenciadorBottom: TPanel;
-    StatusBarGerenciador: TStatusBar;
+    ControleAbasGerenciador: TPageControl;
+    AbaGerPlanilhas: TTabSheet;
+    PainelGerPlanilhasTopo: TPanel;
+    BotaoNovaPlanilha: TButton;
+    GradeGerPlanilhas: TDBGrid;
+    AbaGerRelatorios: TTabSheet;
+    PainelGerRelatoriosTopo: TPanel;
+    BotaoNovoRelatorio: TButton;
+    GradeGerRelatorios: TDBGrid;
+    AbaGerAssociacoes: TTabSheet;
+    PainelGerAssociacoesTopo: TPanel;
+    BotaoNovaAssociacao: TButton;
+    GradeGerAssociacoes: TDBGrid;
+    PainelGerenciadorRodape: TPanel;
+    BarraStatusGerenciador: TStatusBar;
+    procedure BotaoNovaPlanilhaClick(Sender: TObject);
+    procedure BotaoNovoRelatorioClick(Sender: TObject);
+    procedure BotaoNovaAssociacaoClick(Sender: TObject);
   private
-    { Private declarations }
   public
-    { Public declarations }
   end;
 
 var
@@ -36,5 +37,20 @@ var
 implementation
 
 {$R *.dfm}
+
+procedure TViewGerenciadorDados.BotaoNovaPlanilhaClick(Sender: TObject);
+begin
+  ShowMessage('Funcionalidade de criar nova planilha acionada. O controller deve tratar isso.');
+end;
+
+procedure TViewGerenciadorDados.BotaoNovoRelatorioClick(Sender: TObject);
+begin
+  ShowMessage('Funcionalidade de criar novo relatório acionada. O controller deve tratar isso.');
+end;
+
+procedure TViewGerenciadorDados.BotaoNovaAssociacaoClick(Sender: TObject);
+begin
+  ShowMessage('Funcionalidade de criar nova associação acionada. O controller deve tratar isso.');
+end;
 
 end.
