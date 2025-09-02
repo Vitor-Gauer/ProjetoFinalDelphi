@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, Vcl.ComCtrls;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, Vcl.ComCtrls, UViewController;
 
 type
   TFGridFlow = class(TForm)
@@ -20,8 +20,9 @@ type
     Ferramentas1: TMenuItem;
     Ajuda1: TMenuItem;
     StatusBar1: TStatusBar;
+    procedure FormShow(Sender: TObject); // Certifique-se que este evento existe no .dfm
   private
-    { Private declarations }
+    FFluxoInicialExecutado: Boolean;
   public
     { Public declarations }
   end;
@@ -32,5 +33,19 @@ var
 implementation
 
 {$R *.dfm}
+
+procedure TFGridFlow.FormShow(Sender: TObject);
+begin
+  OutputDebugString('DEBUG: TFGridFlow.FormShow - INICIO');
+
+  if not FFluxoInicialExecutado then
+  begin
+    FFluxoInicialExecutado := True;
+    OutputDebugString('DEBUG: TFGridFlow.FormShow - Chamando TViewController.Instance.IniciarFluxoInicial');
+    TViewController.Instance.IniciarFluxoInicial(Self);
+  end;
+
+  OutputDebugString('DEBUG: TFGridFlow.FormShow - FIM');
+end;
 
 end.

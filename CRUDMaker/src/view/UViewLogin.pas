@@ -41,18 +41,18 @@ implementation
 
 procedure TViewLogin.FormCreate(Sender: TObject);
 begin
-  RadioButtonPrivado.Checked := True;
+  RadioButtonPrivado.Checked := True;    // Privado tem que ser ativo por default
 end;
 
 procedure TViewLogin.BotaoLoginClick(Sender: TObject);
 begin
-  if Assigned(FOnLogin) then
-    FOnLogin(EditarUsuario.Text, EditarSenha.Text, RadioButtonPublico.Checked);
+  if Assigned(FOnLogin) then // se o evento login existe
+    FOnLogin(EditarUsuario.Text, EditarSenha.Text, RadioButtonPublico.Checked); // assinala em ordem: AUsuario, ASenha, AModoPublico
 end;
 
 procedure TViewLogin.BotaoCancelarClick(Sender: TObject);
 begin
-  if Assigned(FOnCancelarLogin) then
+  if Assigned(FOnCancelarLogin) then   // Se o evento de CancelarLogin existe, Cancele o login
     FOnCancelarLogin;
   Self.Close;
 end;

@@ -69,7 +69,7 @@ type
     FOnNavegarParaNovoRelatorioComBase: TNavegarParaNovoRelatorioComBaseEvent;
     FOnNavegarParaEditorRelatorio: TNavegarParaEditorRelatorioEvent;
     FOnNavegarParaVisualizadorRelatorio: TNavegarParaVisualizadorRelatorioEvent;
-    FOnSolicitarLogout: TOnSolicitarLogoutEvent;
+    FOnSolicitarLogout: TOnSolicitarLogoutEvent;     // Logout -> Login
     FOnAbrirGerenciador: TOnAbrirGerenciadorEvent;
     FOnAbrirCompartilhamento: TOnAbrirCompartilhamentoEvent;
     procedure AtualizarExibicaoPlanilha;
