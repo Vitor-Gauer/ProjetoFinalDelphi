@@ -94,6 +94,7 @@ object ViewPrincipal: TViewPrincipal
             Height = 25
             Caption = 'Editar'
             TabOrder = 0
+            OnClick = BotaoEditarPlanilhaClick
           end
           object BotaoExcluirPlanilha: TButton
             Left = 120
@@ -108,8 +109,9 @@ object ViewPrincipal: TViewPrincipal
             Top = 2
             Width = 150
             Height = 25
-            Caption = 'Criar Relat'#243'rio'
+            Caption = 'Criar Planilha'
             TabOrder = 2
+            OnClick = BotaoCriarPlanilhaClick
           end
         end
       end
@@ -186,6 +188,14 @@ object ViewPrincipal: TViewPrincipal
             Height = 25
             Caption = 'Visualizar'
             TabOrder = 2
+          end
+          object Button1: TButton
+            Left = 340
+            Top = 2
+            Width = 150
+            Height = 25
+            Caption = 'Criar Relat'#243'rio'
+            TabOrder = 3
           end
         end
       end

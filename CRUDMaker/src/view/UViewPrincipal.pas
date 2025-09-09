@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.ExtCtrls, Vcl.Grids, Vcl.DBGrids,
   Data.DB, Vcl.StdCtrls, Vcl.Menus,
-  UPlanilhaDTO, URelatorioDTO, UViewLogin;  // UViewLogin para os edt, os DTO
+  UPlanilhaDTO, URelatorioDTO, UViewLogin, UShowViewController;  // UViewLogin para o "Bem -vindo!"
 
 type
   TNavegarParaEditorPlanilhaEvent = procedure(const APlanilha: TPlanilhaDTO) of object;
@@ -52,12 +52,13 @@ type
     AbaAssociacoes: TTabSheet;
     GradeAssociacoes: TDBGrid;
     BarraStatusPrincipal: TStatusBar;
+    Button1: TButton;
     procedure MenuItemSairClick(Sender: TObject);
     procedure MenuItemGerenciarDadosClick(Sender: TObject);
     procedure MenuItemCompartilharClick(Sender: TObject);
     procedure BotaoEditarPlanilhaClick(Sender: TObject);
     procedure BotaoExcluirPlanilhaClick(Sender: TObject);
-    procedure BotaoCriarRelatorioPlanilhaClick(Sender: TObject);
+    procedure BotaoCriarPlanilhaClick(Sender: TObject);
     procedure BotaoEditarRelatorioClick(Sender: TObject);
     procedure BotaoExcluirRelatorioClick(Sender: TObject);
     procedure BotaoVisualizarRelatorioClick(Sender: TObject);
@@ -124,8 +125,9 @@ end;
 
 procedure TViewPrincipal.BotaoEditarPlanilhaClick(Sender: TObject);
 begin
-  if Assigned(FOnNavegarParaEditorPlanilha) then
-    FOnNavegarParaEditorPlanilha(FPlanilhaSelecionada);
+   if Assigned(FOnNavegarParaEditorPlanilha) then
+     FOnNavegarParaEditorPlanilha(FPlanilhaSelecionada);
+     TViewController.Instance.ShowViewEditorPlanilha(FPlanilhaSelecionada);
 end;
 
 procedure TViewPrincipal.BotaoExcluirPlanilhaClick(Sender: TObject);
@@ -140,7 +142,7 @@ begin
   end;
 end;
 
-procedure TViewPrincipal.BotaoCriarRelatorioPlanilhaClick(Sender: TObject);
+procedure TViewPrincipal.BotaoCriarPlanilhaClick(Sender: TObject);
 begin
   if Assigned(FPlanilhaSelecionada) then
   begin

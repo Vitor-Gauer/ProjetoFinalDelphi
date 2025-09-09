@@ -74,7 +74,7 @@ begin
     EditarSenha.Clear;
 end;
 
-// Implementação do novo evento para os RadioButtons <<< Adicionado
+// Implementação do novo evento para os RadioButtons
 procedure TViewLogin.RadioButtonModoClick(Sender: TObject);
 begin
   // Sempre que um RadioButton for clicado, atualiza os controles
