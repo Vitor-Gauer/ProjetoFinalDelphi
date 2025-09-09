@@ -120,20 +120,21 @@ object ViewPrincipal: TViewPrincipal
       object Divisor2: TSplitter
         Left = 200
         Top = 0
-        Height = 437
+        Height = 438
+        ExplicitHeight = 437
       end
       object PainelEsquerdoRelatorios: TPanel
         Left = 0
         Top = 0
         Width = 200
-        Height = 437
+        Height = 438
         Align = alLeft
         TabOrder = 0
         object ListaRelatorios: TListBox
           Left = 1
           Top = 1
           Width = 198
-          Height = 435
+          Height = 436
           Align = alClient
           ItemHeight = 15
           TabOrder = 0
@@ -146,19 +147,18 @@ object ViewPrincipal: TViewPrincipal
         Height = 438
         Align = alClient
         TabOrder = 1
-        ExplicitHeight = 437
         object MemoVisualizadorRelatorio: TMemo
           Left = 1
           Top = 1
           Width = 687
-          Height = 405
+          Height = 406
           Align = alClient
           ScrollBars = ssVertical
           TabOrder = 0
         end
         object PainelBotoesRelatorio: TPanel
           Left = 1
-          Top = 406
+          Top = 407
           Width = 687
           Height = 30
           Align = alBottom
@@ -197,7 +197,7 @@ object ViewPrincipal: TViewPrincipal
         Left = 0
         Top = 0
         Width = 892
-        Height = 437
+        Height = 438
         Align = alClient
         TabOrder = 0
         TitleFont.Charset = DEFAULT_CHARSET
@@ -217,8 +217,8 @@ object ViewPrincipal: TViewPrincipal
     SimplePanel = True
   end
   object MainMenuPrincipal: TMainMenu
-    Left = 24
-    Top = 16
+    Left = 696
+    Top = 8
     object MenuItemArquivo: TMenuItem
       Caption = '&Arquivo'
       object MenuItemSair: TMenuItem
