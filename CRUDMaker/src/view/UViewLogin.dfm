@@ -48,6 +48,7 @@ object ViewLogin: TViewLogin
         Height = 17
         Caption = 'P'#250'blico (Servidor)'
         TabOrder = 0
+        OnClick = RadioButtonModoClick
       end
       object RadioButtonPrivado: TRadioButton
         Left = 184
@@ -55,9 +56,8 @@ object ViewLogin: TViewLogin
         Width = 113
         Height = 17
         Caption = 'Privado (Local)'
-        Checked = True
         TabOrder = 1
-        TabStop = True
+        OnClick = RadioButtonModoClick
       end
     end
     object EditarUsuario: TEdit
@@ -83,6 +83,7 @@ object ViewLogin: TViewLogin
       Caption = 'Entrar'
       Default = True
       TabOrder = 2
+      OnClick = BotaoLoginClick
     end
     object BotaoCancelar: TButton
       Left = 208
@@ -91,6 +92,7 @@ object ViewLogin: TViewLogin
       Height = 25
       Caption = 'Cancelar'
       TabOrder = 3
+      OnClick = BotaoCancelarClick
     end
   end
 end

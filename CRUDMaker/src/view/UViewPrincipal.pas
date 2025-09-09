@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.ExtCtrls, Vcl.Grids, Vcl.DBGrids,
   Data.DB, Vcl.StdCtrls, Vcl.Menus,
-  UPlanilhaDTO, URelatorioDTO;
+  UPlanilhaDTO, URelatorioDTO, UViewLogin;  // UViewLogin para os edt, os DTO
 
 type
   TNavegarParaEditorPlanilhaEvent = procedure(const APlanilha: TPlanilhaDTO) of object;
@@ -69,7 +69,7 @@ type
     FOnNavegarParaNovoRelatorioComBase: TNavegarParaNovoRelatorioComBaseEvent;
     FOnNavegarParaEditorRelatorio: TNavegarParaEditorRelatorioEvent;
     FOnNavegarParaVisualizadorRelatorio: TNavegarParaVisualizadorRelatorioEvent;
-    FOnSolicitarLogout: TOnSolicitarLogoutEvent;     // Logout -> Login
+    FOnSolicitarLogout: TOnSolicitarLogoutEvent;
     FOnAbrirGerenciador: TOnAbrirGerenciadorEvent;
     FOnAbrirCompartilhamento: TOnAbrirCompartilhamentoEvent;
     procedure AtualizarExibicaoPlanilha;

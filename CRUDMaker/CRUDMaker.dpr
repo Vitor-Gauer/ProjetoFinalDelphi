@@ -21,30 +21,26 @@ uses
   UAppConstants in 'src\utils\UAppConstants.pas',
   UAppUtils in 'src\utils\UAppUtils.pas',
   UServerPinger in 'src\utils\UServerPinger.pas',
-  UViewModalTermos in 'src\view\UViewModalTermos.pas' {Form1},
-  UViewCompartilhamento in 'src\view\UViewCompartilhamento.pas' {Form2},
-  UViewGerenciadorDados in 'src\view\UViewGerenciadorDados.pas' {Form3},
-  UViewEditorRelatorio in 'src\view\UViewEditorRelatorio.pas' {Form4},
-  UViewEditorPlanilha in 'src\view\UViewEditorPlanilha.pas' {Form5},
-  UViewPrincipal in 'src\view\UViewPrincipal.pas' {Form6},
-  UViewLogin in 'src\view\UViewLogin.pas' {Form7},
-  UViewVisualizadorRelatorio in 'src\view\UViewVisualizadorRelatorio.pas' {Form8},
-  UGridFlow in 'src\view\UGridFlow.pas' {Form10},
-  UViewController in 'src\controller\UViewController.pas';
+  UViewModalTermos in 'src\view\UViewModalTermos.pas' {ViewModalTermos}, // Nota: Classe/Formulário
+  UViewCompartilhamento in 'src\view\UViewCompartilhamento.pas' {ViewCompartilhamento},
+  UViewGerenciadorDados in 'src\view\UViewGerenciadorDados.pas' {ViewGerenciadorDados},
+  UViewEditorRelatorio in 'src\view\UViewEditorRelatorio.pas' {ViewEditorRelatorio},
+  UViewEditorPlanilha in 'src\view\UViewEditorPlanilha.pas' {ViewEditorPlanilha},
+  UViewPrincipal in 'src\view\UViewPrincipal.pas' {ViewPrincipal},
+  UViewLogin in 'src\view\UViewLogin.pas' {ViewLogin},
+  UViewVisualizadorRelatorio in 'src\view\UViewVisualizadorRelatorio.pas' {ViewVisualizadorRelatorio},
+  UShowViewController in 'src\controller\UShowViewController.pas';
 
 {$R *.res}
 
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
-  Application.CreateForm(TViewModalTermos, ViewModalTermos);
-  Application.CreateForm(TViewCompartilhamento, ViewCompartilhamento);
-  Application.CreateForm(TViewLogin, ViewLogin);
-  Application.CreateForm(TViewPrincipal, ViewPrincipal);
-  Application.CreateForm(TViewEditorPlanilha, ViewEditorPlanilha);
-  Application.CreateForm(TViewEditorRelatorio, ViewEditorRelatorio);
-  Application.CreateForm(TViewGerenciadorDados, ViewGerenciadorDados);
-  Application.CreateForm(TViewVisualizadorRelatorio, ViewVisualizadorRelatorio);
-  Application.CreateForm(TFGridFlow, FGridFlow);
+
+  TViewController.Instance.IniciarAplicacao;
+
   Application.Run;
+
+  // Limpar o singleton ViewController ao final
+  TViewController.FreeInstance;
 end.
