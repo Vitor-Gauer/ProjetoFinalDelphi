@@ -1,7 +1,7 @@
-object ViewEditorPlanilha: TViewEditorPlanilha
+object ViewEditorTabela: TViewEditorTabela
   Left = 0
   Top = 0
-  Caption = 'Editar Planilha'
+  Caption = 'Editar Tabela'
   ClientHeight = 538
   ClientWidth = 801
   Color = clBtnFace
@@ -20,21 +20,21 @@ object ViewEditorPlanilha: TViewEditorPlanilha
     Align = alTop
     AutoSize = True
     TabOrder = 0
-    object RotuloTituloPlanilha: TLabel
+    object RotuloTituloTabela: TLabel
       Left = 5
       Top = 10
       Width = 34
       Height = 15
       Caption = 'T'#237'tulo:'
     end
-    object EditarTituloPlanilha: TEdit
+    object EditarTituloTabela: TEdit
       Left = 46
       Top = 7
       Width = 300
       Height = 23
       TabOrder = 0
     end
-    object BotaoSalvarPlanilha: TButton
+    object BotaoSalvarTabela: TButton
       AlignWithMargins = True
       Left = 582
       Top = 4
@@ -42,9 +42,9 @@ object ViewEditorPlanilha: TViewEditorPlanilha
       Height = 30
       Caption = 'Salvar'
       TabOrder = 1
-      OnClick = BotaoSalvarPlanilhaClick
+      OnClick = BotaoSalvarTabelaClick
     end
-    object BotaoCancelarPlanilha: TButton
+    object BotaoCancelarTabela: TButton
       AlignWithMargins = True
       Left = 690
       Top = 4
@@ -52,7 +52,7 @@ object ViewEditorPlanilha: TViewEditorPlanilha
       Height = 30
       Caption = 'Cancelar'
       TabOrder = 2
-      OnClick = BotaoCancelarPlanilhaClick
+      OnClick = BotaoCancelarTabelaClick
     end
   end
   object DBGridEditor: TDBGrid

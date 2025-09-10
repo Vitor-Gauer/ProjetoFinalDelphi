@@ -33,9 +33,9 @@ type
     Divisor1: TSplitter;
     PainelEsquerdoPlanilhas: TPanel;
     ListaPlanilhas: TListBox;
-    PainelDireitoPlanilhas: TPanel;
-    GradePlanilha: TDBGrid;
-    PainelBotoesPlanilha: TPanel;
+    PainelDireitoTabelas: TPanel;
+    GradeTabelas: TDBGrid;
+    PainelBotoesTabela: TPanel;
     BotaoEditarPlanilha: TButton;
     BotaoExcluirPlanilha: TButton;
     BotaoCriarRelatorioPlanilha: TButton;

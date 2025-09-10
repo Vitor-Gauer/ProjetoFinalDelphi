@@ -1,4 +1,4 @@
-program CRUDMaker;
+program GridFlow;
 
 uses
   Vcl.Forms,
@@ -21,15 +21,19 @@ uses
   UAppConstants in 'src\utils\UAppConstants.pas',
   UAppUtils in 'src\utils\UAppUtils.pas',
   UServerPinger in 'src\utils\UServerPinger.pas',
-  UViewModalTermos in 'src\view\UViewModalTermos.pas' {ViewModalTermos}, // Nota: Classe/Formulário
+  UViewModalTermos in 'src\view\UViewModalTermos.pas' {ViewModalTermos},
   UViewCompartilhamento in 'src\view\UViewCompartilhamento.pas' {ViewCompartilhamento},
   UViewGerenciadorDados in 'src\view\UViewGerenciadorDados.pas' {ViewGerenciadorDados},
   UViewEditorRelatorio in 'src\view\UViewEditorRelatorio.pas' {ViewEditorRelatorio},
-  UViewEditorPlanilha in 'src\view\UViewEditorPlanilha.pas' {ViewEditorPlanilha},
+  UViewEditorTabela in 'src\view\UViewEditorTabela.pas' {ViewEditorTabela},
   UViewPrincipal in 'src\view\UViewPrincipal.pas' {ViewPrincipal},
   UViewLogin in 'src\view\UViewLogin.pas' {ViewLogin},
   UViewVisualizadorRelatorio in 'src\view\UViewVisualizadorRelatorio.pas' {ViewVisualizadorRelatorio},
-  UShowViewController in 'src\controller\UShowViewController.pas';
+  UShowViewController in 'src\controller\UShowViewController.pas',
+  UTabelaDTO in 'src\model\UTabelaDTO.pas',
+  UEditorTabelaController in 'src\controller\UEditorTabelaController.pas',
+  UEditarTabelaService in 'src\service\UEditarTabelaService.pas',
+  UXMLService in 'src\service\UXMLService.pas';
 
 {$R *.res}
 

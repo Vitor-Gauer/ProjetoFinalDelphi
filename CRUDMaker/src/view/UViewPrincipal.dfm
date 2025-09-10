@@ -60,14 +60,14 @@ object ViewPrincipal: TViewPrincipal
           TabOrder = 0
         end
       end
-      object PainelDireitoPlanilhas: TPanel
+      object PainelDireitoTabelas: TPanel
         Left = 203
         Top = 0
         Width = 689
         Height = 438
         Align = alClient
         TabOrder = 1
-        object GradePlanilha: TDBGrid
+        object GradeTabelas: TDBGrid
           Left = 1
           Top = 1
           Width = 687
@@ -79,8 +79,13 @@ object ViewPrincipal: TViewPrincipal
           TitleFont.Height = -12
           TitleFont.Name = 'Segoe UI'
           TitleFont.Style = []
+          Columns = <
+            item
+              Expanded = False
+              Visible = True
+            end>
         end
-        object PainelBotoesPlanilha: TPanel
+        object PainelBotoesTabela: TPanel
           Left = 1
           Top = 407
           Width = 687

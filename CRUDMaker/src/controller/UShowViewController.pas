@@ -3,8 +3,10 @@
 interface
 
 uses
+  System.Classes, System.SysUtils, Vcl.Forms, Vcl.Controls,
   UPlanilhaDTO, URelatorioDTO,
-  System.Classes, System.SysUtils, Vcl.Forms, Vcl.Controls;
+  UViewEditorTabela, UViewEditorRelatorio, UViewGerenciadorDados, UViewCompartilhamento,
+  UViewModalTermos, UViewLogin, UViewPrincipal;
 
 type
   TViewController = class
@@ -17,12 +19,13 @@ type
     class procedure TempOnCancelarLoginHandler;
   public
     class property Instance: TViewController read GetInstance;
-    procedure IniciarAplicacao;
+
+    // Métodos para mostrar as views
     procedure ShowViewLogin(AModal: Boolean = False);
     procedure ShowViewPrincipalModal(AUsuarioNome: string);
     procedure ShowViewPrincipal(AUsuarioNome: string);
     function ShowViewModalTermos: Boolean;
-    procedure ShowViewEditorPlanilha(APlanilha: TPlanilhaDTO = nil);
+    procedure ShowViewEditorTabela(ATabela: TTabelaDTO = nil);
     procedure ShowViewEditorRelatorio(ARelatorio: TRelatorioDTO = nil; APlanilhaBase: TPlanilhaDTO = nil);
     procedure ShowViewVisualizadorRelatorio(ARelatorio: TRelatorioDTO);
     procedure ShowViewGerenciadorDados;
@@ -33,11 +36,6 @@ type
 
 implementation
 
-uses
-  UViewLogin, UViewPrincipal, UViewEditorPlanilha, UViewEditorRelatorio,
-  UViewGerenciadorDados, UViewCompartilhamento, UViewVisualizadorRelatorio,
-  UViewModalTermos;
-
 { TViewController }
 
 class function TViewController.GetInstance: TViewController;
@@ -47,11 +45,10 @@ begin
   Result := FInstance;
 end;
 
-  // --- Implementação dos métodos auxiliares ---
-
+// - Implementação dos métodos auxiliares -
 class procedure TViewController.TempOnLoginHandler(const AUsuario, ASenha: string; AModoPublico: Boolean);
 begin
-    // Este método estático captura os dados do login
+  // Este método estático captura os dados do login
   FTempNomeUsuario := AUsuario;
   if FTempNomeUsuario = '' then
     FTempNomeUsuario := 'Anônimo';
@@ -64,7 +61,7 @@ begin
   FTempNomeUsuario := 'Anônimo';
 end;
 
-  // --- Fim da implementação dos métodos auxiliares ---
+// - Fim da implementação dos métodos auxiliares -
 
 procedure TViewController.IniciarAplicacao;
 begin
@@ -86,46 +83,43 @@ var
   LView: TViewLogin;
 begin
   // 1. Mostra os termos e verifica o resultado
-    // 2a. Termos ACEITOS
-    LView := TViewLogin.Create(nil);
-    try
-      FTempLoginSucesso := False;
-      FTempNomeUsuario := 'Anônimo';
-      // Conecta os eventos usando os métodos auxiliares estáticos
-      LView.OnLogin := TempOnLoginHandler;
-      LView.OnCancelarLogin := TempOnCancelarLoginHandler;
-      if AModal then
+  // 2a. Termos ACEITOS
+  LView := TViewLogin.Create(nil);
+  try
+    FTempLoginSucesso := False;
+    FTempNomeUsuario := 'Anônimo';
+    // Conecta os eventos usando os métodos auxiliares estáticos
+    LView.OnLogin := TempOnLoginHandler;
+    LView.OnCancelarLogin := TempOnCancelarLoginHandler;
+
+    if AModal then
+    begin
+      // 3a. Mostra MODAL e ESPERA
+      LView.ShowModal;
+      // 4a. Após ShowModal retornar, verifica o resultado
+      if FTempLoginSucesso then
       begin
-        // 3a. Mostra MODAL e ESPERA
-        LView.ShowModal;
-        // 4a. Após ShowModal retornar, verifica o resultado
-        if FTempLoginSucesso then
-        begin
-          // Login bem-sucedido
-          Self.ShowViewPrincipalModal(FTempNomeUsuario);
-        end
-        else
-        begin
-          Exit;
-        end;
+        // Login bem-sucedido
+        Self.ShowViewPrincipalModal(FTempNomeUsuario);
       end
       else
       begin
-         // 3b. Mostra NÃO MODAL (não espera)
-        // Conecta eventos para ações pós-login não modal
-        LView.OnLogin := TempOnLoginHandler;
-        LView.OnCancelarLogin := TempOnCancelarLoginHandler;
-        LView.Show;
         Exit;
       end;
-    finally
-      // Libera o formulário SOMENTE se foi modal (já foi fechado)
-      if AModal then
-        LView.Free;
+    end
+    else
+    begin
+      // 3b. Mostra NÃO MODAL (não espera)
+      // Conecta eventos para ações pós-login não modal
+      LView.OnLogin := TempOnLoginHandler;
+      LView.OnCancelarLogin := TempOnCancelarLoginHandler;
+      LView.Show;
+      Exit;
     end;
-  begin
-    // 2b. Termos RECUSADOS
-    Self.ShowViewPrincipalModal('Anônimo');
+  finally
+    // Libera o formulário SOMENTE se foi modal (já foi fechado)
+    if AModal then
+      LView.Free;
   end;
 end;
 
@@ -164,11 +158,11 @@ begin
   end;
 end;
 
-procedure TViewController.ShowViewEditorPlanilha(APlanilha: TPlanilhaDTO);
+procedure TViewController.ShowViewEditorTabela(ATabela: TTabelaDTO);
 var
-  LView: TViewEditorPlanilha;
+  LView: TViewEditorTabela;
 begin
-  LView := TViewEditorPlanilha.Create(Application);
+  LView := TViewEditorTabela.Create(Application, ATabela);
   LView.Show;
 end;
 
@@ -176,7 +170,7 @@ procedure TViewController.ShowViewEditorRelatorio(ARelatorio: TRelatorioDTO; APl
 var
   LView: TViewEditorRelatorio;
 begin
-  LView := TViewEditorRelatorio.Create(Application);
+  LView := TViewEditorRelatorio.Create(Application, ARelatorio, APlanilhaBase);
   LView.Show;
 end;
 
