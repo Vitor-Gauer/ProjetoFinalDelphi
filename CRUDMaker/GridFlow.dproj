@@ -192,6 +192,8 @@
         <DCCReference Include="src\controller\UEditorTabelaController.pas"/>
         <DCCReference Include="src\service\UEditarTabelaService.pas"/>
         <DCCReference Include="src\service\UXMLService.pas"/>
+        <DCCReference Include="src\service\UTransformadorService.pas"/>
+        <DCCReference Include="src\service\UAbrirArquivoExternoService.pas"/>
         <None Include="src\controller\explicacaocontroller.txt"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>

@@ -8,30 +8,35 @@ uses
 type
   EXMLServiceException = class(Exception);
 
+  /// Serviço para manipulação de arquivos XML no formato específico da aplicação.
   TXMLService = class
   private
-    // Função auxiliar para converter índice numérico para letra de coluna (A, B, ..., Z, AA, AB, ...)
+    /// Converte um índice numérico para a letra da coluna (A, B, ..., Z, AA, AB, ...).
+    // <param name="AIndice"> Índice base 1 da coluna.</param>
+    // <returns> Letra correspondente à coluna.</returns>
     function IndiceParaLetraColuna(AIndice: Integer): string;
-    // Função auxiliar para converter letra de coluna para índice numérico
+
+    /// Converte a letra da coluna para um índice numérico.
+    // <param name="ALetra"> Letra da coluna (A, B, ..., Z, AA, AB, ...).</param>
+    // <returns> Índice base 1 da coluna.</returns>
     function LetraColunaParaIndice(ALetra: string): Integer;
   public
+    /// Construtor do serviço.
     constructor Create;
+
+    /// Destrutor do serviço.
     destructor Destroy; override;
 
-    /// <summary>
     /// Lê um arquivo XML específico e popula o TTabelaDTO com os dados.
-    /// Assume que o DTO já tenha o CaminhoArquivoXML definido.
-    /// </summary>
-    /// <param name="ATabelaDTO">O DTO que será preenchido com os dados do XML.</param>
-    /// <param name="ADataSetDestino">O TClientDataSet que será populado com os dados da grade.</param>
+    // Assume que o DTO já tenha o CaminhoArquivoXML definido.
+    // <param name="ATabelaDTO"> O DTO que será preenchido com os dados do XML.</param>
+    // <param name="ADataSetDestino"> O TClientDataSet que será populado com os dados da grade.</param>
     procedure LerArquivoXML(ATabelaDTO: TTabelaDTO; ADataSetDestino: TClientDataSet);
 
-    /// <summary>
     /// Salva os dados de um TClientDataSet em um arquivo XML no formato especificado.
-    /// O caminho do arquivo é obtido de ATabelaDTO.CaminhoArquivoXML.
-    /// </summary>
-    /// <param name="ATabelaDTO">O DTO contendo os metadados (título, caminho, ID).</param>
-    /// <param name="ADataSet">O TClientDataSet contendo os dados da tabela a serem salvos.</param>
+    // O caminho do arquivo é obtido de ATabelaDTO.CaminhoArquivoXML.
+    // <param name="ATabelaDTO"> O DTO contendo os metadados (título, caminho, ID).</param>
+    // <param name="ADataSet"> O TClientDataSet contendo os dados da tabela a serem salvos.</param>
     procedure SalvarArquivoXML(ATabelaDTO: TTabelaDTO; ADataSet: TClientDataSet);
   end;
 
@@ -60,7 +65,6 @@ begin
   begin
     raise EXMLServiceException.Create('Índice de coluna inválido: ' + IntToStr(AIndice));
   end;
-
   if AIndice <= 26 then
   begin
     Result := Chr(Ord('A') + AIndice - 1);
@@ -105,9 +109,9 @@ procedure TXMLService.LerArquivoXML(ATabelaDTO: TTabelaDTO; ADataSetDestino: TCl
 var
   XMLDoc: IXMLDocument;
   RootNode, RedorExtNode, RedorIntNode, TabelaNode, TituloNode: IXMLNode;
-  LinhasNodeList: IXMLNodeList; // <-- Correção: usar IXMLNodeList
+  LinhasNodeList: IXMLNodeList;
   LinhaNode, ColunasNode, CelulaNode: IXMLNode;
-  CelulasNodeList: IXMLNodeList; // <-- Correção: usar IXMLNodeList
+  CelulasNodeList: IXMLNodeList;
   CaminhoArquivo: string;
   i, j, NumeroLinha, NumeroColunaIndice: Integer;
   NumeroLinhaStr, NumeroCelulaStr: string;
@@ -118,62 +122,50 @@ var
 begin
   if not Assigned(ATabelaDTO) or (ATabelaDTO.CaminhoArquivoXML = '') then
     raise EXMLServiceException.Create('DTO ou CaminhoArquivoXML inválido para leitura.');
-
   CaminhoArquivo := ATabelaDTO.CaminhoArquivoXML;
   if not FileExists(CaminhoArquivo) then
     raise EXMLServiceException.Create('Arquivo XML não encontrado: ' + CaminhoArquivo);
-
   if not Assigned(ADataSetDestino) then
      raise EXMLServiceException.Create('TClientDataSet destino não fornecido.');
-
   XMLDoc := TXMLDocument.Create(nil);
   try
     XMLDoc.LoadFromFile(CaminhoArquivo);
     XMLDoc.Active := True;
-
     // Inicializa o DTO
     ATabelaDTO.ID := -1;
     ATabelaDTO.Titulo := '';
-
     RootNode := XMLDoc.DocumentElement; // <Corpo>
     if (RootNode = nil) or (RootNode.NodeName <> 'Corpo') then
        raise EXMLServiceException.Create('Documento XML inválido: Raiz não é <Corpo>.');
-
     // Navegação corrigida para acessar os nós filhos
     if RootNode.ChildNodes.Count = 0 then
        raise EXMLServiceException.Create('Documento XML inválido: <Corpo> está vazio.');
     RedorExtNode := RootNode.ChildNodes.Get(0); // <Redor> externo
     if (RedorExtNode = nil) or (RedorExtNode.NodeName <> 'Redor') then
        raise EXMLServiceException.Create('Documento XML inválido: Falta <Redor> externo.');
-
     if RedorExtNode.ChildNodes.Count = 0 then
        raise EXMLServiceException.Create('Documento XML inválido: <Redor> externo está vazio.');
     RedorIntNode := RedorExtNode.ChildNodes.Get(0); // <Redor> interno
     if (RedorIntNode = nil) or (RedorIntNode.NodeName <> 'Redor') then
        raise EXMLServiceException.Create('Documento XML inválido: Falta <Redor> interno.');
-
     if RedorIntNode.ChildNodes.Count = 0 then
        raise EXMLServiceException.Create('Documento XML inválido: <Redor> interno está vazio.');
     TabelaNode := RedorIntNode.ChildNodes.Get(0); // <Tabela>
     if (TabelaNode = nil) or (TabelaNode.NodeName <> 'Tabela') then
        raise EXMLServiceException.Create('Documento XML inválido: Falta <Tabela>.');
-
     // --- Leitura de Metadados ---
     // Lê o ID
     if TabelaNode.HasAttribute('id') then
       ATabelaDTO.ID := StrToIntDef(TabelaNode.Attributes['id'], -1);
-
     // Lê o Título
     TituloNode := TabelaNode.ChildNodes.FindNode('Titulo');
     if Assigned(TituloNode) and (TituloNode.Text <> '') then
       ATabelaDTO.Titulo := TituloNode.Text
     else
       ATabelaDTO.Titulo := ChangeFileExt(ExtractFileName(CaminhoArquivo), ''); // Fallback
-
     // --- Leitura das Linhas e Células ---
     ADataSetDestino.Close;
     ADataSetDestino.FieldDefs.Clear; // Limpa campos existentes
-
     // Primeira passagem: Determinar o número máximo de colunas
     MaxColunasEncontradas := 0;
     // LinhasNodeList := TabelaNode.ChildNodes; // <-- Erro corrigido
@@ -211,17 +203,14 @@ begin
          end;
       end;
     end;
-
     // Configura o ClientDataSet com o número correto de colunas
     if MaxColunasEncontradas = 0 then MaxColunasEncontradas := 1; // Garante pelo menos uma coluna
-
     for i := 1 to MaxColunasEncontradas do
     begin
       ADataSetDestino.FieldDefs.Add('Coluna' + IntToStr(i), ftString, 300); // Tamanho máximo 300
     end;
     ADataSetDestino.CreateDataSet;
     ADataSetDestino.Open;
-
     // Segunda passagem: Popular os dados
     ADataSetDestino.EmptyDataSet; // Limpa dados existentes
     // Re-iterar para popular os dados
@@ -231,7 +220,6 @@ begin
       if (ChildNode <> nil) and (ChildNode.NodeName = 'Linha') then
       begin
         ADataSetDestino.Append; // Adiciona nova linha no ClientDataSet
-
         LinhaNode := ChildNode; // Trata ChildNode como LinhaNode
         ColunasNode := LinhaNode.ChildNodes.FindNode('Colunas');
         if Assigned(ColunasNode) then
@@ -244,7 +232,6 @@ begin
             begin
               NumeroCelulaStr := CelulaNode.Attributes['numero'];
               ValorCelula := CelulaNode.Text;
-
               if NumeroCelulaStr <> '' then
               begin
                 try
@@ -266,11 +253,9 @@ begin
         ADataSetDestino.Post; // Confirma a linha no ClientDataSet
       end;
     end;
-
     // Garante que haja pelo menos uma linha vazia se o arquivo estiver vazio
     if ADataSetDestino.IsEmpty then
        ADataSetDestino.AppendRecord([nil]);
-
   finally
     XMLDoc := nil; // Libera a interface
   end;
@@ -279,17 +264,15 @@ end;
 procedure TXMLService.SalvarArquivoXML(ATabelaDTO: TTabelaDTO; ADataSet: TClientDataSet);
 var
   XMLDoc: IXMLDocument;
-  ProcInst: IXMLNode; // <-- Para a instrução de processamento
+  ProcInst: IXMLNode;
   RootNode, RedorExtNode, RedorIntNode, TabelaNode, TituloNode, LinhaNode, ColunasNode, CelulaNode: IXMLNode;
   i, j: Integer;
-  NumeroLinhaStr: string;
   ValorCelula: string;
-  NomeCampo: string;
   CaminhoArquivo: string;
+  HasData: Boolean; // Flag para verificar se há dados
 begin
   if not Assigned(ATabelaDTO) or (ATabelaDTO.Titulo = '') or not Assigned(ADataSet) then
     raise EXMLServiceException.Create('DTO, Título ou TClientDataSet inválido para salvamento.');
-
   CaminhoArquivo := ATabelaDTO.CaminhoArquivoXML;
   if CaminhoArquivo = '' then
      raise EXMLServiceException.Create('Caminho do arquivo XML não definido no DTO.');
@@ -297,91 +280,89 @@ begin
   XMLDoc := TXMLDocument.Create(nil);
   try
     XMLDoc.Active := True;
-    // <?xml version="1.0" encoding="UTF-8"?>
     XMLDoc.Encoding := 'UTF-8';
 
-    // Cria e adiciona a instrução de processamento <?xml-stylesheet ?> ANTES do nó raiz
-    // Isso é feito adicionando-a ao documento, não a um nó específico.
-    ProcInst := XMLDoc.CreateNode('xml-stylesheet type="text/css" href="estilo.css"', ntProcessingInstr);
-    XMLDoc.DocumentElement := ProcInst; // Isso pode não funcionar como esperado
-
-    // Uma abordagem mais confiável é criar o nó raiz primeiro e depois inserir a instrução
-    // como o primeiro filho do documento.
+    // Cria o nó raiz <Corpo>
     RootNode := XMLDoc.AddChild('Corpo');
 
-    // Cria a instrução de processamento
+    // Adiciona a instrução de processamento <?xml-stylesheet ... ?>
     ProcInst := XMLDoc.CreateNode('xml-stylesheet type="text/css" href="estilo.css"', ntProcessingInstr);
-    // Insere a instrução de processamento como o primeiro nó do documento
-    // O método InsertBefore funciona com o DocumentElement (RootNode)
-//    XMLDoc.DocumentElement.Parent.InsertBefore(ProcInst, XMLDoc.DocumentElement);
+    XMLDoc.ChildNodes.Insert(0, ProcInst); // Insere como primeiro nó do documento
 
-
-    // <Redor> externo
+    // Cria a estrutura aninhada <Redor><Redor><Tabela>
     RedorExtNode := RootNode.AddChild('Redor');
-
-    // <Redor> interno
     RedorIntNode := RedorExtNode.AddChild('Redor');
-
-    // <Tabela id="X">
     TabelaNode := RedorIntNode.AddChild('Tabela');
-    // O ID deve ser gerenciado antes de chamar este método
-    TabelaNode.Attributes['id'] := IntToStr(ATabelaDTO.ID);
 
-    // <Titulo>...</Titulo>
+    // Define o atributo 'id' da Tabela
+    TabelaNode.Attributes['id'] := IntToStr(ATabelaDTO.ID); // Assume que o ID já foi definido
+
+    // Adiciona o <Titulo>
     TituloNode := TabelaNode.AddChild('Titulo');
     TituloNode.Text := ATabelaDTO.Titulo;
 
     // --- Salvar as linhas e células do TClientDataSet ---
+    HasData := False; // Inicializa a flag
+
     if not ADataSet.IsEmpty and (ADataSet.RecordCount > 0) then
     begin
       ADataSet.First;
       i := 1; // Número da linha no XML (começando de 1)
       while not ADataSet.Eof do
       begin
-        // <Linha numero="X">
-        LinhaNode := TabelaNode.AddChild('Linha');
-        NumeroLinhaStr := IntToStr(i);
-        LinhaNode.Attributes['numero'] := NumeroLinhaStr;
-
-        // <Colunas>
-        ColunasNode := LinhaNode.AddChild('Colunas');
-
-        // Percorre os campos (colunas) do ClientDataSet
-        // Salva todas as colunas que existem no ClientDataSet
+        // Verifica se a linha atual tem algum dado
+        HasData := False;
         for j := 0 to ADataSet.FieldCount - 1 do
         begin
-          // <Celula numero="Y">Valor</Celula>
-          // Converte índice base 0 para base 1 e depois para letra
-          CelulaNode := ColunasNode.AddChild('Celula');
-          CelulaNode.Attributes['numero'] := IndiceParaLetraColuna(j + 1); // j+1 é índice base 1
-
-          // Obtém o valor do campo
-          ValorCelula := '';
-          if Assigned(ADataSet.Fields[j]) then
-            ValorCelula := ADataSet.Fields[j].AsString;
-
-          CelulaNode.Text := ValorCelula;
+          if Trim(ADataSet.Fields[j].AsString) <> '' then
+          begin
+            HasData := True;
+            Break;
+          end;
         end;
 
+        if HasData then // Só salva a linha se tiver dados
+        begin
+          // <Linha numero="X">
+          LinhaNode := TabelaNode.AddChild('Linha');
+          LinhaNode.Attributes['numero'] := IntToStr(i);
+
+          // <Colunas>
+          ColunasNode := LinhaNode.AddChild('Colunas');
+
+          // Percorre os campos (colunas) do ClientDataSet e salva
+          for j := 0 to ADataSet.FieldCount - 1 do
+          begin
+            ValorCelula := ADataSet.Fields[j].AsString;
+            // Salva a célula apenas se tiver conteúdo (ou sempre, dependendo do requisito)
+            if Trim(ValorCelula) <> '' then
+            begin
+              // <Celula numero="Y">Valor</Celula>
+              CelulaNode := ColunasNode.AddChild('Celula');
+              // Converte índice base 0 para letra de coluna (A=1, B=2, ...)
+              CelulaNode.Attributes['numero'] := IndiceParaLetraColuna(j + 1);
+              CelulaNode.Text := ValorCelula; // Usa o valor completo, incluindo espaços internos
+            end;
+          end;
+        end;
         ADataSet.Next;
         Inc(i);
       end;
-    end
-    else
+    end;
+
+    // Se não houver dados em nenhuma linha, salva pelo menos uma linha vazia
+    if not HasData then
     begin
-       // Se o ClientDataSet estiver vazio, salva pelo menos uma linha vazia
        LinhaNode := TabelaNode.AddChild('Linha');
        LinhaNode.Attributes['numero'] := '1';
        ColunasNode := LinhaNode.AddChild('Colunas');
-       // Adiciona células vazias para as 200 colunas padrão, se necessário
-       // Ou apenas uma célula vazia para a Coluna1
+       // Adicionando uma célula vazia para a primeira coluna:
        CelulaNode := ColunasNode.AddChild('Celula');
        CelulaNode.Attributes['numero'] := 'A';
        CelulaNode.Text := '';
     end;
     // --- Fim do salvamento das linhas e células ---
 
-    // Salva o arquivo
     XMLDoc.SaveToFile(CaminhoArquivo);
   finally
     XMLDoc := nil;

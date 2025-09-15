@@ -3,24 +3,39 @@ unit UEditarTabelaService;
 interface
 
 uses
-  System.SysUtils, System.Classes, UTabelaDTO, UXMLService; // Adicione Data.DB se precisar validar TClientDataSet
+  System.SysUtils, System.Classes, Data.DB, Datasnap.DBClient, Vcl.Dialogs,
+  UTabelaDTO, UXMLService;
 
 type
-  EEditarTabelaServiceException = class(Exception);
+  // Record para representar uma célula válida
+  TCellData = record
+    Row: Integer;
+    Col: Integer; // Base 1
+    Value: string;
+  end;
+
+  // Record para representar uma linha válida
+  TRowData = record
+    Number: Integer;
+    Cells: TArray<TCellData>;
+  end;
+
+  // Tipo para os dados preparados para transformação
+  TPreparedData = TArray<TRowData>;
 
   TEditarTabelaService = class
   private
     FXMLService: TXMLService;
+    function ContemConteudoPerigoso(const ATexto: string): Boolean;
+    function ExtrairTextoParaValidacao(const ATexto: string): string; // Remove espaços para validação
   public
     constructor Create(AXMLService: TXMLService);
-    /// <summary>
-    /// Carrega os dados de uma tabela do XML para o DTO.
-    /// </summary>
+    destructor Destroy; override;
+
     function Carregar(ATabelaDTO: TTabelaDTO): TTabelaDTO;
-    /// <summary>
-    /// Salva os dados de uma tabela do DTO para o XML.
-    /// </summary>
-    procedure Salvar(ATabelaDTO: TTabelaDTO);
+    function ValidarDados(ADataSet: TClientDataSet): Boolean;
+    function PrepararParaTransformacao(ADataSet: TClientDataSet): TPreparedData; // Novo método
+    procedure Salvar(ATabelaDTO: TTabelaDTO; ADataSet: TClientDataSet); // Atualizado para receber DataSet
   end;
 
 implementation
@@ -33,37 +48,192 @@ begin
   FXMLService := AXMLService;
 end;
 
-function TEditarTabelaService.Carregar(ATabelaDTO: TTabelaDTO): TTabelaDTO;
+destructor TEditarTabelaService.Destroy;
 begin
-  if not Assigned(ATabelaDTO) then
-    raise EEditarTabelaServiceException.Create('DTO da tabela não pode ser nulo.');
-
-  if (ATabelaDTO.CaminhoArquivoXML = '') or not FileExists(ATabelaDTO.CaminhoArquivoXML) then
-    raise EEditarTabelaServiceException.Create('Caminho do arquivo XML inválido ou arquivo não encontrado.');
-
-  // Validação de segurança básica (exemplo simples)
-  if Pos('..\', ATabelaDTO.CaminhoArquivoXML) > 0 then
-    raise EEditarTabelaServiceException.Create('Caminho do arquivo contém sequência inválida.');
-
-  // Chama o XMLService para ler e parsear o arquivo
-  // O XMLService preencherá o DTO com os dados (título, ID, etc.)
-//  FXMLService.LerArquivoXML(ATabelaDTO); // Assumindo que LerArquivoXML modifica o DTO passado
-
-  Result := ATabelaDTO; // Retorna o DTO atualizado
+  // FXMLService é injetado, não deve ser destruído aqui
+  inherited;
 end;
 
-procedure TEditarTabelaService.Salvar(ATabelaDTO: TTabelaDTO);
+function TEditarTabelaService.Carregar(ATabelaDTO: TTabelaDTO): TTabelaDTO;
+var
+  TempDataSet: TClientDataSet;
 begin
   if not Assigned(ATabelaDTO) then
-    raise EEditarTabelaServiceException.Create('DTO da tabela não pode ser nulo.');
+    raise Exception.Create('TabelaDTO não fornecido para carregamento.');
 
-  if ATabelaDTO.Titulo = '' then
-    raise EEditarTabelaServiceException.Create('O título da tabela não pode estar vazio.');
+  Result := ATabelaDTO;
 
-  // Outras validações: tamanho do título, caracteres especiais, etc.
+  TempDataSet := TClientDataSet.Create(nil);
+  try
+    FXMLService.LerArquivoXML(Result, TempDataSet);
+  finally
+    TempDataSet.Free;
+  end;
+end;
 
-  // Chama o XMLService para salvar o DTO em XML
-//  FXMLService.SalvarArquivoXML(ATabelaDTO); // Assumindo que SalvarArquivoXML usa os dados do DTO
+function TEditarTabelaService.ExtrairTextoParaValidacao(const ATexto: string): string;
+begin
+  // Remove espaços iniciais e finais para validação
+  Result := Trim(ATexto);
+end;
+
+function TEditarTabelaService.ContemConteudoPerigoso(const ATexto: string): Boolean;
+var
+  TextoLower: string;
+begin
+  Result := False;
+  TextoLower := LowerCase(ATexto);
+
+  if (Pos('select', TextoLower) > 0) and (Pos('from', TextoLower) > 0) then Exit(True);
+  if (Pos('insert', TextoLower) > 0) and (Pos('into', TextoLower) > 0) then Exit(True);
+  if (Pos('update', TextoLower) > 0) and (Pos('set', TextoLower) > 0) then Exit(True);
+  if (Pos('delete', TextoLower) > 0) and (Pos('from', TextoLower) > 0) then Exit(True);
+  if (Pos('drop', TextoLower) > 0) or (Pos('create', TextoLower) > 0) then Exit(True);
+  if (Pos('http://', TextoLower) > 0) or (Pos('https://', TextoLower) > 0) then Exit(True);
+  // Adicione mais verificações conforme necessário
+end;
+
+function TEditarTabelaService.ValidarDados(ADataSet: TClientDataSet): Boolean;
+var
+  HasData: Boolean;
+  HasInvalidData: Boolean;
+  i, j: Integer;
+  CellValue, TrimmedValueForValidation: string;
+  MsgErro: string;
+begin
+  Result := False;
+  HasData := False;
+  HasInvalidData := False;
+  MsgErro := '';
+
+  if not Assigned(ADataSet) or not ADataSet.Active then
+  begin
+    MsgErro := 'DataSet inválido ou inativo.';
+    ShowMessage(MsgErro);
+    Exit;
+  end;
+
+  ADataSet.DisableControls;
+  try
+    ADataSet.First;
+    while not ADataSet.Eof do
+    begin
+      for j := 0 to ADataSet.FieldCount - 1 do
+      begin
+        if ADataSet.Fields[j] is TStringField then
+        begin
+          CellValue := ADataSet.Fields[j].AsString;
+          TrimmedValueForValidation := ExtrairTextoParaValidacao(CellValue); // Usa o valor sem espaços para validação
+
+          if TrimmedValueForValidation <> '' then
+          begin
+            HasData := True;
+            if Length(CellValue) > 300 then
+            begin
+              HasInvalidData := True;
+              MsgErro := Format('Célula na linha %d, coluna %d excede 300 caracteres.', [ADataSet.RecNo, j + 1]);
+              Break;
+            end;
+            if ContemConteudoPerigoso(TrimmedValueForValidation) then
+            begin
+              HasInvalidData := True;
+              MsgErro := Format('Conteúdo potencialmente perigoso encontrado na linha %d, coluna %d.', [ADataSet.RecNo, j + 1]);
+              Break;
+            end;
+          end;
+        end;
+      end;
+      if HasInvalidData then Break;
+      ADataSet.Next;
+    end;
+  finally
+    ADataSet.EnableControls;
+  end;
+
+  if not HasData then
+  begin
+    MsgErro := 'A tabela deve conter pelo menos uma célula preenchida.';
+    HasInvalidData := True;
+  end;
+
+  if HasInvalidData then
+  begin
+    ShowMessage('Erro de validação: ' + MsgErro + sLineBreak + 'Por favor, corrija os dados antes de salvar.');
+  end
+  else
+  begin
+    Result := True;
+  end;
+end;
+
+// Novo método para preparar dados para transformação
+function TEditarTabelaService.PrepararParaTransformacao(ADataSet: TClientDataSet): TPreparedData;
+var
+  RowIndex: Integer;
+  ColIndex: Integer;
+  HasRowData: Boolean;
+  CellValue: string;
+  TrimmedValue: string;
+  CurrentRow: TRowData;
+  CurrentCell: TCellData;
+begin
+  SetLength(Result, 0); // Inicializa array vazio
+  if not Assigned(ADataSet) or not ADataSet.Active or ADataSet.IsEmpty then
+    Exit;
+
+  ADataSet.DisableControls;
+  try
+    ADataSet.First;
+    RowIndex := 1; // Começa da linha 1
+    while not ADataSet.Eof do
+    begin
+      HasRowData := False;
+      SetLength(CurrentRow.Cells, 0); // Inicializa array de células vazio
+
+      for ColIndex := 0 to ADataSet.FieldCount - 1 do
+      begin
+        if ADataSet.Fields[ColIndex] is TStringField then
+        begin
+          CellValue := ADataSet.Fields[ColIndex].AsString;
+          TrimmedValue := Trim(CellValue); // Verifica se tem conteúdo
+
+          if TrimmedValue <> '' then
+          begin
+            HasRowData := True;
+            // Adiciona célula válida ao array temporário da linha
+            SetLength(CurrentRow.Cells, Length(CurrentRow.Cells) + 1);
+            CurrentCell.Row := RowIndex;
+            CurrentCell.Col := ColIndex + 1; // Converte para base 1
+            CurrentCell.Value := CellValue; // Passa o valor original (com espaços)
+            CurrentRow.Cells[High(CurrentRow.Cells)] := CurrentCell;
+          end;
+        end;
+      end;
+
+      if HasRowData then
+      begin
+        CurrentRow.Number := RowIndex;
+        // Adiciona linha válida ao array de resultado
+        SetLength(Result, Length(Result) + 1);
+        Result[High(Result)] := CurrentRow;
+      end;
+
+      ADataSet.Next;
+      Inc(RowIndex);
+    end;
+  finally
+    ADataSet.EnableControls;
+  end;
+end;
+
+
+procedure TEditarTabelaService.Salvar(ATabelaDTO: TTabelaDTO; ADataSet: TClientDataSet);
+begin
+  if not Assigned(ATabelaDTO) or not Assigned(ADataSet) then
+    raise Exception.Create('DTO ou DataSet não fornecidos para salvamento.');
+
+  // Chama o XMLService para salvar o arquivo XML
+  FXMLService.SalvarArquivoXML(ATabelaDTO, ADataSet);
 end;
 
 end.

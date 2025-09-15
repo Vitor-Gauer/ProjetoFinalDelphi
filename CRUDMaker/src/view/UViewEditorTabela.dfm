@@ -18,8 +18,10 @@ object ViewEditorTabela: TViewEditorTabela
     Width = 801
     Height = 38
     Align = alTop
-    AutoSize = True
     TabOrder = 0
+    DesignSize = (
+      801
+      38)
     object RotuloTituloTabela: TLabel
       Left = 5
       Top = 10
@@ -32,6 +34,7 @@ object ViewEditorTabela: TViewEditorTabela
       Top = 7
       Width = 300
       Height = 23
+      Anchors = [akLeft, akTop, akRight]
       TabOrder = 0
     end
     object BotaoSalvarTabela: TButton
@@ -40,9 +43,10 @@ object ViewEditorTabela: TViewEditorTabela
       Top = 4
       Width = 98
       Height = 30
+      Anchors = [akTop, akRight]
       Caption = 'Salvar'
       TabOrder = 1
-      OnClick = BotaoSalvarTabelaClick
+      OnClick = AoClicarBotaoSalvar
     end
     object BotaoCancelarTabela: TButton
       AlignWithMargins = True
@@ -50,9 +54,10 @@ object ViewEditorTabela: TViewEditorTabela
       Top = 4
       Width = 100
       Height = 30
+      Anchors = [akTop, akRight]
       Caption = 'Cancelar'
       TabOrder = 2
-      OnClick = BotaoCancelarTabelaClick
+      OnClick = AoClicarBotaoCancelar
     end
   end
   object DBGridEditor: TDBGrid
@@ -69,6 +74,8 @@ object ViewEditorTabela: TViewEditorTabela
     TitleFont.Height = -12
     TitleFont.Name = 'Segoe UI'
     TitleFont.Style = []
+    OnExit = DBGridEditorExit
+    OnMouseMove = DBGridEditorMouseMove
   end
   object PainelEditorRodape: TPanel
     Left = 0

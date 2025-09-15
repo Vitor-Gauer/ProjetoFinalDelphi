@@ -33,7 +33,9 @@ uses
   UTabelaDTO in 'src\model\UTabelaDTO.pas',
   UEditorTabelaController in 'src\controller\UEditorTabelaController.pas',
   UEditarTabelaService in 'src\service\UEditarTabelaService.pas',
-  UXMLService in 'src\service\UXMLService.pas';
+  UXMLService in 'src\service\UXMLService.pas',
+  UTransformadorService in 'src\service\UTransformadorService.pas',
+  UAbrirArquivoExternoService in 'src\service\UAbrirArquivoExternoService.pas';
 
 {$R *.res}
 

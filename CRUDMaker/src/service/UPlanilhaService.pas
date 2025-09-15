@@ -12,7 +12,7 @@ type
   public
     constructor Create(ADao: TPostgresDAO);
     function GetPlanilha(AId: Integer): TPlanilhaDTO;
-    procedure SavePlanilha(APlanilha: TPlanilhaDTO);
+    procedure AtualizarPlanilha(APlanilha: TPlanilhaDTO);
   end;
 
 implementation
@@ -29,7 +29,7 @@ begin
   Result := nil;
 end;
 
-procedure TPlanilhaService.SavePlanilha(APlanilha: TPlanilhaDTO);
+procedure TPlanilhaService.AtualizarPlanilha(APlanilha: TPlanilhaDTO);
 begin
 end;
 
