@@ -99,7 +99,7 @@ object ViewPrincipal: TViewPrincipal
             Height = 25
             Caption = 'Editar'
             TabOrder = 0
-            OnClick = BotaoEditarPlanilhaClick
+            OnClick = BotaoEditarTabelaClick
           end
           object BotaoExcluirPlanilha: TButton
             Left = 120
@@ -114,9 +114,9 @@ object ViewPrincipal: TViewPrincipal
             Top = 2
             Width = 150
             Height = 25
-            Caption = 'Criar Planilha'
+            Caption = 'Criar Tabela'
             TabOrder = 2
-            OnClick = BotaoCriarPlanilhaClick
+            OnClick = BotaoCriarTabelaClick
           end
         end
       end

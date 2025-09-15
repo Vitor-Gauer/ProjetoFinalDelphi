@@ -47,7 +47,7 @@ begin
 
   // Chama o XMLService para ler e parsear o arquivo
   // O XMLService preencherá o DTO com os dados (título, ID, etc.)
-  FXMLService.LerArquivoXML(ATabelaDTO); // Assumindo que LerArquivoXML modifica o DTO passado
+//  FXMLService.LerArquivoXML(ATabelaDTO); // Assumindo que LerArquivoXML modifica o DTO passado
 
   Result := ATabelaDTO; // Retorna o DTO atualizado
 end;
@@ -63,7 +63,7 @@ begin
   // Outras validações: tamanho do título, caracteres especiais, etc.
 
   // Chama o XMLService para salvar o DTO em XML
-  FXMLService.SalvarArquivoXML(ATabelaDTO); // Assumindo que SalvarArquivoXML usa os dados do DTO
+//  FXMLService.SalvarArquivoXML(ATabelaDTO); // Assumindo que SalvarArquivoXML usa os dados do DTO
 end;
 
 end.

@@ -4,9 +4,7 @@ interface
 
 uses
   System.Classes, System.SysUtils, Vcl.Forms, Vcl.Controls,
-  UPlanilhaDTO, URelatorioDTO,
-  UViewEditorTabela, UViewEditorRelatorio, UViewGerenciadorDados, UViewCompartilhamento,
-  UViewModalTermos, UViewLogin, UViewPrincipal;
+  UPlanilhaDTO, URelatorioDTO, UTabelaDTO;
 
 type
   TViewController = class
@@ -17,17 +15,19 @@ type
     class var FTempLoginSucesso: Boolean;
     class procedure TempOnLoginHandler(const AUsuario, ASenha: string; AModoPublico: Boolean);
     class procedure TempOnCancelarLoginHandler;
+
   public
     class property Instance: TViewController read GetInstance;
 
     // Métodos para mostrar as views
+    procedure IniciarAplicacao;
     procedure ShowViewLogin(AModal: Boolean = False);
     procedure ShowViewPrincipalModal(AUsuarioNome: string);
     procedure ShowViewPrincipal(AUsuarioNome: string);
     function ShowViewModalTermos: Boolean;
     procedure ShowViewEditorTabela(ATabela: TTabelaDTO = nil);
     procedure ShowViewEditorRelatorio(ARelatorio: TRelatorioDTO = nil; APlanilhaBase: TPlanilhaDTO = nil);
-    procedure ShowViewVisualizadorRelatorio(ARelatorio: TRelatorioDTO);
+    //procedure ShowViewVisualizadorRelatorio2(ARelatorio: TRelatorioDTO = nil);
     procedure ShowViewGerenciadorDados;
     procedure ShowViewCompartilhamento;
     procedure CloseViewPrincipal;
@@ -37,6 +37,9 @@ type
 implementation
 
 { TViewController }
+uses
+  UViewEditorTabela, UViewEditorRelatorio, UViewGerenciadorDados, UViewCompartilhamento,
+  UViewModalTermos, UViewLogin, UViewPrincipal, UViewVisualizadorRelatorio;
 
 class function TViewController.GetInstance: TViewController;
 begin
@@ -170,17 +173,17 @@ procedure TViewController.ShowViewEditorRelatorio(ARelatorio: TRelatorioDTO; APl
 var
   LView: TViewEditorRelatorio;
 begin
-  LView := TViewEditorRelatorio.Create(Application, ARelatorio, APlanilhaBase);
+  LView := TViewEditorRelatorio.Create(Application){, ARelatorio, APlanilhaBase)};
   LView.Show;
 end;
 
-procedure TViewController.ShowViewVisualizadorRelatorio(ARelatorio: TRelatorioDTO);
-var
-  LView: TViewVisualizadorRelatorio;
-begin
-  LView := TViewVisualizadorRelatorio.Create(Application, ARelatorio);
-  LView.Show;
-end;
+//procedure ShowViewVisualizadorRelatorio2(ARelatorio: TRelatorioDTO);
+//var
+//  LView:TViewVisualizadorRelatorio;
+//  begin
+//    LView := TViewVisualizadorRelatorio.Create(Application, ARelatorio);
+//    LView.Show;
+//  end;
 
 procedure TViewController.ShowViewGerenciadorDados;
 var

@@ -6,10 +6,10 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.ExtCtrls, Vcl.Grids, Vcl.DBGrids,
   Data.DB, Vcl.StdCtrls, Vcl.Menus,
-  UPlanilhaDTO, URelatorioDTO, UViewLogin, UShowViewController;  // UViewLogin para o "Bem -vindo!"
+  UPlanilhaDTO, URelatorioDTO, UShowViewController;  // UViewLogin para o "Bem -vindo!"
 
 type
-  TNavegarParaEditorPlanilhaEvent = procedure(const APlanilha: TPlanilhaDTO) of object;
+  TNavegarParaEditorTabelaEvent = procedure(const APlanilha: TPlanilhaDTO) of object;
   TNavegarParaNovoRelatorioComBaseEvent = procedure(const APlanilhaBase: TPlanilhaDTO) of object;
   TNavegarParaEditorRelatorioEvent = procedure(const ARelatorio: TRelatorioDTO) of object;
   TNavegarParaVisualizadorRelatorioEvent = procedure(const ARelatorio: TRelatorioDTO) of object;
@@ -56,17 +56,17 @@ type
     procedure MenuItemSairClick(Sender: TObject);
     procedure MenuItemGerenciarDadosClick(Sender: TObject);
     procedure MenuItemCompartilharClick(Sender: TObject);
-    procedure BotaoEditarPlanilhaClick(Sender: TObject);
+    procedure BotaoEditarTabelaClick(Sender: TObject);
     procedure BotaoExcluirPlanilhaClick(Sender: TObject);
-    procedure BotaoCriarPlanilhaClick(Sender: TObject);
+    procedure BotaoCriarTabelaClick(Sender: TObject);
     procedure BotaoEditarRelatorioClick(Sender: TObject);
     procedure BotaoExcluirRelatorioClick(Sender: TObject);
     procedure BotaoVisualizarRelatorioClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
-    FPlanilhaSelecionada: TPlanilhaDTO;
+    FTabelaSelecionada: TPlanilhaDTO;
     FRelatorioSelecionado: TRelatorioDTO;
-    FOnNavegarParaEditorPlanilha: TNavegarParaEditorPlanilhaEvent;
+    FOnNavegarParaEditorTabela: TNavegarParaEditorTabelaEvent;
     FOnNavegarParaNovoRelatorioComBase: TNavegarParaNovoRelatorioComBaseEvent;
     FOnNavegarParaEditorRelatorio: TNavegarParaEditorRelatorioEvent;
     FOnNavegarParaVisualizadorRelatorio: TNavegarParaVisualizadorRelatorioEvent;
@@ -77,7 +77,7 @@ type
     procedure AtualizarExibicaoRelatorio;
   public
     procedure DefinirNomeUsuario(const ANome: string);
-    property OnNavegarParaEditorPlanilha: TNavegarParaEditorPlanilhaEvent read FOnNavegarParaEditorPlanilha write FOnNavegarParaEditorPlanilha;
+    property OnNavegarParaEditorTabela: TNavegarParaEditorTabelaEvent read FOnNavegarParaEditorTabela write FOnNavegarParaEditorTabela;
     property OnNavegarParaNovoRelatorioComBase: TNavegarParaNovoRelatorioComBaseEvent read FOnNavegarParaNovoRelatorioComBase write FOnNavegarParaNovoRelatorioComBase;
     property OnNavegarParaEditorRelatorio: TNavegarParaEditorRelatorioEvent read FOnNavegarParaEditorRelatorio write FOnNavegarParaEditorRelatorio;
     property OnNavegarParaVisualizadorRelatorio: TNavegarParaVisualizadorRelatorioEvent read FOnNavegarParaVisualizadorRelatorio write FOnNavegarParaVisualizadorRelatorio;
@@ -123,18 +123,18 @@ begin
     FOnAbrirCompartilhamento;
 end;
 
-procedure TViewPrincipal.BotaoEditarPlanilhaClick(Sender: TObject);
+procedure TViewPrincipal.BotaoEditarTabelaClick(Sender: TObject);
 begin
-   if Assigned(FOnNavegarParaEditorPlanilha) then
-     FOnNavegarParaEditorPlanilha(FPlanilhaSelecionada);
-     TViewController.Instance.ShowViewEditorPlanilha(FPlanilhaSelecionada);
+   if Assigned(FOnNavegarParaEditorTabela) then
+     OnNavegarParaEditorTabela(FTabelaSelecionada);
+     TViewController.Instance.ShowViewEditorTabela;
 end;
 
 procedure TViewPrincipal.BotaoExcluirPlanilhaClick(Sender: TObject);
 begin
-  if Assigned(FPlanilhaSelecionada) then
+  if Assigned(FTabelaSelecionada) then
   begin
-    if MessageDlg('Tem certeza que deseja excluir a planilha "' + FPlanilhaSelecionada.Titulo + '"?',
+    if MessageDlg('Tem certeza que deseja excluir a planilha "' + FTabelaSelecionada.Titulo + '"?',
       mtConfirmation, [mbYes, mbNo], 0) = mrYes then
     begin
       // TODO: Chamar serviço para excluir a planilha
@@ -142,12 +142,12 @@ begin
   end;
 end;
 
-procedure TViewPrincipal.BotaoCriarPlanilhaClick(Sender: TObject);
+procedure TViewPrincipal.BotaoCriarTabelaClick(Sender: TObject);
 begin
-  if Assigned(FPlanilhaSelecionada) then
+  if Assigned(FTabelaSelecionada) then
   begin
-     if Assigned(FOnNavegarParaNovoRelatorioComBase) then
-       FOnNavegarParaNovoRelatorioComBase(FPlanilhaSelecionada);
+     if Assigned(OnNavegarParaNovoRelatorioComBase) then
+       OnNavegarParaNovoRelatorioComBase(FTabelaSelecionada);
   end;
 end;
 
@@ -174,7 +174,7 @@ begin
   if Assigned(FRelatorioSelecionado) then
   begin
      if Assigned(FOnNavegarParaVisualizadorRelatorio) then
-       FOnNavegarParaVisualizadorRelatorio(FRelatorioSelecionado);
+       OnNavegarParaVisualizadorRelatorio(FRelatorioSelecionado);
   end;
 end;
 

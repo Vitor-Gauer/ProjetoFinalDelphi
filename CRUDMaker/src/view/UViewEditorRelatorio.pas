@@ -63,6 +63,11 @@ destructor TViewEditorRelatorio.Destroy;
 begin
   if not FSendoEditada and Assigned(FRelatorio) then
     FRelatorio.Free;
+//    Mensagem de else if a ser implementada (não tem RelatorioSelecionado)
+//    else if
+//      MessageDlg('Tem certeza que deseja sair do editor do relatorio: "' +
+//      FRelatorioSelecionado.Titulo + '"?',
+//      mtConfirmation, [mbYes, mbNo], 0) = mrYes then
   inherited;
 end;
 

@@ -65,6 +65,7 @@ object ViewLogin: TViewLogin
       Top = 21
       Width = 289
       Height = 23
+      Enabled = False
       TabOrder = 0
     end
     object EditarSenha: TEdit
@@ -72,6 +73,7 @@ object ViewLogin: TViewLogin
       Top = 61
       Width = 289
       Height = 23
+      Enabled = False
       PasswordChar = '*'
       TabOrder = 1
     end

@@ -32,7 +32,7 @@ type
     FOnSolicitarSalvar: TSolicitarSalvarTabelaEvent;
     FOnSolicitarCancelar: TSolicitarCancelarEdicaoEvent;
 
-    procedure CarregarTabelaNaInterface;
+    // procedure CarregarTabelaNaInterface;
     procedure AtualizarTabelaDoInterface;
     procedure ConfigurarClientDataSet;
     procedure SalvarClientDataSetParaArquivo;

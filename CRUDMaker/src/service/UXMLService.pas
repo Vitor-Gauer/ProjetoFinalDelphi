@@ -313,7 +313,7 @@ begin
     ProcInst := XMLDoc.CreateNode('xml-stylesheet type="text/css" href="estilo.css"', ntProcessingInstr);
     // Insere a instrução de processamento como o primeiro nó do documento
     // O método InsertBefore funciona com o DocumentElement (RootNode)
-    XMLDoc.DocumentElement.Parent.InsertBefore(ProcInst, XMLDoc.DocumentElement);
+//    XMLDoc.DocumentElement.Parent.InsertBefore(ProcInst, XMLDoc.DocumentElement);
 
 
     // <Redor> externo
