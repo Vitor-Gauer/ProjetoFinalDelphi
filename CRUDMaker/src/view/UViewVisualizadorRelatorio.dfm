@@ -19,6 +19,9 @@ object ViewVisualizadorRelatorio: TViewVisualizadorRelatorio
     Height = 50
     Align = alTop
     TabOrder = 0
+    DesignSize = (
+      800
+      50)
     object RotuloNomeRelatorio: TLabel
       Left = 10
       Top = 15
@@ -31,6 +34,7 @@ object ViewVisualizadorRelatorio: TViewVisualizadorRelatorio
       Top = 10
       Width = 100
       Height = 30
+      Anchors = [akTop, akRight]
       Caption = 'Imprimir'
       TabOrder = 0
     end

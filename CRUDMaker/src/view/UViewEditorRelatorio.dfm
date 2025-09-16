@@ -19,6 +19,9 @@ object ViewEditorRelatorio: TViewEditorRelatorio
     Height = 100
     Align = alTop
     TabOrder = 0
+    DesignSize = (
+      800
+      100)
     object RotuloTituloRelatorio: TLabel
       Left = 10
       Top = 15
@@ -36,8 +39,9 @@ object ViewEditorRelatorio: TViewEditorRelatorio
     object EditarTituloRelatorio: TEdit
       Left = 50
       Top = 12
-      Width = 300
+      Width = 520
       Height = 23
+      Anchors = [akLeft, akTop, akRight]
       TabOrder = 0
     end
     object ComboBoxTipoRelatorio: TComboBox
@@ -46,6 +50,7 @@ object ViewEditorRelatorio: TViewEditorRelatorio
       Width = 200
       Height = 23
       Style = csDropDownList
+      Anchors = [akLeft, akTop]
       TabOrder = 1
     end
     object BotaoSalvarRelatorio: TButton
@@ -53,6 +58,7 @@ object ViewEditorRelatorio: TViewEditorRelatorio
       Top = 35
       Width = 100
       Height = 30
+      Anchors = [akTop, akRight]
       Caption = 'Salvar'
       TabOrder = 2
     end
@@ -61,6 +67,7 @@ object ViewEditorRelatorio: TViewEditorRelatorio
       Top = 35
       Width = 100
       Height = 30
+      Anchors = [akTop, akRight]
       Caption = 'Cancelar'
       TabOrder = 3
     end

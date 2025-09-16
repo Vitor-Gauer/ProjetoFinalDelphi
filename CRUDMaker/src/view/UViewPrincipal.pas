@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.ExtCtrls, Vcl.Grids, Vcl.DBGrids,
   Data.DB, Vcl.StdCtrls, Vcl.Menus,
-  UPlanilhaDTO, URelatorioDTO, UShowViewController;  // UViewLogin para o "Bem -vindo!"
+  UPlanilhaDTO, URelatorioDTO, UShowViewController;
 
 type
   TNavegarParaEditorTabelaEvent = procedure(const APlanilha: TPlanilhaDTO) of object;
@@ -52,7 +52,7 @@ type
     AbaAssociacoes: TTabSheet;
     GradeAssociacoes: TDBGrid;
     BarraStatusPrincipal: TStatusBar;
-    Button1: TButton;
+    BotaoCriarRelatorio: TButton;
     procedure MenuItemSairClick(Sender: TObject);
     procedure MenuItemGerenciarDadosClick(Sender: TObject);
     procedure MenuItemCompartilharClick(Sender: TObject);
@@ -155,6 +155,7 @@ procedure TViewPrincipal.BotaoEditarRelatorioClick(Sender: TObject);
 begin
   if Assigned(FOnNavegarParaEditorRelatorio) then
     FOnNavegarParaEditorRelatorio(FRelatorioSelecionado);
+    TViewController.Instance.ShowViewEditorRelatorio
 end;
 
 procedure TViewPrincipal.BotaoExcluirRelatorioClick(Sender: TObject);
@@ -171,11 +172,9 @@ end;
 
 procedure TViewPrincipal.BotaoVisualizarRelatorioClick(Sender: TObject);
 begin
-  if Assigned(FRelatorioSelecionado) then
-  begin
-     if Assigned(FOnNavegarParaVisualizadorRelatorio) then
-       OnNavegarParaVisualizadorRelatorio(FRelatorioSelecionado);
-  end;
+    if Assigned(FOnNavegarParaVisualizadorRelatorio) then
+      FOnNavegarParaVisualizadorRelatorio(FRelatorioSelecionado);
+      TViewController.Instance.ShowViewVisualizadorRelatorio(FRelatorioSelecionado);
 end;
 
 procedure TViewPrincipal.AtualizarExibicaoPlanilha;

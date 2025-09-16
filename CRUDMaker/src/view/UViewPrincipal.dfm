@@ -32,7 +32,7 @@ object ViewPrincipal: TViewPrincipal
     Top = 60
     Width = 900
     Height = 468
-    ActivePage = AbaPlanilhas
+    ActivePage = AbaRelatorios
     Align = alClient
     TabOrder = 0
     object AbaPlanilhas: TTabSheet
@@ -92,11 +92,15 @@ object ViewPrincipal: TViewPrincipal
           Height = 30
           Align = alBottom
           TabOrder = 1
+          DesignSize = (
+            687
+            30)
           object BotaoEditarPlanilha: TButton
             Left = 10
             Top = 2
             Width = 100
             Height = 25
+            Anchors = [akLeft, akTop]
             Caption = 'Editar'
             TabOrder = 0
             OnClick = BotaoEditarTabelaClick
@@ -106,14 +110,17 @@ object ViewPrincipal: TViewPrincipal
             Top = 2
             Width = 100
             Height = 25
+            Anchors = [akLeft, akTop]
             Caption = 'Excluir'
             TabOrder = 1
+            OnClick = BotaoExcluirPlanilhaClick
           end
           object BotaoCriarRelatorioPlanilha: TButton
             Left = 230
             Top = 2
             Width = 150
             Height = 25
+            Anchors = [akLeft, akTop]
             Caption = 'Criar Tabela'
             TabOrder = 2
             OnClick = BotaoCriarTabelaClick
@@ -170,35 +177,45 @@ object ViewPrincipal: TViewPrincipal
           Height = 30
           Align = alBottom
           TabOrder = 1
+          DesignSize = (
+            687
+            30)
           object BotaoEditarRelatorio: TButton
             Left = 10
             Top = 2
             Width = 100
             Height = 25
+            Anchors = [akLeft, akTop]
             Caption = 'Editar'
             TabOrder = 0
+            OnClick = BotaoEditarRelatorioClick
           end
           object BotaoExcluirRelatorio: TButton
             Left = 120
             Top = 2
             Width = 100
             Height = 25
+            Anchors = [akLeft, akTop]
             Caption = 'Excluir'
             TabOrder = 1
+            OnClick = BotaoExcluirRelatorioClick
           end
           object BotaoVisualizarRelatorio: TButton
             Left = 230
             Top = 2
             Width = 100
             Height = 25
+            Anchors = [akLeft, akTop]
             Caption = 'Visualizar'
             TabOrder = 2
+            OnClick = BotaoVisualizarRelatorioClick
           end
-          object Button1: TButton
+          object BotaoCriarRelatorio: TButton
             Left = 340
             Top = 2
             Width = 150
             Height = 25
+            Anchors = [akLeft, akTop]
             Caption = 'Criar Relat'#243'rio'
             TabOrder = 3
           end

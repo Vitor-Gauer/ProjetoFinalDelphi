@@ -3,7 +3,7 @@
 interface
 
 uses
-  System.Classes, System.SysUtils, Vcl.Forms, Vcl.Controls,
+  System.Classes, System.SysUtils, Vcl.Forms, Vcl.Controls, Vcl.Dialogs,
   UPlanilhaDTO, URelatorioDTO, UTabelaDTO;
 
 type
@@ -27,7 +27,7 @@ type
     function ShowViewModalTermos: Boolean;
     procedure ShowViewEditorTabela(ATabela: TTabelaDTO = nil);
     procedure ShowViewEditorRelatorio(ARelatorio: TRelatorioDTO = nil; APlanilhaBase: TPlanilhaDTO = nil);
-    //procedure ShowViewVisualizadorRelatorio2(ARelatorio: TRelatorioDTO = nil);
+    procedure ShowViewVisualizadorRelatorio(ARelatorio: TRelatorioDTO);
     procedure ShowViewGerenciadorDados;
     procedure ShowViewCompartilhamento;
     procedure CloseViewPrincipal;
@@ -173,17 +173,23 @@ procedure TViewController.ShowViewEditorRelatorio(ARelatorio: TRelatorioDTO; APl
 var
   LView: TViewEditorRelatorio;
 begin
-  LView := TViewEditorRelatorio.Create(Application){, ARelatorio, APlanilhaBase)};
+  LView := TViewEditorRelatorio.Create(Application, ARelatorio); // Passa os DTOs
   LView.Show;
 end;
 
-//procedure ShowViewVisualizadorRelatorio2(ARelatorio: TRelatorioDTO);
-//var
-//  LView:TViewVisualizadorRelatorio;
-//  begin
-//    LView := TViewVisualizadorRelatorio.Create(Application, ARelatorio);
-//    LView.Show;
-//  end;
+procedure TViewController.ShowViewVisualizadorRelatorio(ARelatorio: TRelatorioDTO);
+var
+  LView: TViewVisualizadorRelatorio;
+begin
+  LView := TViewVisualizadorRelatorio.Create(Application, ARelatorio);
+  try
+    ShowMessage('Criando formulário: ' + LView.Caption);
+    LView.Show;
+  except
+    LView.Free;
+    raise;
+  end;
+end;
 
 procedure TViewController.ShowViewGerenciadorDados;
 var

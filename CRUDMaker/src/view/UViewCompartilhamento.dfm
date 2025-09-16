@@ -34,6 +34,7 @@ object ViewCompartilhamento: TViewCompartilhamento
           Top = 10
           Width = 150
           Height = 17
+          Anchors = [akLeft, akTop]
           Caption = 'Selecionar Todas'
           TabOrder = 0
         end
@@ -57,9 +58,10 @@ object ViewCompartilhamento: TViewCompartilhamento
         TabOrder = 2
         object BotaoExportarPlanilhas: TButton
           Left = 10
-          Top = 2
+          Top = 3
           Width = 150
           Height = 25
+          Anchors = [akLeft, akTop]
           Caption = 'Exportar Selecionadas'
           TabOrder = 0
         end
@@ -80,6 +82,7 @@ object ViewCompartilhamento: TViewCompartilhamento
           Top = 10
           Width = 150
           Height = 17
+          Anchors = [akLeft, akTop]
           Caption = 'Selecionar Todos'
           TabOrder = 0
         end
@@ -88,7 +91,7 @@ object ViewCompartilhamento: TViewCompartilhamento
         Left = 0
         Top = 40
         Width = 792
-        Height = 367
+        Height = 378
         Align = alClient
         ItemHeight = 15
         MultiSelect = True
@@ -101,12 +104,12 @@ object ViewCompartilhamento: TViewCompartilhamento
         Height = 30
         Align = alBottom
         TabOrder = 2
-        ExplicitTop = 407
         object BotaoExportarRelatorios: TButton
           Left = 10
           Top = 2
           Width = 150
           Height = 25
+          Anchors = [akLeft, akTop]
           Caption = 'Exportar Selecionados'
           TabOrder = 0
         end
@@ -127,6 +130,7 @@ object ViewCompartilhamento: TViewCompartilhamento
           Top = 10
           Width = 150
           Height = 17
+          Anchors = [akLeft, akTop]
           Caption = 'Selecionar Todas'
           TabOrder = 0
         end
@@ -135,7 +139,7 @@ object ViewCompartilhamento: TViewCompartilhamento
         Left = 0
         Top = 40
         Width = 792
-        Height = 367
+        Height = 378
         Align = alClient
         ItemHeight = 15
         MultiSelect = True
@@ -148,12 +152,12 @@ object ViewCompartilhamento: TViewCompartilhamento
         Height = 30
         Align = alBottom
         TabOrder = 2
-        ExplicitTop = 407
         object BotaoExportarAssociacoes: TButton
           Left = 10
           Top = 2
           Width = 150
           Height = 25
+          Anchors = [akLeft, akTop]
           Caption = 'Exportar Selecionadas'
           TabOrder = 0
         end

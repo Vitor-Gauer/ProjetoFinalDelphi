@@ -19,7 +19,7 @@ object ViewModalTermos: TViewModalTermos
     Top = 0
     Width = 600
     Height = 350
-    Align = alTop
+    Align = alClient
     ReadOnly = True
     ScrollBars = ssVertical
     TabOrder = 0
@@ -29,13 +29,17 @@ object ViewModalTermos: TViewModalTermos
     Top = 350
     Width = 600
     Height = 50
-    Align = alClient
+    Align = alBottom
     TabOrder = 1
+    DesignSize = (
+      600
+      50)
     object BotaoAceitar: TButton
       Left = 150
       Top = 10
       Width = 120
       Height = 30
+      Anchors = [akTop]
       Caption = 'Aceitar'
       Default = True
       TabOrder = 0
@@ -46,6 +50,7 @@ object ViewModalTermos: TViewModalTermos
       Top = 10
       Width = 120
       Height = 30
+      Anchors = [akTop]
       Caption = 'Recusar'
       TabOrder = 1
       OnClick = BotaoRecusarClick

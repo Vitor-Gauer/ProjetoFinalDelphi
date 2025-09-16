@@ -16,13 +16,15 @@ type
     PainelVisualizadorRodape: TPanel;
     BarraStatusVisualizador: TStatusBar;
     procedure BotaoImprimirClick(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
+    //procedure FormCreate(Sender: TObject);
   private
-    FRelatorio: TRelatorioDTO;
-    procedure ExibirRelatorioNaInterface;
   public
-    constructor Create(AOwner: TComponent; ARelatorio: TRelatorioDTO); reintroduce;
+    FRelatorio: TRelatorioDTO;
+    //procedure ExibirRelatorioNaInterface;
+    constructor Create(AOwner: TComponent); reintroduce; overload;
+    constructor Create(AOwner: TComponent; ARelatorio: TRelatorioDTO); reintroduce; overload;
     destructor Destroy; override;
+    property Relatorio: TRelatorioDTO read FRelatorio write FRelatorio;
   end;
 
 var
@@ -32,37 +34,31 @@ implementation
 
 {$R *.dfm}
 
+constructor TViewVisualizadorRelatorio.Create(AOwner: TComponent);
+begin
+  Create(AOwner);
+  FRelatorio := nil;
+end;
+
 constructor TViewVisualizadorRelatorio.Create(AOwner: TComponent; ARelatorio: TRelatorioDTO);
 begin
   inherited Create(AOwner);
-  FRelatorio := ARelatorio;
+  FRelatorio := nil;
 end;
 
 destructor TViewVisualizadorRelatorio.Destroy;
 begin
+  if Assigned(FRelatorio) then
+    FRelatorio.Free;
   inherited;
-end;
-
-procedure TViewVisualizadorRelatorio.FormCreate(Sender: TObject);
-begin
-  if Assigned(FRelatorio) then
-  begin
-    ExibirRelatorioNaInterface;
-  end;
-end;
-
-procedure TViewVisualizadorRelatorio.ExibirRelatorioNaInterface;
-begin
-  if Assigned(FRelatorio) then
-  begin
-    RotuloNomeRelatorio.Caption := FRelatorio.Titulo;
-    EditorVisualizador.Lines.Text := 'Conteúdo do relatório: ' + FRelatorio.Conteudo;
-  end;
 end;
 
 procedure TViewVisualizadorRelatorio.BotaoImprimirClick(Sender: TObject);
 begin
-  ShowMessage('Funcionalidade de impressão acionada.');
+  if Assigned(FRelatorio) then
+    ShowMessage('Funcionalidade de impressão acionada para: ' + FRelatorio.Titulo + '.')
+  else
+    ShowMessage('Nenhum relatório disponível para imprimir.');
 end;
 
 end.

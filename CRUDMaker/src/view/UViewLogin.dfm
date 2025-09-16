@@ -20,6 +20,9 @@ object ViewLogin: TViewLogin
     Height = 220
     Align = alClient
     TabOrder = 0
+    DesignSize = (
+      400
+      220)
     object RotuloUsuario: TLabel
       Left = 24
       Top = 24
@@ -39,6 +42,7 @@ object ViewLogin: TViewLogin
       Top = 104
       Width = 353
       Height = 57
+      Anchors = [akLeft, akTop, akRight]
       Caption = ' Modo de Opera'#231#227'o '
       TabOrder = 4
       object RadioButtonPublico: TRadioButton
@@ -65,6 +69,7 @@ object ViewLogin: TViewLogin
       Top = 21
       Width = 289
       Height = 23
+      Anchors = [akLeft, akTop, akRight]
       Enabled = False
       TabOrder = 0
     end
@@ -73,6 +78,7 @@ object ViewLogin: TViewLogin
       Top = 61
       Width = 289
       Height = 23
+      Anchors = [akLeft, akTop, akRight]
       Enabled = False
       PasswordChar = '*'
       TabOrder = 1
@@ -82,6 +88,7 @@ object ViewLogin: TViewLogin
       Top = 176
       Width = 75
       Height = 25
+      Anchors = [akLeft, akBottom]
       Caption = 'Entrar'
       Default = True
       TabOrder = 2
@@ -92,6 +99,7 @@ object ViewLogin: TViewLogin
       Top = 176
       Width = 75
       Height = 25
+      Anchors = [akLeft, akBottom]
       Caption = 'Cancelar'
       TabOrder = 3
       OnClick = BotaoCancelarClick

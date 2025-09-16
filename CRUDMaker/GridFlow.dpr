@@ -47,6 +47,5 @@ begin
 
   Application.Run;
 
-  // Limpar o singleton ViewController ao final
   TViewController.FreeInstance;
 end.

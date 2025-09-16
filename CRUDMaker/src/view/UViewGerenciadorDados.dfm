@@ -34,6 +34,7 @@ object ViewGerenciadorDados: TViewGerenciadorDados
           Top = 5
           Width = 120
           Height = 30
+          Anchors = [akLeft, akTop]
           Caption = 'Nova Planilha'
           TabOrder = 0
         end
@@ -67,6 +68,7 @@ object ViewGerenciadorDados: TViewGerenciadorDados
           Top = 5
           Width = 120
           Height = 30
+          Anchors = [akLeft, akTop]
           Caption = 'Novo Relat'#243'rio'
           TabOrder = 0
         end
@@ -75,7 +77,7 @@ object ViewGerenciadorDados: TViewGerenciadorDados
         Left = 0
         Top = 40
         Width = 792
-        Height = 397
+        Height = 408
         Align = alClient
         TabOrder = 1
         TitleFont.Charset = DEFAULT_CHARSET
@@ -100,6 +102,7 @@ object ViewGerenciadorDados: TViewGerenciadorDados
           Top = 5
           Width = 150
           Height = 30
+          Anchors = [akLeft, akTop]
           Caption = 'Nova Associa'#231#227'o'
           TabOrder = 0
         end
@@ -108,7 +111,7 @@ object ViewGerenciadorDados: TViewGerenciadorDados
         Left = 0
         Top = 40
         Width = 792
-        Height = 397
+        Height = 408
         Align = alClient
         TabOrder = 1
         TitleFont.Charset = DEFAULT_CHARSET

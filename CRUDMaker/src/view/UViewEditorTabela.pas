@@ -8,14 +8,9 @@ uses
   Vcl.DBCtrls, Data.DB, Data.FMTBcd, Datasnap.DBClient, UTabelaDTO, UEditorTabelaController, Math;
 
 type
-  /// Tipo de evento para solicitar o salvamento de uma tabela.
-  // <param name="ATabela"> DTO da tabela a ser salva.</param>
   TEventoSolicitarSalvarTabela = procedure(const ATabela: TTabelaDTO) of object;
-
-  /// Tipo de evento para solicitar o cancelamento da edição.
   TEventoSolicitarCancelarEdicao = procedure of object;
 
-  /// Formulário para editar uma tabela.
   TViewEditorTabela = class(TForm)
     PainelEditorTopo: TPanel;
     RotuloTituloTabela: TLabel;
@@ -27,27 +22,10 @@ type
     BarraStatusEditor: TStatusBar;
     ClientDataSetEditor: TClientDataSet;
     DataSourceEditor: TDataSource;
-    /// Evento acionado ao clicar no botão Salvar.
-    // <param name="Sender"> Objeto que disparou o evento.</param>
     procedure AoClicarBotaoSalvar(Sender: TObject);
-
-    /// Evento acionado ao clicar no botão Cancelar.
-    // <param name="Sender"> Objeto que disparou o evento.</param>
     procedure AoClicarBotaoCancelar(Sender: TObject);
-
-    /// Evento acionado ao criar o formulário.
-    // <param name="Sender"> Objeto que disparou o evento.</param>
     procedure AoCriarFormulario(Sender: TObject);
-
-    /// Evento acionado ao mover o mouse sobre o DBGrid.
-    // <param name="Sender"> Objeto que disparou o evento.</param>
-    // <param name="Shift"> Estado das teclas Shift.</param>
-    // <param name="X"> Coordenada X do mouse.</param>
-    // <param name="Y"> Coordenada Y do mouse.</param>
     procedure DBGridEditorMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
-
-    /// Evento acionado ao sair do DBGrid.
-    // <param name="Sender"> Objeto que disparou o evento.</param>
     procedure DBGridEditorExit(Sender: TObject);
   private
     FTabela: TTabelaDTO;
@@ -55,39 +33,17 @@ type
     FController: TEditorTabelaController;
     FEventoSalvar: TEventoSolicitarSalvarTabela;
     FEventoCancelar: TEventoSolicitarCancelarEdicao;
-
-    /// Atualiza os dados do DTO com base nos valores da interface.
     procedure AtualizarTabelaDoInterface;
-
-    /// Configura o ClientDataSet com 200 colunas e 2000 linhas.
     procedure ConfigurarClientDataSet;
-
-    /// Carrega os dados de um arquivo XML para o ClientDataSet.
     procedure CarregarClientDataSetDeArquivo;
-
-    /// Executa o processo de salvamento com confirmação do usuário.
     procedure ExecutarSalvarComConfirmacao;
   public
-    /// Construtor padrão.
-    // <param name="AOwner"> Componente proprietário.</param>
     constructor Create(AOwner: TComponent); reintroduce; overload;
-
-    /// Construtor com DTO de tabela.
-    // <param name="AOwner"> Componente proprietário.</param>
-    // <param name="ATabela"> DTO da tabela a ser editada.</param>
     constructor Create(AOwner: TComponent; ATabela: TTabelaDTO); reintroduce; overload;
-
-    /// Destrutor.
     destructor Destroy; override;
-
-    /// Evento disparado quando o salvamento é solicitado.
     property EventoSalvar: TEventoSolicitarSalvarTabela read FEventoSalvar write FEventoSalvar;
-
-    /// Evento disparado quando o cancelamento é solicitado.
     property EventoCancelar: TEventoSolicitarCancelarEdicao read FEventoCancelar write FEventoCancelar;
   end;
-
-  /// Formulário de diálogo para confirmar o salvamento com timer.
   TSalvarConfirmacaoDialog = class(TForm)
   private
     FTimer: TTimer;
@@ -95,22 +51,11 @@ type
     FLabel: TLabel;
     FYesButton: TButton;
     FNoButton: TButton;
-    /// Evento do timer para atualizar a contagem regressiva.
-    // <param name="Sender"> Objeto que disparou o evento.</param>
     procedure TimerTimer(Sender: TObject);
-    /// Evento acionado ao clicar no botão "Sim".
-    // <param name="Sender"> Objeto que disparou o evento.</param>
     procedure SalvarVerdadeiroClick(Sender: TObject);
-    /// Evento acionado ao clicar no botão "Não".
-    // <param name="Sender"> Objeto que disparou o evento.</param>
     procedure SalvarFalsoClick(Sender: TObject);
   public
-    /// Construtor do diálogo.
-    // <param name="AOwner"> Componente proprietário.</param>
-    // <param name="ATituloTabela"> Título da tabela a ser salva.</param>
     constructor Create(AOwner: TComponent; const ATituloTabela: string); reintroduce;
-    /// Exibe o diálogo e retorna o resultado.
-    // <returns> True se o usuário confirmou, False caso contrário.</returns>
     function Execute: Boolean;
   end;
 
@@ -150,7 +95,7 @@ begin
   ConfigurarClientDataSet;
   if Assigned(FTabela) and (FTabela.CaminhoArquivoXML <> '') then
   begin
-    // O DTO tem um caminho, então vamos carregar os dados
+    // O DTO tem um caminho, então carregue os dados
     CarregarClientDataSetDeArquivo;
   end
   else
@@ -169,14 +114,14 @@ var
   FieldDef: TFieldDef;
 begin
   ClientDataSetEditor.Close;
-  ClientDataSetEditor.FieldDefs.Clear;
+  ClientDataSetEditor.FieldDefs.Clear; // Limpa definições anteriores
 
   // Cria 200 campos (colunas)
   for i := 1 to 200 do
   begin
-    FieldDef := ClientDataSetEditor.FieldDefs.AddFieldDef;
-    FieldDef.Name := 'Coluna' + IntToStr(i);
-    FieldDef.DataType := ftString;
+    FieldDef := ClientDataSetEditor.FieldDefs.AddFieldDef; // Adiciona nova definição de campo
+    FieldDef.Name := 'Coluna' + IntToStr(i); // Nome do campo
+    FieldDef.DataType := ftString; // Tipo de dado string
     FieldDef.Size := 300; // Limite de 300 caracteres por campo
   end;
 
@@ -184,25 +129,36 @@ begin
   ClientDataSetEditor.Open;
 
   // Insere 2000 registros (linhas)
-  ClientDataSetEditor.DisableControls; // Otimiza inserção
+  ClientDataSetEditor.DisableControls; // Otimiza inserção porque não atualiza a UI a cada inserção
   try
-    for i := 1 to 2000 do
+    for i := 1 to 2000 do // i controla o número do registro (linha)
     begin
-      ClientDataSetEditor.Append;
-      ClientDataSetEditor.Post;
+      ClientDataSetEditor.Append; // Inicia um novo registro
+      for j := 1 to 200 do // j controla o número da coluna dentro do registro
+      begin
+        ClientDataSetEditor.FieldByName('Coluna' + IntToStr(j)).AsString := ''; // Inicializa com string vazia
+        // Para ser modificado para valores padrão deve ser feito a seguinte verificação antes disso:
+        // if Assigned(FTabela) and (Length(FTabela.ValoresPadrao) >= j) then
+        //   ClientDataSetEditor.FieldByName('Coluna' + IntToStr(j)).AsString := FTabela.ValoresPadrao[j - 1];
+        // Caso contrário, todos os campos começam vazios
+        // não implementado pois ainda nao tem a funcionalidade de preencher o DTO
+      end;
+      ClientDataSetEditor.Post; // Salva o registro
     end;
   finally
-    ClientDataSetEditor.EnableControls;
+    ClientDataSetEditor.EnableControls; // Reabilita atualizações da UI
   end;
 
   // Posiciona no primeiro registro
   if not ClientDataSetEditor.IsEmpty then
     ClientDataSetEditor.First;
 
-  // Ajusta a largura das colunas no DBGrid (opcional)
-  for i := 0 to Min(DBGridEditor.Columns.Count - 1, 19) do // Ajusta só as primeiras 20
+  // Ajusta a largura das colunas no DBGrid
+  // Mas nao ajusta o limite de caracteres do campo, que permanece 300
+  // O min é para evitar erro caso tenha menos de 20 colunas
+  for i := 0 to Min(DBGridEditor.Columns.Count - 1, 19) do // Ajusta só as primeiras 20, por performance
   begin
-    DBGridEditor.Columns[i].Width := 60; // Ajuste conforme necessário
+    DBGridEditor.Columns[i].Width := 60; // Largura fixa de 60 pixels, suficiente para 20 caracteres
   end;
 end;
 
@@ -275,7 +231,6 @@ end;
 
 procedure TViewEditorTabela.AoClicarBotaoSalvar(Sender: TObject);
 begin
-  // Chama o novo método de salvar com confirmação
   ExecutarSalvarComConfirmacao;
 end;
 
@@ -288,43 +243,44 @@ end;
 
 procedure TViewEditorTabela.AtualizarTabelaDoInterface;
 begin
-  if not Assigned(FTabela) then
+  if not Assigned(FTabela) then // Cria o DTO se não existir
     FTabela := TTabelaDTO.Create;
   FTabela.Titulo := EditarTituloTabela.Text;
-  // Outros campos do DTO, se houver, seriam atualizados aqui
+  // O caminho do arquivo XML é atualizado apenas ao carregar um arquivo
+  // Campo de id que é um hash de 20 caracteres nao implementado
 end;
 
-// --- Adição: Mostrar conteúdo da célula na StatusBar ---
 procedure TViewEditorTabela.DBGridEditorMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
 var
   Coord: TGridCoord;
   ColIndex, RowIndex: Integer;
 begin
-  Coord := DBGridEditor.MouseCoord(X, Y);
-  ColIndex := Coord.X;
-  RowIndex := Coord.Y;
+  Coord := DBGridEditor.MouseCoord(X, Y); // Obtém a coordenada da célula sob o mouse
+  ColIndex := Coord.X; // Coluna (0-based)
+  RowIndex := Coord.Y; // Linha (0-based, 0 é o cabeçalho)
 
-  if (ColIndex >= 0) and (ColIndex < DBGridEditor.Columns.Count) and
-     (RowIndex >= 0) and (RowIndex <= ClientDataSetEditor.RecordCount) and
-     (ClientDataSetEditor.Active) and not (ClientDataSetEditor.IsEmpty) then
+  if (ColIndex >= 0) and (ColIndex < DBGridEditor.Columns.Count) and // se estiver sobre uma coluna válida (ColIndex = 0 é a primeira coluna)
+     (RowIndex >= 0) and (RowIndex <= ClientDataSetEditor.RecordCount) and // se estiver sobre uma linha válida (RowIndex = 0 é o cabeçalho, >0 são dados)
+     (ClientDataSetEditor.Active) and not (ClientDataSetEditor.IsEmpty) then // e se o dataset estiver ativo e não vazio
   begin
     try
       // Verifica se está sobre o cabeçalho ou uma célula de dados
       if RowIndex = 0 then
       begin
          // Se estiver sobre o cabeçalho
-         BarraStatusEditor.SimpleText := Format('Coluna: %s', [DBGridEditor.Columns[ColIndex].Title.Caption]);
+         BarraStatusEditor.SimpleText := Format('Coluna: %s', [DBGridEditor.Columns[ColIndex].Title.Caption]); // %s vem do título da coluna
       end
       else if RowIndex > 0 then
       begin
-         // Mostra linha e coluna
+         // Se estiver sobre uma célula de dados,
+         // Atualiza a StatusBar com a linha e o título da coluna
          BarraStatusEditor.SimpleText := Format('Linha: %d, Coluna: %s', [RowIndex, DBGridEditor.Columns[ColIndex].Title.Caption]);
       end;
     except
       on E: Exception do
         BarraStatusEditor.SimpleText := 'Erro ao ler célula: ' + E.Message;
     end;
-  end else
+  end else // esse else é para quando não está sobre uma célula válida
   begin
     BarraStatusEditor.SimpleText := 'Pronto';
   end;
@@ -334,7 +290,6 @@ procedure TViewEditorTabela.DBGridEditorExit(Sender: TObject);
 begin
   BarraStatusEditor.SimpleText := 'Pronto';
 end;
-// --- Fim da adição ---
 
 { TSalvarConfirmacaoDialog }
 
