@@ -22,8 +22,8 @@ type
     BarraStatusEditor: TStatusBar;
     ClientDataSetEditor: TClientDataSet;
     DataSourceEditor: TDataSource;
-    procedure AoClicarBotaoSalvar(Sender: TObject);
-    procedure AoClicarBotaoCancelar(Sender: TObject);
+    procedure BotaoSalvarClick(Sender: TObject);
+    procedure BotaoCancelarClick(Sender: TObject);
     procedure AoCriarFormulario(Sender: TObject);
     procedure DBGridEditorMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure DBGridEditorExit(Sender: TObject);
@@ -229,12 +229,12 @@ begin
   end;
 end;
 
-procedure TViewEditorTabela.AoClicarBotaoSalvar(Sender: TObject);
+procedure TViewEditorTabela.BotaoSalvarClick(Sender: TObject);
 begin
   ExecutarSalvarComConfirmacao;
 end;
 
-procedure TViewEditorTabela.AoClicarBotaoCancelar(Sender: TObject);
+procedure TViewEditorTabela.BotaoCancelarClick(Sender: TObject);
 begin
   if Assigned(FEventoCancelar) then
     FEventoCancelar;

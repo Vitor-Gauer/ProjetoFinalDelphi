@@ -34,7 +34,6 @@ object ViewCompartilhamento: TViewCompartilhamento
           Top = 10
           Width = 150
           Height = 17
-          Anchors = [akLeft, akTop]
           Caption = 'Selecionar Todas'
           TabOrder = 0
         end
@@ -61,7 +60,6 @@ object ViewCompartilhamento: TViewCompartilhamento
           Top = 3
           Width = 150
           Height = 25
-          Anchors = [akLeft, akTop]
           Caption = 'Exportar Selecionadas'
           TabOrder = 0
         end
@@ -82,7 +80,6 @@ object ViewCompartilhamento: TViewCompartilhamento
           Top = 10
           Width = 150
           Height = 17
-          Anchors = [akLeft, akTop]
           Caption = 'Selecionar Todos'
           TabOrder = 0
         end
@@ -109,7 +106,6 @@ object ViewCompartilhamento: TViewCompartilhamento
           Top = 2
           Width = 150
           Height = 25
-          Anchors = [akLeft, akTop]
           Caption = 'Exportar Selecionados'
           TabOrder = 0
         end
@@ -130,7 +126,6 @@ object ViewCompartilhamento: TViewCompartilhamento
           Top = 10
           Width = 150
           Height = 17
-          Anchors = [akLeft, akTop]
           Caption = 'Selecionar Todas'
           TabOrder = 0
         end
@@ -157,7 +152,6 @@ object ViewCompartilhamento: TViewCompartilhamento
           Top = 2
           Width = 150
           Height = 25
-          Anchors = [akLeft, akTop]
           Caption = 'Exportar Selecionadas'
           TabOrder = 0
         end

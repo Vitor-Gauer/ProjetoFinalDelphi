@@ -46,7 +46,7 @@ object ViewEditorTabela: TViewEditorTabela
       Anchors = [akTop, akRight]
       Caption = 'Salvar'
       TabOrder = 1
-      OnClick = AoClicarBotaoSalvar
+      OnClick = BotaoSalvarClick
     end
     object BotaoCancelarTabela: TButton
       AlignWithMargins = True
@@ -57,7 +57,6 @@ object ViewEditorTabela: TViewEditorTabela
       Anchors = [akTop, akRight]
       Caption = 'Cancelar'
       TabOrder = 2
-      OnClick = AoClicarBotaoCancelar
     end
   end
   object DBGridEditor: TDBGrid

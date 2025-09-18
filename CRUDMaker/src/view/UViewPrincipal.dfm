@@ -32,7 +32,7 @@ object ViewPrincipal: TViewPrincipal
     Top = 60
     Width = 900
     Height = 468
-    ActivePage = AbaRelatorios
+    ActivePage = AbaAssociacoes
     Align = alClient
     TabOrder = 0
     object AbaPlanilhas: TTabSheet
@@ -92,15 +92,11 @@ object ViewPrincipal: TViewPrincipal
           Height = 30
           Align = alBottom
           TabOrder = 1
-          DesignSize = (
-            687
-            30)
           object BotaoEditarPlanilha: TButton
             Left = 10
             Top = 2
             Width = 100
             Height = 25
-            Anchors = [akLeft, akTop]
             Caption = 'Editar'
             TabOrder = 0
             OnClick = BotaoEditarTabelaClick
@@ -110,7 +106,6 @@ object ViewPrincipal: TViewPrincipal
             Top = 2
             Width = 100
             Height = 25
-            Anchors = [akLeft, akTop]
             Caption = 'Excluir'
             TabOrder = 1
             OnClick = BotaoExcluirPlanilhaClick
@@ -120,7 +115,6 @@ object ViewPrincipal: TViewPrincipal
             Top = 2
             Width = 150
             Height = 25
-            Anchors = [akLeft, akTop]
             Caption = 'Criar Tabela'
             TabOrder = 2
             OnClick = BotaoCriarTabelaClick
@@ -177,15 +171,11 @@ object ViewPrincipal: TViewPrincipal
           Height = 30
           Align = alBottom
           TabOrder = 1
-          DesignSize = (
-            687
-            30)
           object BotaoEditarRelatorio: TButton
             Left = 10
             Top = 2
             Width = 100
             Height = 25
-            Anchors = [akLeft, akTop]
             Caption = 'Editar'
             TabOrder = 0
             OnClick = BotaoEditarRelatorioClick
@@ -195,7 +185,6 @@ object ViewPrincipal: TViewPrincipal
             Top = 2
             Width = 100
             Height = 25
-            Anchors = [akLeft, akTop]
             Caption = 'Excluir'
             TabOrder = 1
             OnClick = BotaoExcluirRelatorioClick
@@ -205,7 +194,6 @@ object ViewPrincipal: TViewPrincipal
             Top = 2
             Width = 100
             Height = 25
-            Anchors = [akLeft, akTop]
             Caption = 'Visualizar'
             TabOrder = 2
             OnClick = BotaoVisualizarRelatorioClick
@@ -215,7 +203,6 @@ object ViewPrincipal: TViewPrincipal
             Top = 2
             Width = 150
             Height = 25
-            Anchors = [akLeft, akTop]
             Caption = 'Criar Relat'#243'rio'
             TabOrder = 3
           end
@@ -223,7 +210,7 @@ object ViewPrincipal: TViewPrincipal
       end
     end
     object AbaAssociacoes: TTabSheet
-      Caption = 'Planilhas & Relat'#243'rios'
+      Caption = 'TabelasRelat'#243'rios'
       ImageIndex = 2
       object GradeAssociacoes: TDBGrid
         Left = 0

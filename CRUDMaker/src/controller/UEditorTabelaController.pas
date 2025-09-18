@@ -6,27 +6,18 @@ uses
   System.SysUtils, UTabelaDTO, UEditarTabelaService, UXMLService, Data.DB, Datasnap.DBClient, VCL.Dialogs;
 
 type
-  /// Controlador para a funcionalidade de edição de tabelas.
   TEditorTabelaController = class
   private
     FService: TEditarTabelaService;
     FXMLService: TXMLService;
   public
-    /// Construtor do controlador.
     constructor Create;
-
-    /// Destrutor do controlador.
     destructor Destroy; override;
 
-    /// Inicia o processo de carregamento de uma tabela.
-    // <param name="ATabelaDTO"> DTO da tabela a ser carregada.</param>
-    // <returns> DTO atualizado com os dados carregados.</returns>
+    // Inicia o processo de carregamento de uma tabela.
     function CarregarTabela(ATabelaDTO: TTabelaDTO): TTabelaDTO;
 
-    /// Inicia o processo de salvamento de uma tabela.
-    // <param name="ATabelaDTO"> DTO da tabela a ser salva.</param>
-    // <param name="ADataSet"> O ClientDataSet com os dados.</param>
-    // <returns> True se o processo de salvamento (validação) foi iniciado com sucesso.</returns>
+    // Inicia o processo de salvamento de uma tabela.
     function ExecutarSalvarTabela(ATabelaDTO: TTabelaDTO; ADataSet: TDataSet): Boolean;
   end;
 
@@ -61,18 +52,18 @@ begin
   Result := False;
   try
     // 1. Chama o service para validar os dados
-    if FService.ValidarDados(TClientDataSet(ADataSet)) then // Assume que é TClientDataSet
+    if FService.ValidarDados(TClientDataSet(ADataSet)) then // Assume que ï¿½ TClientDataSet
     begin
-      // 2. Se válido, chama o service para salvar (inicia o processo)
+      // 2. Se vï¿½lido, chama o service para salvar (inicia o processo)
       FService.Salvar(ATabelaDTO, TClientDataSet(ADataSet));
-      Result := True; // Indica que a etapa de validação/salvamento inicial foi bem
+      Result := True; // Indica que a etapa de validaï¿½ï¿½o/salvamento inicial foi bem
     end;
-    // Se não for válido, o service já mostrou o erro. O controller retorna False.
+    // Se nï¿½o for vï¿½lido, o service jï¿½ mostrou o erro. O controller retorna False.
   except
     on E: Exception do
     begin
       ShowMessage('Erro durante o processo de salvamento: ' + E.Message);
-      // Result já é False
+      // Result jï¿½ ï¿½ False
     end;
   end;
 end;

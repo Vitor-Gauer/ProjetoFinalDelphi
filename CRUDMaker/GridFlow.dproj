@@ -194,6 +194,13 @@
         <DCCReference Include="src\service\UXMLService.pas"/>
         <DCCReference Include="src\service\UTransformadorService.pas"/>
         <DCCReference Include="src\service\UAbrirArquivoExternoService.pas"/>
+        <DCCReference Include="src\model\UTabelasRelatoriosDTO.pas"/>
+        <DCCReference Include="src\controller\UCriadorRelatorioController.pas"/>
+        <DCCReference Include="src\service\UCSVService.pas"/>
+        <DCCReference Include="src\controller\UCriadorTabelaController.pas"/>
+        <DCCReference Include="src\view\UViewCriadorTabela.pas">
+            <Form>FViewCriadorTabela</Form>
+        </DCCReference>
         <None Include="src\controller\explicacaocontroller.txt"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>

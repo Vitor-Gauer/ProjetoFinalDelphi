@@ -3,32 +3,46 @@
 interface
 
 uses
-  System.Classes;
+  System.Classes, System.SysUtils;
 
 type
-  // DTO para uma Tabela individual dentro de uma Planilha.
-  TTabelaDTO = class(TPersistent)
+  TTabelaDTO = class
   private
     FTitulo: string;
     FCaminhoArquivoXML: string;
-    FID: string; // Para armazenar o ID da tabela durante o carregamento
+    FCaminhoArquivoCSV: string;
+    FHashXML: string;          // Hash único para o conteúdo XML (20 chars, 5+++ letras)
+    FHashCSV: string;          // Hash único para o conteúdo CSV (20 números)
   public
-    constructor Create; virtual;
+    constructor Create; overload;
+    constructor Create(const ATitulo: string; const ACaminhoArquivoXML: string = ''; const ACaminhoArquivoCSV: string = ''; const AHashXML: string = ''; const AHashCSV: string = ''); overload;
     property Titulo: string read FTitulo write FTitulo;
     property CaminhoArquivoXML: string read FCaminhoArquivoXML write FCaminhoArquivoXML;
-    property ID: string read FID write FID; // Somente leitura apos carregamento
+    property CaminhoArquivoCSV: string read FCaminhoArquivoCSV write FCaminhoArquivoCSV;
+    property HashXML: string read FHashXML write FHashXML;
+    property HashCSV: string read FHashCSV write FHashCSV;
   end;
 
 implementation
-
-{ TTabelaDTO }
 
 constructor TTabelaDTO.Create;
 begin
   inherited Create;
   FTitulo := '';
   FCaminhoArquivoXML := '';
-  FID := '-1'; // Valor padr�o indicando que ainda n�o foi carregado
+  FCaminhoArquivoCSV := '';
+  FHashXML := '';
+  FHashCSV := '';
+end;
+
+constructor TTabelaDTO.Create(const ATitulo: string; const ACaminhoArquivoXML: string = ''; const ACaminhoArquivoCSV: string = ''; const AHashXML: string = ''; const AHashCSV: string = '');
+begin
+  inherited Create;
+  FTitulo := ATitulo;
+  FCaminhoArquivoXML := ACaminhoArquivoXML;
+  FCaminhoArquivoCSV := ACaminhoArquivoCSV;
+  FHashXML := AHashXML;
+  FHashCSV := AHashCSV;
 end;
 
 end.

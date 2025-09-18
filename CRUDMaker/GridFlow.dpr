@@ -35,7 +35,12 @@ uses
   UEditarTabelaService in 'src\service\UEditarTabelaService.pas',
   UXMLService in 'src\service\UXMLService.pas',
   UTransformadorService in 'src\service\UTransformadorService.pas',
-  UAbrirArquivoExternoService in 'src\service\UAbrirArquivoExternoService.pas';
+  UAbrirArquivoExternoService in 'src\service\UAbrirArquivoExternoService.pas',
+  UTabelasRelatoriosDTO in 'src\model\UTabelasRelatoriosDTO.pas',
+  UCriadorRelatorioController in 'src\controller\UCriadorRelatorioController.pas',
+  UCSVService in 'src\service\UCSVService.pas',
+  UCriadorTabelaController in 'src\controller\UCriadorTabelaController.pas',
+  UViewCriadorTabela in 'src\view\UViewCriadorTabela.pas' {FViewCriadorTabela};
 
 {$R *.res}
 
