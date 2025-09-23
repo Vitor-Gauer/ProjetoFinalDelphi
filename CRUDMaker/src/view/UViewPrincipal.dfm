@@ -58,7 +58,6 @@ object ViewPrincipal: TViewPrincipal
           Align = alClient
           ItemHeight = 15
           TabOrder = 0
-          ExplicitLeft = 0
         end
       end
       object PainelDireitoTabelas: TPanel
@@ -111,13 +110,22 @@ object ViewPrincipal: TViewPrincipal
             TabOrder = 1
             OnClick = BotaoExcluirPlanilhaClick
           end
-          object BotaoCriarRelatorioPlanilha: TButton
+          object BotaoCriarPlanilha: TButton
             Left = 230
             Top = 2
-            Width = 150
+            Width = 100
+            Height = 25
+            Caption = 'Criar Planilha'
+            TabOrder = 2
+            OnClick = BotaoCriarPlanilhaClick
+          end
+          object BotaoCriarTabela: TButton
+            Left = 340
+            Top = 2
+            Width = 100
             Height = 25
             Caption = 'Criar Tabela'
-            TabOrder = 2
+            TabOrder = 3
             OnClick = BotaoCriarTabelaClick
           end
         end
@@ -164,7 +172,6 @@ object ViewPrincipal: TViewPrincipal
           Align = alClient
           ScrollBars = ssVertical
           TabOrder = 0
-          ExplicitLeft = 2
         end
         object PainelBotoesRelatorio: TPanel
           Left = 1

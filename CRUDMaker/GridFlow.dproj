@@ -199,7 +199,22 @@
         <DCCReference Include="src\service\UCSVService.pas"/>
         <DCCReference Include="src\controller\UCriadorTabelaController.pas"/>
         <DCCReference Include="src\service\UPDFService.pas">
-            <Form>$R *.res</Form>
+            <Form>;
+
+{$R *.res</Form>
+        </DCCReference>
+        <DCCReference Include="src\view\UViewSelecionarPlanilhaParaTabela.pas">
+            <Form>ViewSelecionarPlanilhaParaTabela</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="src\view\UViewConfigurarTabela.pas">
+            <Form>ViewConfigurarTabela</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="src\model\UTabelaConfiguracaoDTO.pas"/>
+        <DCCReference Include="src\view\UViewCriadorTabelaDados.pas">
+            <Form>ViewCriadorTabelaDados</Form>
+            <FormType>dfm</FormType>
         </DCCReference>
         <None Include="src\controller\explicacaocontroller.txt"/>
         <BuildConfiguration Include="Base">

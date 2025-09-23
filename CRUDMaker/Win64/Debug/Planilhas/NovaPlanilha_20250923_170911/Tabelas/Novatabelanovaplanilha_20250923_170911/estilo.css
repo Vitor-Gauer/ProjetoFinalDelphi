@@ -1,0 +1,89 @@
+/* Estilos para o elemento raiz <Tabela> */
+
+Corpo {
+    display: flex;
+    font-family: Arial, sans-serif;
+    background-color: #aaa;
+    padding-right: 20px;
+    margin: 0;
+}
+Redor{
+    border: 2px solid #333;
+    padding: 10px;
+    width: fit-content;
+    background-color: #777;
+    margin-top: 0;
+    margin-right: 200px;
+}
+Redor Redor{
+    display: flex;
+    border: 2px solid #333;
+    padding: 10px;
+    margin: 20px auto;
+    width: fit-content;
+    background-color: #555;
+}
+
+Redor Celula{
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+    align-content: center; /* Centraliza o conteúdo verticalmente */
+    min-width: 80px;
+}
+
+Tabela {
+    display: table; /* Simula uma tabela HTML */
+    width: 80%;
+    border-collapse: collapse; /* Borda única para as células */
+    font-family: Arial, sans-serif;
+    margin: 20px auto;
+    border: 2px solid #333;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+/* Estilos para o título da tabela */
+Titulo {
+    display: table-caption; /* Simula a legenda da tabela HTML */
+    font-size: 1.5em;
+    font-weight: bold;
+    caption-side: top;
+    padding: 10px 0;
+    text-align: center;
+    color: #fff;
+}
+
+/* Estilos para as linhas da tabela */
+Linha {
+    display: table-row; /* Simula uma linha de tabela HTML */
+    border-bottom: 1px solid #ccc;
+}
+
+/* Estilos para o grupo de colunas <Colunas> dentro da linha */
+Colunas {
+    display: table-row-group; /* Necessário para alinhar as colunas */
+}
+
+/* Estilos para as colunas individuais */
+Celula {
+    display: table-cell; /* Simula uma célula de tabela HTML */
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+    align-content: center; /* Centraliza o conteúdo verticalmente */
+    min-width: 80px;
+}
+
+/* Estilos para a primeira linha (cabeçalho da tabela) */
+Linha[numero="1"] Celula {
+    background-color: #e2e2e2;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Efeito de destaque ao passar o mouse sobre a linha */
+Celula:hover {
+    background-color: #f5f5f5;
+}

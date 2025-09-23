@@ -40,7 +40,13 @@ uses
   UCriadorRelatorioController in 'src\controller\UCriadorRelatorioController.pas',
   UCSVService in 'src\service\UCSVService.pas',
   UCriadorTabelaController in 'src\controller\UCriadorTabelaController.pas',
-  UPDFService in 'src\service\UPDFService.pas';
+  UPDFService in 'src\service\UPDFService.pas' {;
+
+{$R *.res},
+  UViewSelecionarPlanilhaParaTabela in 'src\view\UViewSelecionarPlanilhaParaTabela.pas' {ViewSelecionarPlanilhaParaTabela},
+  UViewConfigurarTabela in 'src\view\UViewConfigurarTabela.pas' {ViewConfigurarTabela},
+  UTabelaConfiguracaoDTO in 'src\model\UTabelaConfiguracaoDTO.pas',
+  UViewCriadorTabelaDados in 'src\view\UViewCriadorTabelaDados.pas' {ViewCriadorTabelaDados};
 
 {$R *.res}
 
@@ -50,6 +56,9 @@ begin
 
   TViewController.Instance.IniciarAplicacao;
 
+  Application.CreateForm(TViewSelecionarPlanilhaParaTabela, ViewSelecionarPlanilhaParaTabela);
+  Application.CreateForm(TViewConfigurarTabela, ViewConfigurarTabela);
+  Application.CreateForm(TViewCriadorTabelaDados, ViewCriadorTabelaDados);
   Application.Run;
 
   TViewController.FreeInstance;
