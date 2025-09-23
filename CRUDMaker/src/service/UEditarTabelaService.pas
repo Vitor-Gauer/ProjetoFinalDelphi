@@ -65,7 +65,7 @@ begin
 
   TempDataSet := TClientDataSet.Create(nil);
   try
-    FXMLService.LerArquivoXML(Result, TempDataSet);
+//    FXMLService.LerArquivoXML(Result, TempDataSet);
   finally
     TempDataSet.Free;
   end;
@@ -233,7 +233,7 @@ begin
     raise Exception.Create('DTO ou DataSet não fornecidos para salvamento.');
 
   // Chama o XMLService para salvar o arquivo XML
-  FXMLService.SalvarArquivoXML(ATabelaDTO, ADataSet);
+//  FXMLService.SalvarArquivoXML(ATabelaDTO, ADataSet);
 end;
 
 end.

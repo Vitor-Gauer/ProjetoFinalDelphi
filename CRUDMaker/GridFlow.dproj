@@ -198,8 +198,8 @@
         <DCCReference Include="src\controller\UCriadorRelatorioController.pas"/>
         <DCCReference Include="src\service\UCSVService.pas"/>
         <DCCReference Include="src\controller\UCriadorTabelaController.pas"/>
-        <DCCReference Include="src\view\UViewCriadorTabela.pas">
-            <Form>FViewCriadorTabela</Form>
+        <DCCReference Include="src\service\UPDFService.pas">
+            <Form>$R *.res</Form>
         </DCCReference>
         <None Include="src\controller\explicacaocontroller.txt"/>
         <BuildConfiguration Include="Base">

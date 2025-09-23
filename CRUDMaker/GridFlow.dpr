@@ -40,7 +40,7 @@ uses
   UCriadorRelatorioController in 'src\controller\UCriadorRelatorioController.pas',
   UCSVService in 'src\service\UCSVService.pas',
   UCriadorTabelaController in 'src\controller\UCriadorTabelaController.pas',
-  UViewCriadorTabela in 'src\view\UViewCriadorTabela.pas' {FViewCriadorTabela};
+  UPDFService in 'src\service\UPDFService.pas';
 
 {$R *.res}
 

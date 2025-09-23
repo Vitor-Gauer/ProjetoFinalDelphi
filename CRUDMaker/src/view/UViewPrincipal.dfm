@@ -32,7 +32,7 @@ object ViewPrincipal: TViewPrincipal
     Top = 60
     Width = 900
     Height = 468
-    ActivePage = AbaAssociacoes
+    ActivePage = AbaPlanilhas
     Align = alClient
     TabOrder = 0
     object AbaPlanilhas: TTabSheet
@@ -58,6 +58,7 @@ object ViewPrincipal: TViewPrincipal
           Align = alClient
           ItemHeight = 15
           TabOrder = 0
+          ExplicitLeft = 0
         end
       end
       object PainelDireitoTabelas: TPanel
@@ -163,6 +164,7 @@ object ViewPrincipal: TViewPrincipal
           Align = alClient
           ScrollBars = ssVertical
           TabOrder = 0
+          ExplicitLeft = 2
         end
         object PainelBotoesRelatorio: TPanel
           Left = 1

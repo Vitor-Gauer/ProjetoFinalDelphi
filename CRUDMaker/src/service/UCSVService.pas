@@ -158,7 +158,7 @@ begin
     raise Exception.Create('Caminho do arquivo CSV inválido ou arquivo não encontrado.');
 
   AClientDataSet.Close;
-  AClientDataSet.LoadFromFile(ACaminhoArquivo, dfCSV); // Usa o formato nativo dfCSV
+//  AClientDataSet.LoadFromFile(ACaminhoArquivo, dfCSV); // Usa o formato nativo dfCSV
   AClientDataSet.Open;
 end;
 
