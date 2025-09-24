@@ -4,10 +4,11 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.ExtCtrls, Vcl.StdCtrls;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.ExtCtrls, Vcl.StdCtrls,
+  UFormBaseMinTopoCentro;
 
 type
-  TViewCompartilhamento = class(TForm)
+  TViewCompartilhamento = class(TFormBaseMinTopoCentro)
     ControleAbasCompartilhar: TPageControl;
     AbaCompPlanilhas: TTabSheet;
     PainelCompPlanTopo: TPanel;

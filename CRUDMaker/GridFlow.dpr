@@ -40,19 +40,17 @@ uses
   UCriadorRelatorioController in 'src\controller\UCriadorRelatorioController.pas',
   UCSVService in 'src\service\UCSVService.pas',
   UCriadorTabelaController in 'src\controller\UCriadorTabelaController.pas',
-  UPDFService in 'src\service\UPDFService.pas' {;
-
-{$R *.res},
   UViewSelecionarPlanilhaParaTabela in 'src\view\UViewSelecionarPlanilhaParaTabela.pas' {ViewSelecionarPlanilhaParaTabela},
   UViewConfigurarTabela in 'src\view\UViewConfigurarTabela.pas' {ViewConfigurarTabela},
   UTabelaConfiguracaoDTO in 'src\model\UTabelaConfiguracaoDTO.pas',
-  UViewCriadorTabelaDados in 'src\view\UViewCriadorTabelaDados.pas' {ViewCriadorTabelaDados};
+  UViewCriadorTabelaDados in 'src\view\UViewCriadorTabelaDados.pas' {ViewCriadorTabelaDados},
+  UFormBaseMinTopoCentro in 'src\utils\UFormBaseMinTopoCentro.pas',
+  UPDFService in 'src\service\UPDFService.pas';
 
 {$R *.res}
 
 begin
   Application.Initialize;
-  Application.MainFormOnTaskbar := True;
 
   TViewController.Instance.IniciarAplicacao;
 
@@ -60,6 +58,8 @@ begin
   Application.CreateForm(TViewConfigurarTabela, ViewConfigurarTabela);
   Application.CreateForm(TViewCriadorTabelaDados, ViewCriadorTabelaDados);
   Application.Run;
+  UFormBaseMinTopoCentro.TFormBaseMinTopoCentro.LimparListaGlobalMinimizados; // Chama a procedure estática para limpar a lista global >>>
 
+  Application.MainFormOnTaskbar := True; // Este deve estar APÓS Application.Run
   TViewController.FreeInstance;
 end.

@@ -58,6 +58,8 @@ object ViewPrincipal: TViewPrincipal
           Align = alClient
           ItemHeight = 15
           TabOrder = 0
+          ExplicitLeft = 0
+          ExplicitTop = 0
         end
       end
       object PainelDireitoTabelas: TPanel

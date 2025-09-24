@@ -37,15 +37,26 @@ object ViewEditorTabela: TViewEditorTabela
       Anchors = [akLeft, akTop, akRight]
       TabOrder = 0
     end
+    object BotaoCarregarTabela: TButton
+      AlignWithMargins = True
+      Left = 360
+      Top = 4
+      Width = 98
+      Height = 30
+      Anchors = [akTop, akRight]
+      Caption = 'Carregar'
+      TabOrder = 1
+      OnClick = BotaoCarregarClick
+    end
     object BotaoSalvarTabela: TButton
       AlignWithMargins = True
-      Left = 582
+      Left = 462
       Top = 4
       Width = 98
       Height = 30
       Anchors = [akTop, akRight]
       Caption = 'Salvar'
-      TabOrder = 1
+      TabOrder = 2
       OnClick = BotaoSalvarClick
     end
     object BotaoCancelarTabela: TButton
@@ -56,7 +67,8 @@ object ViewEditorTabela: TViewEditorTabela
       Height = 30
       Anchors = [akTop, akRight]
       Caption = 'Cancelar'
-      TabOrder = 2
+      TabOrder = 3
+      OnClick = BotaoCancelarClick
     end
   end
   object DBGridEditor: TDBGrid

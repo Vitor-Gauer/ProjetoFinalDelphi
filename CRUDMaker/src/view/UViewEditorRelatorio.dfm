@@ -50,7 +50,6 @@ object ViewEditorRelatorio: TViewEditorRelatorio
       Width = 200
       Height = 23
       Style = csDropDownList
-      Anchors = [akLeft, akTop]
       TabOrder = 1
     end
     object BotaoSalvarRelatorio: TButton

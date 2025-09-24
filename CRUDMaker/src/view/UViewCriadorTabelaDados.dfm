@@ -22,9 +22,9 @@ object ViewCriadorTabelaDados: TViewCriadorTabelaDados
     object RotuloTitulo: TLabel
       Left = 8
       Top = 14
-      Width = 39
+      Width = 26
       Height = 13
-      Caption = 'T'#195#173'tulo:'
+      Caption = 'T'#237'tulo'
     end
     object EditarTitulo: TEdit
       Left = 44

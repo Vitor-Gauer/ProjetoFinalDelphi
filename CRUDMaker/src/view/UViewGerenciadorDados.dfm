@@ -17,7 +17,7 @@ object ViewGerenciadorDados: TViewGerenciadorDados
     Top = 0
     Width = 800
     Height = 478
-    ActivePage = AbaGerPlanilhas
+    ActivePage = AbaGerAssociacoes
     Align = alClient
     TabOrder = 0
     object AbaGerPlanilhas: TTabSheet
@@ -34,7 +34,6 @@ object ViewGerenciadorDados: TViewGerenciadorDados
           Top = 5
           Width = 120
           Height = 30
-          Anchors = [akLeft, akTop]
           Caption = 'Nova Planilha'
           TabOrder = 0
         end
@@ -68,7 +67,6 @@ object ViewGerenciadorDados: TViewGerenciadorDados
           Top = 5
           Width = 120
           Height = 30
-          Anchors = [akLeft, akTop]
           Caption = 'Novo Relat'#243'rio'
           TabOrder = 0
         end
@@ -102,7 +100,6 @@ object ViewGerenciadorDados: TViewGerenciadorDados
           Top = 5
           Width = 150
           Height = 30
-          Anchors = [akLeft, akTop]
           Caption = 'Nova Associa'#231#227'o'
           TabOrder = 0
         end

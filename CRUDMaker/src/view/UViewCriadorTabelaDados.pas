@@ -6,14 +6,10 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.ComCtrls,
   Vcl.DBCtrls, Data.DB, Data.FMTBcd, Datasnap.DBClient,
-  UTabelaDTO, UTabelaConfiguracaoDTO, UCriadorTabelaController, Math; // Inclui os novos DTOs e Controller
+  UTabelaDTO, UTabelaConfiguracaoDTO, UCriadorTabelaController, Math, UFormBaseMinTopoCentro; // Inclui os novos DTOs e Controller
 
 type
-  /// <summary>
-  /// View específica para a criação de novas tabelas.
-  /// Responsável por permitir ao usuário inserir os dados após definir dimensões e cabeçalho.
-  /// </summary>
-  TViewCriadorTabelaDados = class(TForm)
+  TViewCriadorTabelaDados = class(TFormBaseMinTopoCentro)
     PainelTopo: TPanel;
     RotuloTitulo: TLabel;
     EditarTitulo: TEdit;
@@ -36,11 +32,7 @@ type
     procedure ConfigurarClientDataSet(const AConfig: TConfiguracaoTabelaDTO);
     procedure AtualizarTabelaDoInterface;
   public
-    /// <summary>
-    /// Construtor para a view de criação.
-    /// </summary>
-    /// <param name="AOwner">Owner do componente.</param>
-    /// <param name="AConfiguracao">DTO contendo as configurações iniciais (linhas, colunas, cabeçalho, planilha).</param>
+    // Construtor para a view de criação.
     constructor Create(AOwner: TComponent; const AConfiguracao: TConfiguracaoTabelaDTO); reintroduce;
     destructor Destroy; override;
   end;

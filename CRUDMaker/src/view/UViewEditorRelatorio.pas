@@ -5,13 +5,13 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.ComCtrls,
-  URelatorioDTO, UPlanilhaDTO;
+  URelatorioDTO, UPlanilhaDTO, UFormBaseMinTopoCentro;
 
 type
   TSolicitarSalvarRelatorioEvent = procedure(const ARelatorio: TRelatorioDTO) of object;
   TSolicitarCancelarEdicaoRelatorioEvent = procedure of object;
 
-  TViewEditorRelatorio = class(TForm)
+  TViewEditorRelatorio = class(TFormBaseMinTopoCentro)
     PainelRelatorioTopo: TPanel;
     RotuloTituloRelatorio: TLabel;
     RotuloTipoRelatorio: TLabel;

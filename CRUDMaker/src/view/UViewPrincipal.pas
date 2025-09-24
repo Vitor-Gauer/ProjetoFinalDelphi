@@ -5,13 +5,11 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.ExtCtrls, Vcl.Grids, Vcl.DBGrids,
-  Data.DB, Datasnap.DBClient, // Adiciona Datasnap.DBClient para TClientDataSet
+  Data.DB, Datasnap.DBClient,
   Vcl.StdCtrls, Vcl.Menus,
-  // Removido UTabelaConfiguracaoDTO da interface
-  UTabelaDTO, UPlanilhaDTO, URelatorioDTO, UShowViewController;
+  UTabelaDTO, UPlanilhaDTO, URelatorioDTO, UShowViewController, UFormBaseMinTopoCentro;
 
 type
-  // --- NOVO: Evento para solicitar a criação de uma nova planilha ---
   TCriarPlanilhaEvent = procedure(const ANomeSugerido: string) of object;
 
   TNavegarParaCriadorTabelaEvent = procedure of object;
@@ -23,7 +21,7 @@ type
   TOnAbrirGerenciadorEvent = procedure of object;
   TOnAbrirCompartilhamentoEvent = procedure of object;
 
-  TViewPrincipal = class(TForm)
+  TViewPrincipal = class(TFormBaseMinTopoCentro)
     MainMenuPrincipal: TMainMenu;
     MenuItemArquivo: TMenuItem;
     MenuItemSair: TMenuItem;
@@ -160,7 +158,7 @@ procedure TViewPrincipal.BotaoEditarTabelaClick(Sender: TObject);
 begin
    if Assigned(FOnNavegarParaEditorTabela) then
      OnNavegarParaEditorTabela(FTabelaSelecionada);
-     // TViewController.Instance.ShowViewEditorTabela; // Esta linha parece estar fora do lugar
+      TViewController.Instance.ShowViewEditorTabela;
 end;
 
 procedure TViewPrincipal.BotaoExcluirPlanilhaClick(Sender: TObject);
