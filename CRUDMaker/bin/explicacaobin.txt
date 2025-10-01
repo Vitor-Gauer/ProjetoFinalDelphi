@@ -1,1 +1,0 @@
-É a pasta de destino para o executável (nome_do_seu_projeto.exe) e outras DLLs ou arquivos de suporte gerados durante a compilação.

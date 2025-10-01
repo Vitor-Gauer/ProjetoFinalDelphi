@@ -1,1 +1,0 @@
-Assim como em outros projetos, esta pasta é útil para unidades com lógica reutilizável que não se encaixam diretamente em model ou controller. Por exemplo, uma unit para gerenciar autenticação, validação de dados ou comunicação com APIs.

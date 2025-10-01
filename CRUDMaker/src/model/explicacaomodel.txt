@@ -1,2 +1,0 @@
-Inclui as units que representam a estrutura de dados e a lógica de acesso ao banco de dados. 
-Os DataModules (.pas e .dfm) são perfeitos para essa camada, pois encapsulam componentes de acesso a dados como TQuery ou TTable, separando-os da interface.
