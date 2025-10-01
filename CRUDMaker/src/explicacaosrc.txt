@@ -1,1 +1,0 @@
-Esta é a pasta principal para o código-fonte (arquivos .pas). É aqui que você aplica a organização MVC.

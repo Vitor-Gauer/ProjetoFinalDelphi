@@ -1,1 +1,0 @@
-Se o seu projeto usa pacotes Delphi (.dpk) ou pacotes de tempo de execução BPLs (.bpl), eles podem ser armazenados aqui.

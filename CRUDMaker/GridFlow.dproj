@@ -137,86 +137,65 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="src\model\ULoginDTO.pas"/>
-        <DCCReference Include="src\model\UUsuarioDTO.pas"/>
-        <DCCReference Include="src\model\UPlanilhaDTO.pas"/>
-        <DCCReference Include="src\model\URelatorioDTO.pas"/>
-        <DCCReference Include="src\model\ULogEntryDTO.pas"/>
-        <DCCReference Include="src\model\UAceiteTermoDTO.pas"/>
-        <DCCReference Include="src\model\UDBConnection.pas"/>
-        <DCCReference Include="src\model\UPostgresDAO.pas"/>
-        <DCCReference Include="src\model\UJSONDataHandler.pas"/>
-        <DCCReference Include="src\model\USecurityDataHandler.pas"/>
-        <DCCReference Include="src\service\UAuthService.pas"/>
-        <DCCReference Include="src\service\UPlanilhaService.pas"/>
-        <DCCReference Include="src\service\URelatorioService.pas"/>
-        <DCCReference Include="src\service\ULogService.pas"/>
-        <DCCReference Include="src\service\UExportacaoService.pas"/>
-        <DCCReference Include="src\service\UConfigService.pas"/>
-        <DCCReference Include="src\utils\UAppConstants.pas"/>
-        <DCCReference Include="src\utils\UAppUtils.pas"/>
-        <DCCReference Include="src\utils\UServerPinger.pas"/>
-        <DCCReference Include="src\view\UViewModalTermos.pas">
+        <DCCReference Include="src\Config\UConfigurarBD.pas"/>
+        <DCCReference Include="src\Config\ULogBancoDados.pas"/>
+        <DCCReference Include="src\Utils\UConstantesGlobais.pas"/>
+        <DCCReference Include="src\Utils\UFuncoesGlobais.pas"/>
+        <DCCReference Include="src\Utils\Log\Conexão\UServerPinger.pas"/>
+        <DCCReference Include="src\Utils\Views\UFormBaseMinTopoCentro.pas"/>
+        <DCCReference Include="src\Repo\Programa\USegurancaDadosHandler.pas"/>
+        <DCCReference Include="src\Repo\BD\UDBConnection.pas"/>
+        <DCCReference Include="src\Repo\BD\UPostgresDAO.pas"/>
+        <DCCReference Include="src\DTO\ULoginDTO.pas"/>
+        <DCCReference Include="src\DTO\UTabelaDTO.pas"/>
+        <DCCReference Include="src\DTO\UPlanilhaDTO.pas"/>
+        <DCCReference Include="src\DTO\URelatorioDTO.pas"/>
+        <DCCReference Include="src\DTO\UTabelasRelatoriosDTO.pas"/>
+        <DCCReference Include="src\DTO\UTabelaConfiguracaoDTO.pas"/>
+        <DCCReference Include="src\DTO\UAceiteTermoDTO.pas"/>
+        <DCCReference Include="src\DTO\ULogEntryDTO.pas"/>
+        <DCCReference Include="src\Modulos\Arquivos\Common\UPersistenciaLocalService.pas"/>
+        <DCCReference Include="src\Modulos\Arquivos\XML\UXMLService.pas"/>
+        <DCCReference Include="src\Modulos\Arquivos\CSV\UCSVService.pas"/>
+        <DCCReference Include="src\Modulos\Arquivos\PDF\UPDFService.pas"/>
+        <DCCReference Include="src\Modulos\Tabelas\Application\Service\UEditarTabelaService.pas"/>
+        <DCCReference Include="src\Modulos\Planilhas\Application\Service\UPlanilhaService.pas"/>
+        <DCCReference Include="src\Modulos\Relatorios\Application\Service\URelatorioService.pas"/>
+        <DCCReference Include="src\Modulos\Inicializadores\Login\Application\Service\UAuthService.pas"/>
+        <DCCReference Include="src\Modulos\Navegadores\UShowViewController.pas"/>
+        <DCCReference Include="src\Modulos\Relatorios\Visual\Controller\UCriadorRelatorioController.pas"/>
+        <DCCReference Include="src\Modulos\Inicializadores\Login\Visual\View\UViewLogin.pas">
+            <Form>ViewLogin</Form>
+        </DCCReference>
+        <DCCReference Include="src\Modulos\Inicializadores\Termos\Visual\View\UViewModalTermos.pas">
             <Form>ViewModalTermos</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="src\view\UViewCompartilhamento.pas">
-            <Form>ViewCompartilhamento</Form>
-            <FormType>dfm</FormType>
+        <DCCReference Include="src\Modulos\Inicializadores\Principal\Visual\View\UViewPrincipal.pas">
+            <Form>ViewPrincipal</Form>
         </DCCReference>
-        <DCCReference Include="src\view\UViewGerenciadorDados.pas">
-            <Form>ViewGerenciadorDados</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
-        <DCCReference Include="src\view\UViewEditorRelatorio.pas">
-            <Form>ViewEditorRelatorio</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
-        <DCCReference Include="src\view\UViewEditorTabela.pas">
+        <DCCReference Include="src\Modulos\Tabelas\Application\Editar\UViewEditorTabela.pas">
             <Form>ViewEditorTabela</Form>
         </DCCReference>
-        <DCCReference Include="src\view\UViewPrincipal.pas">
-            <Form>ViewPrincipal</Form>
-            <FormType>dfm</FormType>
+        <DCCReference Include="src\Modulos\Associações\Salvar\UViewSalvarAssociacao.pas">
+            <Form>ViewCompartilhamento</Form>
         </DCCReference>
-        <DCCReference Include="src\view\UViewLogin.pas">
-            <Form>ViewLogin</Form>
-            <FormType>dfm</FormType>
+        <DCCReference Include="src\Modulos\Relatorios\Visual\View\Editar\UViewEditorRelatorio.pas">
+            <Form>ViewEditorRelatorio</Form>
         </DCCReference>
-        <DCCReference Include="src\view\UViewVisualizadorRelatorio.pas">
+        <DCCReference Include="src\Modulos\Relatorios\Visual\View\Imprimir\UViewImprimirRelatorioPronto.pas">
             <Form>ViewVisualizadorRelatorio</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="src\controller\UShowViewController.pas"/>
-        <DCCReference Include="src\model\UTabelaDTO.pas"/>
-        <DCCReference Include="src\controller\UEditorTabelaController.pas"/>
-        <DCCReference Include="src\service\UEditarTabelaService.pas"/>
-        <DCCReference Include="src\service\UXMLService.pas"/>
-        <DCCReference Include="src\service\UTransformadorService.pas"/>
-        <DCCReference Include="src\service\UAbrirArquivoExternoService.pas"/>
-        <DCCReference Include="src\model\UTabelasRelatoriosDTO.pas"/>
-        <DCCReference Include="src\controller\UCriadorRelatorioController.pas"/>
-        <DCCReference Include="src\service\UCSVService.pas"/>
-        <DCCReference Include="src\controller\UCriadorTabelaController.pas"/>
-        <DCCReference Include="src\service\UPDFService.pas">
-            <Form>;
-
-{$R *.res</Form>
-        </DCCReference>
-        <DCCReference Include="src\view\UViewSelecionarPlanilhaParaTabela.pas">
+        <DCCReference Include="src\Modulos\Tabelas\Visual\Controller\Criar\UCriadorTabelaController.pas"/>
+        <DCCReference Include="src\Modulos\Tabelas\Visual\View\Criar\UViewSelecionarPlanilhaParaTabela.pas">
             <Form>ViewSelecionarPlanilhaParaTabela</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="src\view\UViewConfigurarTabela.pas">
+        <DCCReference Include="src\Modulos\Tabelas\Visual\View\Criar\UViewConfigurarTabela.pas">
             <Form>ViewConfigurarTabela</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="src\model\UTabelaConfiguracaoDTO.pas"/>
-        <DCCReference Include="src\view\UViewCriadorTabelaDados.pas">
+        <DCCReference Include="src\Modulos\Tabelas\Visual\View\Criar\UViewCriadorTabelaDados.pas">
             <Form>ViewCriadorTabelaDados</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
-        <None Include="src\controller\explicacaocontroller.txt"/>
+        <DCCReference Include="src\Modulos\Tabelas\Visual\Controller\Editar\UEditorTabelaController.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -258,12 +237,6 @@
                 <DeployFile LocalName="Win64\Debug\GridFlow.rsm" Configuration="Debug" Class="DebugSymbols">
                     <Platform Name="Win64">
                         <RemoteName>GridFlow.rsm</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="src\controller\explicacaocontroller.txt" Configuration="Debug" Class="ProjectFile">
-                    <Platform Name="Win64">
-                        <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

@@ -1,1 +1,0 @@
-Armazena os formulários (forms) do Delphi (.pas e .dfm). Cada par de arquivos representa uma tela ou janela da sua aplicação. É aqui que os usuários interagem diretamente. A lógica de interface, como o que acontece quando um botão é clicado, fica na view, mas a lógica de negócio deve ser delegada a um controller ou service.

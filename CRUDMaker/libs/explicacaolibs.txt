@@ -1,1 +1,0 @@
-Ideal para guardar bibliotecas de terceiros que você adiciona ao seu projeto, como componentes, frameworks ou outras dependências que não fazem parte do Delphi padrão.
