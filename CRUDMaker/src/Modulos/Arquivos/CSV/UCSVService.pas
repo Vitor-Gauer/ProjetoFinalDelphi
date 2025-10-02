@@ -3,7 +3,9 @@ unit UCSVService;
 interface
 
 uses
-  System.Classes, System.SysUtils, Data.DB, Datasnap.DBClient, UTabelaDTO; // Adiciona UTabelaDTO
+  System.Classes, System.SysUtils, Data.DB, Datasnap.DBClient,
+  System.StrUtils, System.Math, // Para Random,
+  UTabelaDTO; // Adiciona UTabelaDTO
 
 type
   // Service responsável por operações de exportação/importação em formato CSV.
@@ -30,12 +32,13 @@ type
 
     // Função auxiliar para obter o hash gerado (se necessário fora do GravarCSV).
     function ObterUltimoHashGerado: string;
+
+    // Obtém as dimensões (número de linhas e colunas) de um arquivo CSV.
+    // Conta linhas (exceto o cabeçalho) e colunas (baseado no cabeçalho).
+    function ObterDimensoesDoCSV(const ACaminhoArquivo: string): string;
   end;
 
 implementation
-
-uses
-  System.StrUtils, System.Math; // Para Random
 
 { TCSVService }
 
@@ -158,8 +161,50 @@ begin
     raise Exception.Create('Caminho do arquivo CSV inválido ou arquivo não encontrado.');
 
   AClientDataSet.Close;
-//  AClientDataSet.LoadFromFile(ACaminhoArquivo, dfCSV); // Usa o formato nativo dfCSV
+  AClientDataSet.LoadFromFile(ACaminhoArquivo);
   AClientDataSet.Open;
+end;
+
+function TCSVService.ObterDimensoesDoCSV(const ACaminhoArquivo: string): string;
+var
+  TempClientDataSet: TClientDataSet;
+  NumLinhas: Integer;
+  NumColunas: Integer;
+begin
+  Result := 'Erro desconhecido';
+  if (ACaminhoArquivo = '') or not FileExists(ACaminhoArquivo) then
+  begin
+    Result := 'Arquivo não encontrado';
+    Exit;
+  end;
+
+  TempClientDataSet := TClientDataSet.Create(nil);
+  try
+    try
+      Self.LerCSV(TempClientDataSet, ACaminhoArquivo);
+      if TempClientDataSet.Active and not TempClientDataSet.IsEmpty then
+      begin
+        // Número de registros de dados (linhas)
+        NumLinhas := TempClientDataSet.RecordCount;
+        // Número de campos (colunas)
+        NumColunas := TempClientDataSet.FieldCount;
+
+        Result := Format('%dx%d', [NumLinhas, NumColunas]);
+      end
+      else
+      begin
+        // Dataset vazio ou não ativado corretamente
+        Result := '0x0 (dataset vazio ou inativo)';
+      end;
+    except
+      on E: Exception do
+      begin
+        Result := 'Erro ao carregar/ler CSV: ' + E.ClassName;
+      end;
+    end;
+  finally
+    TempClientDataSet.Free;
+  end;
 end;
 
 end.

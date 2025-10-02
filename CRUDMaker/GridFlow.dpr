@@ -32,6 +32,7 @@ uses
   UViewLogin in 'src\Modulos\Inicializadores\Login\Visual\View\UViewLogin.pas' {ViewLogin},
   UViewModalTermos in 'src\Modulos\Inicializadores\Termos\Visual\View\UViewModalTermos.pas' {ViewModalTermos},
   UViewPrincipal in 'src\Modulos\Inicializadores\Principal\Visual\View\UViewPrincipal.pas' {ViewPrincipal},
+  UPrincipalService in 'src\Modulos\Inicializadores\Principal\Application\Service\UPrincipalService.pas',
   UViewEditorTabela in 'src\Modulos\Tabelas\Application\Editar\UViewEditorTabela.pas' {ViewEditorTabela},
   UViewSalvarAssociacao in 'src\Modulos\Associações\Salvar\UViewSalvarAssociacao.pas' {ViewCompartilhamento},
   UViewEditorRelatorio in 'src\Modulos\Relatorios\Visual\View\Editar\UViewEditorRelatorio.pas' {ViewEditorRelatorio},
@@ -40,13 +41,15 @@ uses
   UViewSelecionarPlanilhaParaTabela in 'src\Modulos\Tabelas\Visual\View\Criar\UViewSelecionarPlanilhaParaTabela.pas' {ViewSelecionarPlanilhaParaTabela},
   UViewConfigurarTabela in 'src\Modulos\Tabelas\Visual\View\Criar\UViewConfigurarTabela.pas' {ViewConfigurarTabela},
   UViewCriadorTabelaDados in 'src\Modulos\Tabelas\Visual\View\Criar\UViewCriadorTabelaDados.pas' {ViewCriadorTabelaDados},
-  UEditorTabelaController in 'src\Modulos\Tabelas\Visual\Controller\Editar\UEditorTabelaController.pas';
+  UEditorTabelaController in 'src\Modulos\Tabelas\Visual\Controller\Editar\UEditorTabelaController.pas',
+  UPlanilhaController in 'src\Modulos\Planilhas\Visual\Controller\UPlanilhaController.pas',
+  UInfoTabelaPlanilhaDTO in 'src\DTO\UInfoTabelaPlanilhaDTO.pas',
+  UPrincipalController in 'src\Modulos\Inicializadores\Principal\Visual\Controller\UPrincipalController.pas';
 
 {$R *.res}
 
 begin
   Application.Initialize;
-  Application.MainFormOnTaskbar := True;
   TViewController.Instance.IniciarAplicacao;
 
   Application.CreateForm(TViewSelecionarPlanilhaParaTabela, ViewSelecionarPlanilhaParaTabela);
@@ -55,4 +58,5 @@ begin
   Application.Run;
 
   TViewController.FreeInstance;
+  Application.MainFormOnTaskbar := True;
 end.

@@ -3,11 +3,19 @@
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.ExtCtrls, Vcl.Grids, Vcl.DBGrids,
+  Winapi.Windows, Winapi.Messages,
+  System.SysUtils, System.Variants, System.Classes,
+  System.UITypes, System.IOUtils,
+
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms,
+  Vcl.Dialogs, Vcl.ComCtrls, Vcl.ExtCtrls,
+  Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls,
+  Vcl.Menus,
+
   Data.DB, Datasnap.DBClient,
-  Vcl.StdCtrls, Vcl.Menus,
-  UTabelaDTO, UPlanilhaDTO, URelatorioDTO, UShowViewController, UFormBaseMinTopoCentro;
+
+  UTabelaDTO, UPlanilhaDTO, URelatorioDTO,
+  UPrincipalController, UShowViewController, UFormBaseMinTopoCentro;
 
 type
   TCriarPlanilhaEvent = procedure(const ANomeSugerido: string) of object;
@@ -67,29 +75,35 @@ type
     procedure BotaoExcluirPlanilhaClick(Sender: TObject);
     procedure BotaoCriarTabelaClick(Sender: TObject);
     procedure BotaoCriarPlanilhaClick(Sender: TObject);
+    procedure BotaoAtualizarPlanilhaClick(Sender: TObject);
     procedure BotaoEditarRelatorioClick(Sender: TObject);
     procedure BotaoExcluirRelatorioClick(Sender: TObject);
     procedure BotaoVisualizarRelatorioClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure ListaPlanilhasClick(Sender: TObject);
+    procedure BotaoCriarPlanilhaClick(Sender: TObject);
   private
     FTabelaSelecionada: TPlanilhaDTO;
     FRelatorioSelecionado: TRelatorioDTO;
+    FController: TPrincipalController;
     FOnCriarPlanilha: TCriarPlanilhaEvent;
+    FOnExcluirPlanilha: TExcluirPlanilhaEvent;
     FOnNavegarParaCriadorTabela: TNavegarParaCriadorTabelaEvent;
     FOnNavegarParaEditorTabela: TNavegarParaEditorTabelaEvent;
     FOnNavegarParaNovoRelatorioComBase: TNavegarParaNovoRelatorioComBaseEvent;
     FOnNavegarParaEditorRelatorio: TNavegarParaEditorRelatorioEvent;
     FOnNavegarParaVisualizadorRelatorio: TNavegarParaVisualizadorRelatorioEvent;
     FOnSolicitarLogout: TOnSolicitarLogoutEvent;
+    FOnSolicitarAtualizacaoPlanilha: TNotifyEvent;
     FOnAbrirGerenciador: TOnAbrirGerenciadorEvent;
     FOnAbrirCompartilhamento: TOnAbrirCompartilhamentoEvent;
     procedure AtualizarExibicaoPlanilha;
     procedure AtualizarExibicaoRelatorio;
-    //procedure PopularGradeTabelas(const ANomePlanilha: string);
+    procedure PopularGradeTabelas(const ANomePlanilha: string);
   public
     procedure DefinirNomeUsuario(const ANome: string);
     property OnCriarPlanilha: TCriarPlanilhaEvent read FOnCriarPlanilha write FOnCriarPlanilha;
+    property OnExcluirPlanilha: TExcluirPlanilhaEvent read FOnExcluirPlanilha write FOnExcluirPlanilha;
     property OnNavegarParaCriadorTabela: TNavegarParaCriadorTabelaEvent read FOnNavegarParaCriadorTabela write FOnNavegarParaCriadorTabela;
     property OnNavegarParaEditorTabela: TNavegarParaEditorTabelaEvent read FOnNavegarParaEditorTabela write FOnNavegarParaEditorTabela;
     property OnNavegarParaNovoRelatorioComBase: TNavegarParaNovoRelatorioComBaseEvent read FOnNavegarParaNovoRelatorioComBase write FOnNavegarParaNovoRelatorioComBase;
@@ -102,37 +116,23 @@ type
 
 var
   ViewPrincipal: TViewPrincipal;
-
 implementation
-
+//(* NÃO coloque nenhum comentário acima dessa linha.
+//(* NÃO implemente métodos que não estejam no prompt OU que não estão com //(*
 {$R *.dfm}
-
-uses
-  System.UITypes, System.IOUtils; // System.IOUtils para manipulação de diretórios
 
 procedure TViewPrincipal.FormCreate(Sender: TObject);
 begin
   ControleAbasPrincipal.ActivePageIndex := 0;
+  ClientDataSetTabelas.Close;
+  ClientDataSetTabelas.FieldDefs.Clear;
   ClientDataSetTabelas.FieldDefs.Add('Nome', ftString, 250, False);
   ClientDataSetTabelas.FieldDefs.Add('Vazio', ftString, 10, False); // Coluna vazia
-  ClientDataSetTabelas.FieldDefs.Add('Dimensoes', ftString, 100, False);
+  ClientDataSetTabelas.FieldDefs.Add('Dimensoes', ftString, 500, False); // Para a string formatada
   ClientDataSetTabelas.CreateDataSet;
   ClientDataSetTabelas.Open;
-  // Associa o DataSource ao ClientDataSet
   DataSourceTabelas.DataSet := ClientDataSetTabelas;
-  // Associa o DBGrid ao DataSource
   GradeTabelas.DataSource := DataSourceTabelas;
-  // Configura colunas do DBGrid,
-  // Certifique-se de que GradeTabelas.Columns esteja habilitado (dgColLines, dgRowLines no Options)
-  if GradeTabelas.Columns.Count >= 3 then
-  begin
-    GradeTabelas.Columns[0].Title.Caption := 'Nome da Tabela';
-    GradeTabelas.Columns[1].Title.Caption := '';
-    GradeTabelas.Columns[2].Title.Caption := 'Dimensões';
-    GradeTabelas.Columns[0].Width := 200;
-    GradeTabelas.Columns[1].Width := 20; // Coluna vazia pequena
-    GradeTabelas.Columns[2].Width := 150;
-  end;
 end;
 
 procedure TViewPrincipal.DefinirNomeUsuario(const ANome: string);
@@ -166,44 +166,37 @@ begin
 end;
 
 procedure TViewPrincipal.BotaoExcluirPlanilhaClick(Sender: TObject);
+var
+  NomePlanilhaParaExcluir: string;
 begin
-  if Assigned(FTabelaSelecionada) then
+  if Assigned(FPlanilhaSelecionada) and (FPlanilhaSelecionada.Titulo <> '') then
   begin
-    if MessageDlg('Tem certeza que deseja excluir a planilha "' + FTabelaSelecionada.Titulo + '"?',
+    NomePlanilhaParaExcluir := FPlanilhaSelecionada.Titulo;
+
+    if MessageDlg('Tem certeza que deseja excluir a planilha "' + NomePlanilhaParaExcluir + '"?',
       mtConfirmation, [mbYes, mbNo], 0) = mrYes then
     begin
-      // TODO: Chamar serviço para excluir a planilha
-      ShowMessage('Exclusão da planilha "' + FTabelaSelecionada.Titulo + '" solicitada. Implementar no controller.');
+      if Assigned(FOnExcluirPlanilha) then
+        FOnExcluirPlanilha(NomePlanilhaParaExcluir)
+      else
+        ShowMessage('Evento OnExcluirPlanilha não está conectado.');
     end;
+  end
+  else
+  begin
+    ShowMessage('Nenhuma planilha selecionada para exclusão.');
   end;
 end;
 
-// --- NOVO: Implementação do botão Criar Planilha ---
 procedure TViewPrincipal.BotaoCriarPlanilhaClick(Sender: TObject);
 var
   NomeNovaPlanilha: string;
   InputResult: Boolean;
 begin
-  // Sugere um nome padrão (pode ser melhorado)
   NomeNovaPlanilha := 'NovaPlanilha_' + FormatDateTime('yyyymmdd_hhnnss', Now);
-
-  // Solicita o nome ao usuário
   InputResult := InputQuery('Criar Planilha', 'Digite o nome da nova planilha:', NomeNovaPlanilha);
-
   if InputResult and (Trim(NomeNovaPlanilha) <> '') then
   begin
-    // Validação básica do nome (opcional, pode ser mais robusta)
-    if (Pos('\', NomeNovaPlanilha) > 0) or (Pos('/', NomeNovaPlanilha) > 0) or
-       (Pos(':', NomeNovaPlanilha) > 0) or (Pos('*', NomeNovaPlanilha) > 0) or
-       (Pos('?', NomeNovaPlanilha) > 0) or (Pos('"', NomeNovaPlanilha) > 0) or
-       (Pos('<', NomeNovaPlanilha) > 0) or (Pos('>', NomeNovaPlanilha) > 0) or
-       (Pos('|', NomeNovaPlanilha) > 0) then
-    begin
-      ShowMessage('Nome inválido. Não use os seguintes caracteres: \ / : * ? " < > |');
-      Exit;
-    end;
-
-    // Dispara o evento para que o controller trate a criação
     if Assigned(FOnCriarPlanilha) then
       FOnCriarPlanilha(Trim(NomeNovaPlanilha))
     else
@@ -211,9 +204,8 @@ begin
   end
   else
   begin
-    if InputResult then // Se o usuário clicou OK mas deixou o nome vazio
+    if InputResult then
       ShowMessage('Nome da planilha não pode ser vazio.');
-    // Se InputResult for False, o usuário cancelou, então não faz nada.
   end;
 end;
 
@@ -233,7 +225,7 @@ procedure TViewPrincipal.BotaoEditarRelatorioClick(Sender: TObject);
 begin
   if Assigned(FOnNavegarParaEditorRelatorio) then
     FOnNavegarParaEditorRelatorio(FRelatorioSelecionado);
-    // TViewController.Instance.ShowViewEditorRelatorio // Esta linha parece estar fora do lugar
+    TViewController.Instance.ShowViewEditorRelatorio
 end;
 
 procedure TViewPrincipal.BotaoExcluirRelatorioClick(Sender: TObject);
@@ -253,13 +245,18 @@ procedure TViewPrincipal.BotaoVisualizarRelatorioClick(Sender: TObject);
 begin
     if Assigned(FOnNavegarParaVisualizadorRelatorio) then
       FOnNavegarParaVisualizadorRelatorio(FRelatorioSelecionado);
-      // TViewController.Instance.ShowViewVisualizadorRelatorio(FRelatorioSelecionado); // Esta linha parece estar fora do lugar
 end;
 
 procedure TViewPrincipal.AtualizarExibicaoPlanilha;
 begin
-  // Lógica para atualizar GradePlanilha com base na seleção em ListaPlanilhas
-  // Esta lógica agora é feita em ListaPlanilhasClick
+  if Assigned(FOnSolicitarAtualizacaoPlanilha) then
+      FOnSolicitarAtualizacaoPlanilha();
+  end;
+end;
+
+procedure TViewPrincipal.BotaoAtualizarPlanilhaClick(Sender: TObject);
+begin
+  AtualizarExibicaoPlanilha;
 end;
 
 procedure TViewPrincipal.AtualizarExibicaoRelatorio;
@@ -267,7 +264,6 @@ begin
   // Lógica para atualizar MemoVisualizadorRelatorio com base na seleção em ListaRelatorios
 end;
 
-// --- NOVO: Popular GradeTabelas ao selecionar uma planilha ---
 procedure TViewPrincipal.ListaPlanilhasClick(Sender: TObject);
 var
   NomePlanilhaSelecionada: string;
@@ -275,131 +271,28 @@ begin
   if ListaPlanilhas.ItemIndex >= 0 then
   begin
     NomePlanilhaSelecionada := ListaPlanilhas.Items[ListaPlanilhas.ItemIndex];
-    // Atualiza a grade com as tabelas dessa planilha
-    //PopularGradeTabelas(NomePlanilhaSelecionada);
+    PopularGradeTabelas(NomePlanilhaSelecionada);
   end
   else
   begin
     // Limpa a grade se nenhuma planilha estiver selecionada
-   ClientDataSetTabelas.Close;
+    ClientDataSetTabelas.Close;
     ClientDataSetTabelas.EmptyDataSet;
     ClientDataSetTabelas.Open;
   end;
+  //(* esse IF acima inteiro deveria ser de um service
 end;
 
-(*procedure TViewPrincipal.PopularGradeTabelas(const ANomePlanilha: string);
-var
-  DiretorioPlanilha, DiretorioTabelas: string;
-  SubDirs: TArray<string>;
-  ArquivosXML: TArray<string>;
-  i, j: Integer;
-  NomeTabela: string;
-  CaminhoTabela: string;
-  Dimensoes: string;
-  // Para ler o XML
-  XMLDoc: IXMLDocument;
-  TabelaNode, LinhasNodeList, LinhaNode, ColunasNode, CelulasNodeList: IXMLNode;
-  NumLinhas, NumColunas: Integer;
-  MaxColunasEncontradas: Integer;
+procedure TViewPrincipal.PopularGradeTabelas(const ANomePlanilha: string);
 begin
-  ClientDataSetTabelas.Close;
-  ClientDataSetTabelas.EmptyDataSet;
-  ClientDataSetTabelas.Open;
-
-  DiretorioPlanilha := IncludeTrailingPathDelimiter(ExtractFilePath(Application.ExeName)) +
-                       'Planilhas' + PathDelim + ANomePlanilha;
-  DiretorioTabelas := IncludeTrailingPathDelimiter(DiretorioPlanilha) + 'Tabelas';
-
-  if TDirectory.Exists(DiretorioTabelas) then
+  if Assigned(FController) then
   begin
-    SubDirs := TDirectory.GetDirectories(DiretorioTabelas);
-    for i := Low(SubDirs) to High(SubDirs) do
-    begin
-      NomeTabela := ExtractFileName(SubDirs[i]);
-      // Assume que dentro da pasta da tabela há um arquivo .xml com o nome base
-      CaminhoTabela := IncludeTrailingPathDelimiter(SubDirs[i]) + NomeTabela + '*.xml';
-      ArquivosXML := TDirectory.GetFiles(SubDirs[i], '*.xml');
-
-      Dimensoes := 'Não encontrado'; // Valor padrão se não houver XML
-      if Length(ArquivosXML) > 0 then
-      begin
-        // Tenta ler o primeiro arquivo XML encontrado para obter dimensões
-        try
-          XMLDoc := TXMLDocument.Create(nil);
-          XMLDoc.LoadFromFile(ArquivosXML[0]);
-          XMLDoc.Active := True;
-
-          // Navega até o nó <Tabela>
-          TabelaNode := XMLDoc.DocumentElement.ChildNodes.FindNode('Redor');
-          if Assigned(TabelaNode) then
-            TabelaNode := TabelaNode.ChildNodes.FindNode('Redor');
-          if Assigned(TabelaNode) then
-            TabelaNode := TabelaNode.ChildNodes.FindNode('Tabela');
-
-          if Assigned(TabelaNode) then
-          begin
-            LinhasNodeList := TabelaNode.ChildNodes; // Lista de nós <Linha>
-            if Assigned(LinhasNodeList) then
-            begin
-              NumLinhas := LinhasNodeList.Count;
-              MaxColunasEncontradas := 0;
-              // Itera pelas linhas para encontrar o máximo de colunas
-              for j := 0 to LinhasNodeList.Count - 1 do
-              begin
-                LinhaNode := LinhasNodeList[j];
-                if (LinhaNode.NodeName = 'Linha') then
-                begin
-                  ColunasNode := LinhaNode.ChildNodes.FindNode('Colunas');
-                  if Assigned(ColunasNode) then
-                  begin
-                    CelulasNodeList := ColunasNode.ChildNodes;
-                    if Assigned(CelulasNodeList) then
-                    begin
-                      NumColunas := CelulasNodeList.Count;
-                      if NumColunas > MaxColunasEncontradas then
-                        MaxColunasEncontradas := NumColunas;
-                    end;
-                  end;
-                end;
-              end;
-              Dimensoes := Format('%dx%d', [NumLinhas, MaxColunasEncontradas]);
-            end
-            else
-            begin
-               Dimensoes := '0x0 (sem linhas)';
-            end;
-          end
-          else
-          begin
-            Dimensoes := 'Estrutura XML inválida';
-          end;
-        except
-          on E: Exception do
-          begin
-            Dimensoes := 'Erro ao ler XML: ' + E.ClassName;
-            // Opcional: Logar o erro E.Message
-          end;
-        end;
-        XMLDoc := nil; // Libera a interface
-      end;
-
-      ClientDataSetTabelas.Append;
-      ClientDataSetTabelas.FieldByName('Nome').AsString := NomeTabela;
-      ClientDataSetTabelas.FieldByName('Vazio').AsString := '';
-      ClientDataSetTabelas.FieldByName('Dimensoes').AsString := Dimensoes;
-      ClientDataSetTabelas.Post;
-    end;
-  end;
-
-  if ClientDataSetTabelas.IsEmpty then
+    FController.PopularGradeTabelasNaView(ANomePlanilha);
+  end
+  else
   begin
-    // Opcional: Mostra uma mensagem se não houver tabelas
-    ClientDataSetTabelas.Append;
-    ClientDataSetTabelas.FieldByName('Nome').AsString := '(Nenhuma tabela encontrada)';
-    ClientDataSetTabelas.FieldByName('Vazio').AsString := '';
-    ClientDataSetTabelas.FieldByName('Dimensoes').AsString := '';
-    ClientDataSetTabelas.Post;
+    ShowMessage('Erro: Controller não disponível para popular a grade de tabelas.');
   end;
-end;   *)
+end;
 
 end.

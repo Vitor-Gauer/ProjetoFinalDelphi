@@ -10,15 +10,12 @@ type
   public
     constructor Create;
     destructor Destroy; override;
-
+    function ValidarNomeGenerico(const ANome: string): Boolean;
     function GerarArquivos(ATabelaDTO: TTabelaDTO; APreparedData: TPreparedData;
-      AProgressCallback: TProc<string> = nil; // Recebe mensagem de progresso
-      ACancelCallback: TFunc<Boolean> = nil   // Retorna True se cancelado
+      AProgressCallback: TProc<string> = nil;
+      ACancelCallback: TFunc<Boolean> = nil
       ): Boolean;
 
-    /// Obtém os caminhos completos dos arquivos gerados.
-    // <param name="ATabelaDTO"> DTO com metadados da tabela.</param>
-    // <returns> Record ou array com os caminhos para XML, CSV e PDF.</returns>
     function ObterCaminhosDosArquivos(ATabelaDTO: TTabelaDTO): TArray<string>; // Ex: [XMLPath, CSVPath, PDFPath]
   end;
 
@@ -34,6 +31,22 @@ end;
 destructor TPersistenciaLocalService.Destroy;
 begin
   inherited;
+end;
+
+function TPersistenciaLocalService.ValidarNomeGenerico(const ANome: string): Boolean;
+begin
+  Result := True; // Assume válido inicialmente
+
+  // Validação se o nome tem caracteres inválidos para nomes de pastas/arquivos no Windows
+  if (Pos('\', ANome) > 0) or (Pos('/', ANome) > 0) or
+     (Pos(':', ANome) > 0) or (Pos('*', ANome) > 0) or
+     (Pos('?', ANome) > 0) or (Pos('"', ANome) > 0) or
+     (Pos('<', ANome) > 0) or (Pos('>', ANome) > 0) or
+     (Pos('|', ANome) > 0) then
+  begin
+    Result := False;
+    Exit;
+  end;
 end;
 
 function TPersistenciaLocalService.GerarArquivos(ATabelaDTO: TTabelaDTO; APreparedData: TPreparedData;
