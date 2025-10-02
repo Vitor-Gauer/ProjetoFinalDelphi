@@ -3,7 +3,9 @@
 interface
 
 uses
-  System.Classes, System.SysUtils, Data.DB, Datasnap.DBClient, Xml.XMLDoc, Xml.XMLIntf, UTabelaDTO; // Adiciona unidades XML
+  System.Classes, System.SysUtils, Data.DB, Datasnap.DBClient, System.IOUtils,
+  System.StrUtils, System.Math,  // Para Random, StringReplace, TryStrToInt, CharInSet etc.
+  Xml.XMLDoc, Xml.XMLIntf, UTabelaDTO; // Adiciona unidades XML
 
 type
   TXMLService = class
@@ -20,12 +22,11 @@ type
 
     // Fun��o auxiliar para obter o hash gerado (se necess�rio fora do GravarXML).
     function ObterUltimoHashGerado: string;
+
+    function ObterDimensoesDoXML(const ACaminhoArquivo: string): string;
   end;
 
 implementation
-
-uses
-  System.StrUtils, System.Math; // Para Random, CharInSet etc.
 
 { TXMLService }
 
@@ -222,6 +223,48 @@ begin
 
   finally
     XMLDoc := nil;
+  end;
+end;
+
+function TXMLService.ObterDimensoesDoXML(const ACaminhoArquivo: string): string;
+var
+  TempClientDataSet: TClientDataSet;
+  NumLinhas: Integer;
+  NumColunas: Integer;
+begin
+  Result := 'Erro desconhecido';
+  if (ACaminhoArquivo = '') or not FileExists(ACaminhoArquivo) then
+  begin
+    Result := 'Arquivo não encontrado';
+    Exit;
+  end;
+
+  TempClientDataSet := TClientDataSet.Create(nil);
+  try
+    try
+      Self.LerXML(TempClientDataSet, ACaminhoArquivo);
+      if TempClientDataSet.Active and not TempClientDataSet.IsEmpty then
+      begin
+        // Número de registros de dados (linhas)
+        NumLinhas := TempClientDataSet.RecordCount;
+        // Número de campos (colunas)
+        NumColunas := TempClientDataSet.FieldCount;
+
+        Result := Format('%dx%d', [NumLinhas, NumColunas]);
+      end
+      else
+      begin
+        // Dataset vazio ou não ativado corretamente
+        Result := '0x0 (dataset vazio ou inativo)';
+      end;
+    except
+      on E: Exception do
+      begin
+        Result := 'Erro ao carregar/ler XML: ' + E.ClassName;
+      end;
+    end;
+  finally
+    TempClientDataSet.Free;
   end;
 end;
 

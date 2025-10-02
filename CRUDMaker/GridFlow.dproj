@@ -173,6 +173,7 @@
         <DCCReference Include="src\Modulos\Inicializadores\Principal\Visual\View\UViewPrincipal.pas">
             <Form>ViewPrincipal</Form>
         </DCCReference>
+        <DCCReference Include="src\Modulos\Inicializadores\Principal\Application\Service\UPrincipalService.pas"/>
         <DCCReference Include="src\Modulos\Tabelas\Application\Editar\UViewEditorTabela.pas">
             <Form>ViewEditorTabela</Form>
         </DCCReference>
@@ -196,6 +197,9 @@
             <Form>ViewCriadorTabelaDados</Form>
         </DCCReference>
         <DCCReference Include="src\Modulos\Tabelas\Visual\Controller\Editar\UEditorTabelaController.pas"/>
+        <DCCReference Include="src\Modulos\Planilhas\Visual\Controller\UPlanilhaController.pas"/>
+        <DCCReference Include="src\DTO\UInfoTabelaPlanilhaDTO.pas"/>
+        <DCCReference Include="src\Modulos\Inicializadores\Principal\Visual\Controller\UPrincipalController.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

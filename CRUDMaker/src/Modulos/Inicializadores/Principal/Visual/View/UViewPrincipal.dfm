@@ -35,6 +35,7 @@ object ViewPrincipal: TViewPrincipal
     ActivePage = AbaPlanilhas
     Align = alClient
     TabOrder = 0
+    StyleElements = [seFont, seClient]
     object AbaPlanilhas: TTabSheet
       Caption = 'Planilhas'
       object Divisor1: TSplitter
@@ -49,16 +50,34 @@ object ViewPrincipal: TViewPrincipal
         Width = 200
         Height = 438
         Align = alLeft
+        BevelOuter = bvNone
         TabOrder = 0
         object ListaPlanilhas: TListBox
-          Left = 1
-          Top = 1
-          Width = 198
-          Height = 436
-          HelpType = htKeyword
+          Left = 0
+          Top = 0
+          Width = 200
+          Height = 409
           Align = alClient
+          BevelInner = bvNone
+          BevelOuter = bvNone
           ItemHeight = 15
           TabOrder = 0
+        end
+        object PainelBotaoAtualizar: TPanel
+          Left = 0
+          Top = 409
+          Width = 200
+          Height = 29
+          Align = alBottom
+          TabOrder = 1
+          object BotaoAtualizarPlanilhas: TButton
+            Left = 50
+            Top = 3
+            Width = 100
+            Height = 25
+            Caption = 'Atualizar'
+            TabOrder = 0
+          end
         end
       end
       object PainelDireitoTabelas: TPanel
@@ -67,12 +86,13 @@ object ViewPrincipal: TViewPrincipal
         Width = 689
         Height = 438
         Align = alClient
+        BevelOuter = bvNone
         TabOrder = 1
         object GradeTabelas: TDBGrid
-          Left = 1
-          Top = 1
-          Width = 687
-          Height = 406
+          Left = 0
+          Top = 0
+          Width = 689
+          Height = 408
           Align = alClient
           TabOrder = 0
           TitleFont.Charset = DEFAULT_CHARSET
@@ -87,9 +107,9 @@ object ViewPrincipal: TViewPrincipal
             end>
         end
         object PainelBotoesTabela: TPanel
-          Left = 1
-          Top = 407
-          Width = 687
+          Left = 0
+          Top = 408
+          Width = 689
           Height = 30
           Align = alBottom
           TabOrder = 1
