@@ -44,7 +44,8 @@ uses
   UEditorTabelaController in 'src\Modulos\Tabelas\Visual\Controller\Editar\UEditorTabelaController.pas',
   UPlanilhaController in 'src\Modulos\Planilhas\Visual\Controller\UPlanilhaController.pas',
   UInfoTabelaPlanilhaDTO in 'src\DTO\UInfoTabelaPlanilhaDTO.pas',
-  UPrincipalController in 'src\Modulos\Inicializadores\Principal\Visual\Controller\UPrincipalController.pas';
+  UPrincipalController in 'src\Modulos\Inicializadores\Principal\Visual\Controller\UPrincipalController.pas',
+  ULoginController in 'src\Modulos\Inicializadores\Login\Visual\Controller\ULoginController.pas';
 
 {$R *.res}
 

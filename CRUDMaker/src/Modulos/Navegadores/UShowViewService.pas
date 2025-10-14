@@ -340,12 +340,30 @@ var
   LView: TViewLogin;
 begin
   LView := TViewLogin.Create(Application);
+
+  // Conectar os eventos da ViewLogin ao manipulador estático do serviço
+  LView.OnLogin := TShowViewService.ManipuladorLogin; // Conecta o evento
+  LView.OnCancelarLogin := TShowViewService.ManipuladorCancelarLogin; // Conecta o evento
+
+  LView.ConectarEventosController;
+
   if AModal then
-    LView.ShowModal
+  begin
+    LView.ShowModal;
+    // --- DESCOMENTE AS LINHAS ABAIXO ---
+    if FTempLoginSucesso then
+    begin
+      // Abre a tela principal
+      ShowViewPrincipalModal(FTempNomeUsuario); // Passa o nome do usuário logado
+    end
+    else
+    begin
+      Showmessage('Não deu sucesso!');
+    end;
+  end
   else
-    LView.Show;
-  if AModal then
-    LView.Free;
+  begin
+  end;
 end;
 
 procedure TShowViewService.CloseViewPrincipal;

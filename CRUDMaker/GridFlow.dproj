@@ -203,6 +203,7 @@
         <DCCReference Include="src\Modulos\Planilhas\Visual\Controller\UPlanilhaController.pas"/>
         <DCCReference Include="src\DTO\UInfoTabelaPlanilhaDTO.pas"/>
         <DCCReference Include="src\Modulos\Inicializadores\Principal\Visual\Controller\UPrincipalController.pas"/>
+        <DCCReference Include="src\Modulos\Inicializadores\Login\Visual\Controller\ULoginController.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -235,13 +236,13 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="Win64\Debug\GridFlow.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="bin\Debug\GridFlow.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win64">
                         <RemoteName>GridFlow.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="Win64\Debug\GridFlow.rsm" Configuration="Debug" Class="DebugSymbols">
+                <DeployFile LocalName="bin\Debug\GridFlow.rsm" Configuration="Debug" Class="DebugSymbols">
                     <Platform Name="Win64">
                         <RemoteName>GridFlow.rsm</RemoteName>
                         <Overwrite>true</Overwrite>
