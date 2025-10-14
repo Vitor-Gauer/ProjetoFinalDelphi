@@ -4,47 +4,26 @@ interface
 
 uses
   // Units padrão do Delphi
-  System.SysUtils, System.Classes, System.IOUtils, // <<< Adiciona System.IOUtils para ForceDirectories, TPath
-  Data.DB, Datasnap.DBClient, Vcl.Dialogs, Vcl.Forms, // <<< Adiciona Vcl.Forms para Application
+  System.SysUtils, System.Classes, System.IOUtils,
+  Data.DB, Datasnap.DBClient, Vcl.Dialogs, Vcl.Forms,
   // Units do projeto
-  UTabelaDTO, UTabelaConfiguracaoDTO, // <<< Adiciona UTabelaConfiguracaoDTO
-  UXMLService, UCSVService, UPDFService; // <<< Adiciona UPDFService
+  UTabelaDTO, UTabelaConfiguracaoDTO,
+  UXMLService, UCSVService, UPDFService;
 
 type
-  /// <summary>
-  /// Controller responsável pela lógica de criação e salvamento de tabelas.
-  /// </summary>
   TCriadorTabelaController = class
   private
     FXMLService: TXMLService;
     FCSVService: TCSVService;
-    FPDFService: TPDFService; // <<< Adiciona FPDFService
-    /// <summary>
-    /// Função auxiliar para capitalizar a primeira letra de cada palavra em uma string.
-    /// </summary>
+    FPDFService: TPDFService;
     function CapitalizarPrimeiraLetra(const ATexto: string): string;
   public
     constructor Create;
     destructor Destroy; override;
-
-    /// <summary>
-    /// Executa o processo completo de criação/salvamento de uma tabela.
-    /// Utiliza a configuração fornecida para determinar dimensões, cabeçalho e planilha.
-    /// Solicita o caminho base ao usuário (ou define automaticamente) e salva os dados
-    /// nos formatos XML e CSV, gerando também o PDF.
-    /// Atualiza o DTO com os caminhos e hashes.
-    /// </summary>
-    /// <param name="AConfiguracao">DTO contendo as configurações iniciais da tabela (linhas, colunas, cabeçalho, planilha).</param>
-    /// <param name="ATabela">DTO da tabela a ser salva (contém o título).</param>
-    /// <param name="AClientDataSet">ClientDataSet com os dados da tabela.</param>
-    /// <returns>True se a criação for bem-sucedida, False caso contrário.</returns>
     function ExecutarCriarTabela(const AConfiguracao: TConfiguracaoTabelaDTO; const ATabela: TTabelaDTO; AClientDataSet: TClientDataSet): Boolean;
   end;
 
 implementation
-
-// uses
-//   Vcl.Forms; // <<< JÁ ESTÁ NA INTERFACE, NÃO PRECISA AQUI PARA Application
 
 { TCriadorTabelaController }
 
@@ -53,12 +32,12 @@ begin
   inherited Create;
   FXMLService := TXMLService.Create;
   FCSVService := TCSVService.Create;
-  FPDFService := TPDFService.Create; // <<< Cria FPDFService
+  FPDFService := TPDFService.Create;
 end;
 
 destructor TCriadorTabelaController.Destroy;
 begin
-  FPDFService.Free; // <<< Destrói FPDFService
+  FPDFService.Free;
   FCSVService.Free;
   FXMLService.Free;
   inherited;
@@ -93,7 +72,7 @@ var
   DiretorioBase, DiretorioTabelaEspecifica, CaminhoCompletoBase: string;
   CaminhoXML, CaminhoCSV, CaminhoPDF: string;
   CaminhoCSS: string;
-  ExePath: string; // <<< Variável para armazenar o caminho do executável
+  ExePath: string;
 begin
   Result := False;
 

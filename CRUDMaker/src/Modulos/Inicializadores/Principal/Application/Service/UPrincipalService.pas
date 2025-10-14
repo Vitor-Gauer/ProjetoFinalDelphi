@@ -5,7 +5,8 @@ interface
 uses
   System.SysUtils, System.Classes, System.Generics.Collections, Vcl.Forms,
   System.IOUtils,
-  Xml.XMLDoc, Xml.XMLIntf;
+  Xml.XMLDoc, Xml.XMLIntf,
+  UCSVService;
 
 type
   TInfoTabelaPlanilhaDTO = class
@@ -45,23 +46,28 @@ var
 begin
   Result := TStringList.Create;
   try
+    // Caminho da pasta 'Planilhas' relativo ao executável
     DiretorioPlanilhas := IncludeTrailingPathDelimiter(ExtractFilePath(Application.ExeName)) + 'Planilhas';
-
     if TDirectory.Exists(DiretorioPlanilhas) then
     begin
+      // Obter todos os subdiretórios
       Diretorios := TDirectory.GetDirectories(DiretorioPlanilhas);
       for i := Low(Diretorios) to High(Diretorios) do
       begin
+        // Extrair apenas o nome da pasta
         NomePasta := ExtractFileName(Diretorios[i]);
+        // Adicionar à lista se o nome não for vazio
         if NomePasta <> '' then
           Result.Add(NomePasta);
       end;
     end;
+    // Resultado pode estar vazio se a pasta não existir ou estiver vazia, o que é aceitável.
   except
     on E: Exception do
     begin
-      Result.Clear;
-      Result.Add('Erro ao listar planilhas: ' + E.Message);
+      Result.Clear; // Limpa qualquer dado parcial
+      Result.Add('Erro ao ler pastas de planilhas: ' + E.Message); // Adiciona mensagem de erro
+      // Poderia logar a exceção também, se TLogService estivesse disponível e configurado aqui
     end;
   end;
 end;
@@ -73,26 +79,24 @@ var
   i: Integer;
   NomeTabela: string;
   CaminhoPastaTabela: string;
-  ArquivosXML: TArray<string>;
-  CaminhoXML: string;
+  ArquivosCSV: TArray<string>;
+  CaminhoCSV: string;
   TamanhoBytes: Int64;
   TamanhoMB: string;
   Dimensoes: string;
   InfoTabela: TInfoTabelaPlanilhaDTO;
-  XMLDoc: IXMLDocument;
-  TabelaNode, LinhaNode, ColunasNode: IXMLNode;
-  NodeListAux, LinhasNodeList, CelulasNodeList: IXMLNodeList;
-  NumLinhas, NumColunas, MaxColunasEncontradas, j: Integer;
+  TabelasProcessadas: TStringList;
+  LCSVService: TCSVService; // Variável local temporária
 begin
   Result := TObjectList<TInfoTabelaPlanilhaDTO>.Create(True); // OwnsObjects = True
+  TabelasProcessadas := TStringList.Create;
+  LCSVService := TCSVService.Create; // Cria uma instância temporária do CSVService
   try
     if ANomePlanilha = '' then
       Exit;
 
-    DiretorioPlanilha := IncludeTrailingPathDelimiter(ExtractFilePath(Application.ExeName)) +
-                         'Planilhas' + PathDelim + ANomePlanilha;
+    DiretorioPlanilha := IncludeTrailingPathDelimiter(ExtractFilePath(Application.ExeName)) + 'Planilhas' + PathDelim + ANomePlanilha;
     DiretorioTabelas := IncludeTrailingPathDelimiter(DiretorioPlanilha) + 'Tabelas';
-
     if not TDirectory.Exists(DiretorioTabelas) then
       Exit;
 
@@ -103,104 +107,47 @@ begin
       NomeTabela := ExtractFileName(SubDirs[i]);
       CaminhoPastaTabela := SubDirs[i];
 
-      // Assume que o XML tem o nome base da tabela
-      // CaminhoXML := IncludeTrailingPathDelimiter(CaminhoPastaTabela) + NomeTabela + '*.xml'; // Padrão de nome base
-      ArquivosXML := TDirectory.GetFiles(CaminhoPastaTabela, '*.xml');
-
-      Dimensoes := 'Desconhecido';
-      TamanhoMB := '0 MB';
-      CaminhoXML := '';
-
-      if Length(ArquivosXML) > 0 then
+      // Procura arquivos .CSV na pasta da tabela
+      ArquivosCSV := TDirectory.GetFiles(CaminhoPastaTabela, '*.csv');
+      if Length(ArquivosCSV) > 0 then
       begin
-        CaminhoXML := ArquivosXML[0]; // Usa o primeiro arquivo .xml encontrado
+        CaminhoCSV := ArquivosCSV[0]; // Assume o primeiro CSV encontrado
+
+        // --- USAR O SERVIÇO IMPLEMENTADO ---
         try
-          XMLDoc := TXMLDocument.Create(nil);
-          XMLDoc.LoadFromFile(CaminhoXML);
-          XMLDoc.Active := True;
-
-          // Navega até o nó <Tabela>
-          TabelaNode := XMLDoc.DocumentElement; // <Corpo>
-          if Assigned(TabelaNode) then
-            TabelaNode := TabelaNode.ChildNodes.FindNode('Redor'); // <Redor> nivel 1
-          if Assigned(TabelaNode) then
-            TabelaNode := TabelaNode.ChildNodes.FindNode('Redor'); // <Redor> nivel 2
-          if Assigned(TabelaNode) then
-            TabelaNode := TabelaNode.ChildNodes.FindNode('Tabela');
-
-          if not Assigned(TabelaNode) then
+          // Obter Dimensões do Arquivo CSV usando o serviço
+          Dimensoes := LCSVService.ObterDimensoesDoCSV(CaminhoCSV);
+          if Dimensoes.StartsWith('Erro') then
           begin
-            Dimensoes := 'Estrutura XML inválida (<Tabela> não encontrada)';
-          end
-          else
-          begin
-            // Obter a lista de filhos de <Tabela> (que são <Linha>)
-            LinhasNodeList := TabelaNode.ChildNodes;
-            if not Assigned(LinhasNodeList) or (LinhasNodeList.Count = 0) then
-            begin
-              Dimensoes := '0x0 (sem linhas)';
-            end
-            else
-            begin
-              NumLinhas := LinhasNodeList.Count;
-              MaxColunasEncontradas := 0;
-
-              // Itera pelas linhas para encontrar o máximo de colunas
-              for j := 0 to LinhasNodeList.Count - 1 do
-              begin
-                // Acessa o nó <Linha> individual
-                LinhaNode := LinhasNodeList[j];
-                if (LinhaNode.NodeName = 'Linha') then
-                begin
-                  // Encontra o nó <Colunas> dentro da <Linha>
-                  ColunasNode := LinhaNode.ChildNodes.FindNode('Colunas');
-                  if Assigned(ColunasNode) then
-                  begin
-                    // Obtém a lista de <Celula> dentro de <Colunas>
-                    CelulasNodeList := ColunasNode.ChildNodes;
-                    if Assigned(CelulasNodeList) then
-                    begin
-                      NumColunas := CelulasNodeList.Count;
-                      if NumColunas > MaxColunasEncontradas then
-                        MaxColunasEncontradas := NumColunas;
-                    end;
-                  end;
-                end;
-              end;
-              Dimensoes := Format('%dx%d', [NumLinhas, MaxColunasEncontradas]);
-            end;
+             // Se o serviço retornar um erro, use uma string de erro
+             Dimensoes := Dimensoes; // Mantém a mensagem de erro
           end;
-
-          // --- Obter Tamanho do Arquivo ---
-          if TFile.Exists(CaminhoXML) then // <<< If movido
-          begin
-            TamanhoBytes := TFile.GetSize(CaminhoXML);
-            TamanhoMB := FormatFloat('0.00 MB', TamanhoBytes / (1024 * 1024));
-          end;
-
         except
           on E: Exception do
-          begin
-            TamanhoMB := 'Erro';
-            Dimensoes := 'Erro ao ler XML: ' + E.ClassName;
-            // Opcional: Logar E.Message
-          end;
+            Dimensoes := 'Erro ao ler CSV: ' + E.Message; // Tratamento de exceção adicional
         end;
-      end;
 
-      InfoTabela := TInfoTabelaPlanilhaDTO.Create(NomeTabela, Dimensoes, TamanhoMB);
-      Result.Add(InfoTabela);
+        // Obter Tamanho do Arquivo CSV
+        TamanhoBytes := TFile.GetSize(CaminhoCSV);
+        TamanhoMB := FormatFloat('0.00 MB', TamanhoBytes / (1024 * 1024));
+
+        // Criar o DTO com os dados obtidos (Nome, Dimensoes, TamanhoMB)
+        // O formato (CSV) e o caminho são informações internas para o cálculo,
+        // mas o DTO final só precisa dos dados resumidos.
+        InfoTabela := TInfoTabelaPlanilhaDTO.Create(NomeTabela, Dimensoes, TamanhoMB);
+        Result.Add(InfoTabela);
+        TabelasProcessadas.Add(NomeTabela); // Marca como processada via CSV
+      end;
+      // NÃO PROCESSAR XML - Conforme instrução "Não irá ser feito chamada por XML"
+      // O bloco 'else' que lia XML foi removido.
     end;
-    // --- FIM DA LÓGICA MOVIDA ---
-  except
-    on E: Exception do
-    begin
-      // Em caso de erro grave, adiciona um item indicando o erro
-      InfoTabela := TInfoTabelaPlanilhaDTO.Create('Erro', 'Erro ao processar planilha', '0 MB');
-      Result.Add(InfoTabela);
-      // Opcional: Logar E.Message
-    end;
+
+  finally
+    LCSVService.Free; // Libera o serviço temporário
+    TabelasProcessadas.Free;
   end;
 end;
+
+end.
 
 end.

@@ -181,29 +181,33 @@ begin
   TempClientDataSet := TClientDataSet.Create(nil);
   try
     try
+      // Lê o CSV para o ClientDataSet temporário
       Self.LerCSV(TempClientDataSet, ACaminhoArquivo);
+
       if TempClientDataSet.Active and not TempClientDataSet.IsEmpty then
       begin
-        // Número de registros de dados (linhas)
+        // Número de registros de dados (linhas) - desconsidera o registro de inserção
         NumLinhas := TempClientDataSet.RecordCount;
-        // Número de campos (colunas)
+        // Número de campos (colunas) - baseado na estrutura carregada do CSV
         NumColunas := TempClientDataSet.FieldCount;
 
-        Result := Format('%dx%d', [NumLinhas, NumColunas]);
+        // Formata a string de dimensões
+        Result := IntToStr(NumLinhas) + 'x' + IntToStr(NumColunas);
       end
       else
       begin
-        // Dataset vazio ou não ativado corretamente
-        Result := '0x0 (dataset vazio ou inativo)';
+        // CSV vazio ou não carregado corretamente
+        Result := '0x0';
       end;
     except
       on E: Exception do
       begin
-        Result := 'Erro ao carregar/ler CSV: ' + E.ClassName;
+        // Captura qualquer erro durante a leitura ou contagem
+        Result := 'Erro: ' + E.Message;
       end;
     end;
   finally
-    TempClientDataSet.Free;
+    TempClientDataSet.Free; // Libera o ClientDataSet temporário
   end;
 end;
 

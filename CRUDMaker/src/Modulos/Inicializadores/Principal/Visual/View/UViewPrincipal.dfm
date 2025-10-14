@@ -77,6 +77,7 @@ object ViewPrincipal: TViewPrincipal
             Height = 25
             Caption = 'Atualizar'
             TabOrder = 0
+            OnClick = BotaoAtualizarPlanilhaClick
           end
         end
       end

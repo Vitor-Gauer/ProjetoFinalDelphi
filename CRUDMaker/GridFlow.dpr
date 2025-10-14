@@ -27,7 +27,7 @@ uses
   UPlanilhaService in 'src\Modulos\Planilhas\Application\Service\UPlanilhaService.pas',
   URelatorioService in 'src\Modulos\Relatorios\Application\Service\URelatorioService.pas',
   UAuthService in 'src\Modulos\Inicializadores\Login\Application\Service\UAuthService.pas',
-  UShowViewController in 'src\Modulos\Navegadores\UShowViewController.pas',
+  UShowViewService in 'src\Modulos\Navegadores\UShowViewService.pas',
   UCriadorRelatorioController in 'src\Modulos\Relatorios\Visual\Controller\UCriadorRelatorioController.pas',
   UViewLogin in 'src\Modulos\Inicializadores\Login\Visual\View\UViewLogin.pas' {ViewLogin},
   UViewModalTermos in 'src\Modulos\Inicializadores\Termos\Visual\View\UViewModalTermos.pas' {ViewModalTermos},
@@ -50,13 +50,8 @@ uses
 
 begin
   Application.Initialize;
-  TViewController.Instance.IniciarAplicacao;
-
-  Application.CreateForm(TViewSelecionarPlanilhaParaTabela, ViewSelecionarPlanilhaParaTabela);
-  Application.CreateForm(TViewConfigurarTabela, ViewConfigurarTabela);
-  Application.CreateForm(TViewCriadorTabelaDados, ViewCriadorTabelaDados);
+  TShowViewService.Instance.IniciarAplicacao;
   Application.Run;
 
-  TViewController.FreeInstance;
   Application.MainFormOnTaskbar := True;
 end.

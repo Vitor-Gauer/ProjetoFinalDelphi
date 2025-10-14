@@ -13,7 +13,6 @@ type
   TViewConfigurarTabela = class(TForm)
     PainelBotoes: TPanel;
     BotaoAvancar: TButton;
-    BotaoVoltar: TButton;
     BotaoCancelar: TButton;
     EditNumLinhas: TEdit;
     EditNumColunas: TEdit;
@@ -34,6 +33,7 @@ type
     FOnCancelar: TNotifyEvent;
     procedure AtualizarEstadoBotoes;
     function ValidarEntradas(out AMensagemErro: string): Boolean;
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   public
     constructor Create(AOwner: TComponent; const ANomePlanilha: string); reintroduce;
     destructor Destroy; override;
@@ -62,8 +62,12 @@ end;
 
 destructor TViewConfigurarTabela.Destroy;
 begin
-  FConfiguracao.Free;
-  inherited;
+//  FConfiguracao.Free;
+end;
+
+procedure TViewConfigurarTabela.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  Action := caFree; // Esta linha garante que o formulário será destruído
 end;
 
 procedure TViewConfigurarTabela.FormCreate(Sender: TObject);
@@ -120,32 +124,34 @@ procedure TViewConfigurarTabela.BotaoAvancarClick(Sender: TObject);
 var
   MensagemErro: string;
 begin
-  if ValidarEntradas(MensagemErro) then
-  begin
-    FConfiguracao.NumLinhas := StrToInt(EditNumLinhas.Text);
-    FConfiguracao.NumColunas := StrToInt(EditNumColunas.Text);
-    if RadioGroupCabecalho.ItemIndex = 0 then
-      FConfiguracao.TipoCabecalho := tcLinha
+    if ValidarEntradas(MensagemErro) then
+    begin
+      FConfiguracao.NumLinhas := StrToInt(EditNumLinhas.Text);
+      FConfiguracao.NumColunas := StrToInt(EditNumColunas.Text);
+      if RadioGroupCabecalho.ItemIndex = 0 then
+        FConfiguracao.TipoCabecalho := tcLinha
+      else
+        FConfiguracao.TipoCabecalho := tcColuna;
+      modalresult := mrOk;
+      if Assigned(FOnAvancar) then
+        FOnAvancar(FConfiguracao);
+    end
     else
-      FConfiguracao.TipoCabecalho := tcColuna;
-
-    if Assigned(FOnAvancar) then
-      FOnAvancar(FConfiguracao);
-  end
-  else
-  begin
-    ShowMessage(MensagemErro);
-  end;
+    begin
+      ShowMessage(MensagemErro);
+    end;
 end;
 
 procedure TViewConfigurarTabela.BotaoVoltarClick(Sender: TObject);
 begin
+modalresult := mrCancel;
   if Assigned(FOnVoltar) then
     FOnVoltar(Self);
 end;
 
 procedure TViewConfigurarTabela.BotaoCancelarClick(Sender: TObject);
 begin
+modalresult := mrCancel;
   if Assigned(FOnCancelar) then
     FOnCancelar(Self);
 end;

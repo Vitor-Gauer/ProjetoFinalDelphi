@@ -4,155 +4,307 @@ interface
 
 uses
   System.SysUtils, System.Classes, Vcl.Forms, Vcl.Dialogs, System.Generics.Collections,
+  System.IOUtils,
   UFuncoesGlobais,
-  UPersistenciaLocalService,
   UTabelaDTO, UPlanilhaDTO, URelatorioDTO,
-  UViewPrincipal,
-  UPrincipalService;
+  UInfoTabelaPlanilhaDTO,
+  UPrincipalService, UPersistenciaLocalService, UPlanilhaService;
 
 type
+  // --- Tipos de Evento (POObj)
+  TNavegarParaCriadorTabelaEvent = procedure of object;
+  TNavegarParaEditorTabelaEvent = procedure(const ATabela: TTabelaDTO) of object;
+  TNavegarParaNovoRelatorioComBaseEvent = procedure(const ATabelaBase: TTabelaDTO) of object;
+  TNavegarParaEditorRelatorioEvent = procedure(const ARelatorio: TRelatorioDTO) of object;
+  TNavegarParaVisualizadorRelatorioEvent = procedure(const ARelatorio: TRelatorioDTO) of object;
+  TOnSolicitarLogoutEvent = procedure of object;
+  TOnAbrirSalvarAssociacaoEvent = procedure of object;
+  TExcluirPlanilhaEvent = procedure(const APlanilha: TPlanilhaDTO) of object;
+  TCriarPlanilhaEvent = procedure(const ANomeSugerido: string) of object;
+  TSolicitarAtualizacaoPlanilha = procedure(const APlanilha: TPlanilhaDTO) of object;
+  TListaPlanilhasAtualizadaEvent = procedure(const AListaPlanilhas: TStringList) of object;
+  TGradeTabelasAtualizadaEvent = procedure(const AInfoTabelas: TObjectList<TInfoTabelaPlanilhaDTO>) of object;
+
   TPrincipalController = class
   private
-    FView: TViewPrincipal;
     FService: TPrincipalService;
-    procedure OnViewFormCreate(Sender: TObject);
-    procedure OnViewListaPlanilhasClick(Sender: TObject);
+    FPersistenciaService: TPersistenciaLocalService;
+    FPlanilhaService: TPlanilhaService;
+
+    // --- Métodos Manipuladores (renomeados de handlers) ---
+    procedure ManipuladorNavegarParaCriadorTabela;
+    procedure ManipuladorNavegarParaEditorTabela(const ATabela: TTabelaDTO);
+    procedure ManipuladorNavegarParaNovoRelatorioComBase(const ATabelaBase: TTabelaDTO);
+    procedure ManipuladorNavegarParaEditorRelatorio(const ARelatorio: TRelatorioDTO);
+    procedure ManipuladorNavegarParaVisualizadorRelatorio(const ARelatorio: TRelatorioDTO);
+    procedure ManipuladorSolicitarLogout;
+    // procedure ManipuladorAbrirGerenciador; // REMOVIDO
+    procedure ManipuladorAbrirSalvarAssociacao;
+
+    // --- MÉTODOS MANIPULADORES EXISTENTES (renomeados) ---
+    procedure ManipuladorExcluirPlanilha(const APlanilha: TPlanilhaDTO);
+    procedure ManipuladorSolicitarAtualizacaoPlanilha(const APlanilha: TPlanilhaDTO);
+    procedure ManipuladorListaPlanilhasAtualizada(const AListaPlanilhas: TStringList);
+    procedure ManipuladorGradeTabelasAtualizada(const AInfoTabelas: TObjectList<TInfoTabelaPlanilhaDTO>);
+    // --- ALTERAR ESTE MÉTODO ---
+    procedure ManipuladorCriarPlanilha(const ANomeSugerido: string); // Este manipulador já existia, mas foi renomeado
+
   public
-    constructor Create(AView: TViewPrincipal; AService: TPrincipalService);
+    // --- Campos para DTOs selecionados ---
+    FTabelaSelecionada: TTabelaDTO;
+    FPlanilhaSelecionada: TPlanilhaDTO;
+    FRelatorioSelecionado: TRelatorioDTO;
+    // --- POObj (Propriedades de Objetos de Eventos) ---
+    FOnListaPlanilhasAtualizada: TListaPlanilhasAtualizadaEvent;
+    FOnGradeTabelasAtualizada: TGradeTabelasAtualizadaEvent;
+    FOnSolicitarAtualizacaoPlanilha: TSolicitarAtualizacaoPlanilha;
+    FOnCriarPlanilha: TCriarPlanilhaEvent;
+    FOnExcluirPlanilha: TExcluirPlanilhaEvent;
+    FOnNavegarParaCriadorTabela: TNavegarParaCriadorTabelaEvent;
+    FOnNavegarParaEditorTabela: TNavegarParaEditorTabelaEvent;
+    FOnNavegarParaNovoRelatorioComBase: TNavegarParaNovoRelatorioComBaseEvent;
+    FOnNavegarParaEditorRelatorio: TNavegarParaEditorRelatorioEvent;
+    FOnNavegarParaVisualizadorRelatorio: TNavegarParaVisualizadorRelatorioEvent;
+    FOnSolicitarLogout: TOnSolicitarLogoutEvent;
+    FOnAbrirSalvarAssociacao: TOnAbrirSalvarAssociacaoEvent;
+
+    // --- Propriedades Públicas para os POObj ---
+    property OnNavegarParaCriadorTabela: TNavegarParaCriadorTabelaEvent read FOnNavegarParaCriadorTabela write FOnNavegarParaCriadorTabela;
+    property OnNavegarParaEditorTabela: TNavegarParaEditorTabelaEvent read FOnNavegarParaEditorTabela write FOnNavegarParaEditorTabela;
+    property OnNavegarParaNovoRelatorioComBase: TNavegarParaNovoRelatorioComBaseEvent read FOnNavegarParaNovoRelatorioComBase write FOnNavegarParaNovoRelatorioComBase;
+    property OnNavegarParaEditorRelatorio: TNavegarParaEditorRelatorioEvent read FOnNavegarParaEditorRelatorio write FOnNavegarParaEditorRelatorio;
+    property OnNavegarParaVisualizadorRelatorio: TNavegarParaVisualizadorRelatorioEvent read FOnNavegarParaVisualizadorRelatorio write FOnNavegarParaVisualizadorRelatorio;
+    property OnSolicitarLogout: TOnSolicitarLogoutEvent read FOnSolicitarLogout write FOnSolicitarLogout;
+    property OnAbrirSalvarAssociacao: TOnAbrirSalvarAssociacaoEvent read FOnAbrirSalvarAssociacao write FOnAbrirSalvarAssociacao;
+
+    // --- PROPRIEDADES EXISTENTES ---
+    property OnListaPlanilhasAtualizada: TListaPlanilhasAtualizadaEvent read FOnListaPlanilhasAtualizada write FOnListaPlanilhasAtualizada;
+    property OnGradeTabelasAtualizada: TGradeTabelasAtualizadaEvent read FOnGradeTabelasAtualizada write FOnGradeTabelasAtualizada;
+    property OnSolicitarAtualizacaoPlanilha: TSolicitarAtualizacaoPlanilha read FOnSolicitarAtualizacaoPlanilha write FOnSolicitarAtualizacaoPlanilha;
+    property OnCriarPlanilha: TCriarPlanilhaEvent read FOnCriarPlanilha write FOnCriarPlanilha;
+    property OnExcluirPlanilha: TExcluirPlanilhaEvent read FOnExcluirPlanilha write FOnExcluirPlanilha;
+
+    // --- Propriedades para DTOs selecionados ---
+    property TabelaSelecionada: TTabelaDTO read FTabelaSelecionada write FTabelaSelecionada;
+    property PlanilhaSelecionada: TPlanilhaDTO read FPlanilhaSelecionada write FPlanilhaSelecionada;
+    property RelatorioSelecionado: TRelatorioDTO read FRelatorioSelecionado write FRelatorioSelecionado;
+
+    constructor Create(AService: TPrincipalService; APersistenciaService: TPersistenciaLocalService; APlanilhaService: TPlanilhaService); // Alterar construtor
     destructor Destroy; override;
+
+    // --- MÉTODOS EXISTENTES ---
+    procedure AtualizarListaPlanilhas;
     procedure PopularListaPlanilhasNaView;
     procedure PopularGradeTabelasNaView(const ANomePlanilha: string);
+    procedure AtualizarListaPlanilhasInterna;
+    procedure AtualizarGradeTabelasInterna(const ANomePlanilha: string);
+    procedure HandleCriarPlanilha(const ANomeSugerido: string);
+    function ValidarNomePlanilha(const ANome: string): Boolean;
   end;
-implementation
 
+implementation
+uses
+UShowViewService;
 { TPrincipalController }
 
-constructor TPrincipalController.Create(AView: TViewPrincipal; AService: TPrincipalService);
+// --- Implementação dos Manipuladores ---
+procedure TPrincipalController.ManipuladorNavegarParaCriadorTabela;
+begin
+  TShowViewService.Instance.ShowViewCriadorTabela; // Chamada direta ao serviço
+end;
+
+procedure TPrincipalController.ManipuladorNavegarParaEditorTabela(const ATabela: TTabelaDTO);
+begin
+  TShowViewService.Instance.ShowViewEditorTabela(ATabela); // Chamada direta ao serviço, passando DTO
+end;
+
+procedure TPrincipalController.ManipuladorNavegarParaNovoRelatorioComBase(const ATabelaBase: TTabelaDTO);
+begin
+  // Chamada direta ao serviço, passando DTO
+  TShowViewService.ManipuladorNavegarParaNovoRelatorioComBase(ATabelaBase); // Pode chamar manipulador estático ou outro método do serviço
+end;
+
+procedure TPrincipalController.ManipuladorNavegarParaEditorRelatorio(const ARelatorio: TRelatorioDTO);
+begin
+  TShowViewService.Instance.ShowViewEditorRelatorio(ARelatorio); // Chamada direta ao serviço, passando DTO
+end;
+
+procedure TPrincipalController.ManipuladorNavegarParaVisualizadorRelatorio(const ARelatorio: TRelatorioDTO);
+begin
+  // Chamada direta ao serviço, passando DTO
+  TShowViewService.ManipuladorNavegarParaVisualizadorRelatorio(ARelatorio); // Pode chamar manipulador estático ou outro método do serviço
+end;
+
+procedure TPrincipalController.ManipuladorSolicitarLogout;
+begin
+  // Chamada direta ao serviço de navegação para logout
+  TShowViewService.ManipuladorSolicitarLogout; // Chama o manipulador estático que encapsula a lógica de logout e navegação
+end;
+
+// procedure TPrincipalController.ManipuladorAbrirGerenciador; // REMOVIDO
+// begin
+//   // Chamada direta ao serviço
+//   TShowViewService.ManipuladorAbrirGerenciador; // Chama o manipulador estático
+// end;
+
+procedure TPrincipalController.ManipuladorAbrirSalvarAssociacao;
+begin
+  TShowViewService.Instance.ShowViewSalvarAssociacao; // Chamada direta ao serviço
+end;
+
+// --- MÉTODOS MANIPULADORES EXISTENTES ---
+procedure TPrincipalController.ManipuladorExcluirPlanilha(const APlanilha: TPlanilhaDTO);
+begin
+  // TODO: Implementar lógica de exclusão via serviço
+  ShowMessage('Exclusão de planilha "' + APlanilha.Titulo + '" solicitada via manipulador.');
+end;
+
+procedure TPrincipalController.ManipuladorSolicitarAtualizacaoPlanilha(const APlanilha: TPlanilhaDTO);
+begin
+  AtualizarListaPlanilhas;
+end;
+
+procedure TPrincipalController.ManipuladorListaPlanilhasAtualizada(const AListaPlanilhas: TStringList);
+begin
+  (*
+    Este manipulador provavelmente vai ser usado futuramente. A View se conecta diretamente a FOnListaPlanilhasAtualizada
+    e executa a lógica de atualização da lista (ex: ListBox.Items.Assign(AListaPlanilhas))
+  *)
+end;
+
+procedure TPrincipalController.ManipuladorGradeTabelasAtualizada(const AInfoTabelas: TObjectList<TInfoTabelaPlanilhaDTO>);
+begin
+  (*
+    Este manipulador provavelmente vai ser usado futuramente. A View se conecta diretamente a FOnGradeTabelasAtualizada por agora
+    e executa a lógica de atualização da grade (ex: preencher uma StringGrid ou DBGrid)
+  *)
+end;
+
+procedure TPrincipalController.ManipuladorCriarPlanilha(const ANomeSugerido: string);
+begin
+  if Assigned(FPlanilhaService) then
+  begin
+    // A chamada ao serviço encapsula a lógica e a mensagem de sucesso/erro
+    FPlanilhaService.CriarNovaPlanilha(ANomeSugerido);
+    // Após criar, atualizar a lista de planilhas para refletir a nova planilha
+    AtualizarListaPlanilhas;
+  end
+  else
+  begin
+    ShowMessage('Erro: Serviço de Planilha não está disponível.');
+  end;
+end;
+
+constructor TPrincipalController.Create(AService: TPrincipalService; APersistenciaService: TPersistenciaLocalService; APlanilhaService: TPlanilhaService);
 begin
   inherited Create;
-  FView := AView;
-  FService := AService;
+  if not Assigned(AService) then
+    raise Exception.Create('TPrincipalService não pode ser nulo.');
+  if not Assigned(APersistenciaService) then
+    raise Exception.Create('TPersistenciaLocalService não pode ser nulo.');
+  if not Assigned(APlanilhaService) then
+    raise Exception.Create('TPlanilhaService não pode ser nulo.'); // Nova validação
 
-  // Conecta os eventos da View ao Controller
-  if Assigned(FView) then
-  begin
-    FView.OnCreate := OnViewFormCreate;
-    FView.OnListaPlanilhasClick := OnViewListaPlanilhasClick;
-  end;
+  FService := AService;
+  FPersistenciaService := APersistenciaService;
+  FPlanilhaService := APlanilhaService;
+
+  // Conectar os manipuladores (métodos) aos eventos (POObj)
+  FOnNavegarParaCriadorTabela := ManipuladorNavegarParaCriadorTabela;
+  FOnNavegarParaEditorTabela := ManipuladorNavegarParaEditorTabela;
+  FOnNavegarParaNovoRelatorioComBase := ManipuladorNavegarParaNovoRelatorioComBase;
+  FOnNavegarParaEditorRelatorio := ManipuladorNavegarParaEditorRelatorio;
+  FOnNavegarParaVisualizadorRelatorio := ManipuladorNavegarParaVisualizadorRelatorio;
+  FOnSolicitarLogout := ManipuladorSolicitarLogout;
+  FOnAbrirSalvarAssociacao := ManipuladorAbrirSalvarAssociacao;
+
+  // Conectar manipuladores para eventos existentes
+  FOnCriarPlanilha := ManipuladorCriarPlanilha; // Conectar o manipulador ao evento
+  // FOnExcluirPlanilha := ManipuladorExcluirPlanilha; // Exemplo - Conectar quando necessário
+  // FOnSolicitarAtualizacaoPlanilha := ManipuladorSolicitarAtualizacaoPlanilha; // Exemplo - Conectar quando necessário
+  // FOnListaPlanilhasAtualizada := ManipuladorListaPlanilhasAtualizada; // Exemplo - A View conecta diretamente
+  // FOnGradeTabelasAtualizada := ManipuladorGradeTabelasAtualizada; // Exemplo - A View conecta diretamente
 end;
 
 destructor TPrincipalController.Destroy;
 begin
-  // Desconecta os eventos da View do Controller para evitar dangling pointers
-  if Assigned(FView) then
-  begin
-    FView.OnCreate := nil;
-    FView.OnListaPlanilhasClick := nil;
-  end;
+  // Liberar DTOs se necessário (geralmente não são liberados aqui, a menos que sejam criados internamente)
+  // FTabelaSelecionada.Free; // Exemplo, depende da origem do DTO
+  // FPlanilhaSelecionada.Free;
+  // FRelatorioSelecionado.Free;
+  // Os serviços injetados não são liberados aqui (FService, FPersistenciaService, FPlanilhaService)
   inherited;
 end;
 
-procedure TPrincipalController.OnViewFormCreate(Sender: TObject);
+// Método chamado pela View
+procedure TPrincipalController.AtualizarListaPlanilhas;
 begin
-  // Lógica a ser executada quando a ViewPrincipal é criada
-  if Sender = FView then
-  begin
-    PopularListaPlanilhasNaView;
-    FView.BarraStatusPrincipal.SimpleText := 'Pronto - Nenhum arquivo carregado. Use "Carregar".';
-  end;
+  // Este método delega a atualização interna
+  AtualizarListaPlanilhasInterna;
 end;
 
-procedure TPrincipalController.OnViewListaPlanilhasClick(Sender: TObject);
-var
-  NomePlanilhaSelecionada: string;
-begin
-  // Lógica a ser executada quando um item da ListaPlanilhas é clicado
-  if (Sender = FView) and (FView.ListaPlanilhas.ItemIndex >= 0) then
-  begin
-    NomePlanilhaSelecionada := FView.ListaPlanilhas.Items[FView.ListaPlanilhas.ItemIndex];
-    PopularGradeTabelasNaView(NomePlanilhaSelecionada);
-  end
-  else
-  begin
-    // Limpa a grade se nenhuma planilha estiver selecionada
-     FView.ClientDataSetTabelas.Close;
-     FView.ClientDataSetTabelas.EmptyDataSet;
-     FView.ClientDataSetTabelas.Open;
-  end;
-end;
-
+// Método chamado pela View na inicialização (pode ser o mesmo que AtualizarListaPlanilhas)
 procedure TPrincipalController.PopularListaPlanilhasNaView;
-var
-  ListaNomesPlanilhas: TStringList;
-  i: Integer;
 begin
-  if not Assigned(FView) or not Assigned(FService) then
-    Exit;
+  // Este método também delega a atualização interna
+  AtualizarListaPlanilhasInterna;
+end;
 
-  FView.ListaPlanilhas.Items.Clear;
-
-  // Chama o Service para obter a lista de nomes de planilhas
-  ListaNomesPlanilhas := FService.ObterListaPlanilhas;
+procedure TPrincipalController.AtualizarListaPlanilhasInterna;
+var
+  ListaPlanilhas: TStringList;
+begin
+  // Chama o serviço para obter a lista atualizada
+  ListaPlanilhas := FService.ObterListaPlanilhas; // Assume que ObterListaPlanilhas retorna um novo TStringList
   try
-    if Assigned(ListaNomesPlanilhas) and (ListaNomesPlanilhas.Count > 0) then
+    // Verifica se alguém está ouvindo o evento
+    if Assigned(FOnListaPlanilhasAtualizada) then
     begin
-      for i := 0 to ListaNomesPlanilhas.Count - 1 do
-      begin
-        FView.ListaPlanilhas.Items.Add(ListaNomesPlanilhas[i]);
-      end;
-    end
-    else
-    begin
-      FView.ListaPlanilhas.Items.Add('(Nenhuma planilha encontrada)');
+      // Dispara o evento passando a lista atualizada
+      FOnListaPlanilhasAtualizada(ListaPlanilhas);
+      // A View, que está conectada a este evento, receberá a lista e atualizará o ListBox
     end;
   finally
-    ListaNomesPlanilhas.Free;
+    ListaPlanilhas.Free;
   end;
 end;
 
 procedure TPrincipalController.PopularGradeTabelasNaView(const ANomePlanilha: string);
-var
-  // Assume que TPrincipalService retorna uma lista de DTOs ou records com as infos
-  ListaInfoTabelas: TObjectList<TInfoTabelaPlanilhaDTO>;
-  InfoTabela: TInfoTabelaPlanilhaDTO;
-  i: Integer;
 begin
-  if not Assigned(FView) or not Assigned(FService) then
-    Exit;
+  AtualizarGradeTabelasInterna(ANomePlanilha);
+end;
 
-  FView.ClientDataSetTabelas.Close;
-  FView.ClientDataSetTabelas.EmptyDataSet;
-  FView.ClientDataSetTabelas.Open;
-
+procedure TPrincipalController.AtualizarGradeTabelasInterna(const ANomePlanilha: string);
+var
+  ListaInfoTabelas: TObjectList<TInfoTabelaPlanilhaDTO>;
+begin
   ListaInfoTabelas := FService.ObterInfoTabelasDaPlanilha(ANomePlanilha);
   try
-    if Assigned(ListaInfoTabelas) and (ListaInfoTabelas.Count > 0) then
-    begin
-      for i := 0 to ListaInfoTabelas.Count - 1 do
-      begin
-        InfoTabela := ListaInfoTabelas[i];
-        FView.ClientDataSetTabelas.Append;
-        // Preenche os campos do ClientDataSet com os dados do DTO
-        FView.ClientDataSetTabelas.FieldByName('Nome').AsString := InfoTabela.Nome;
-        FView.ClientDataSetTabelas.FieldByName('Vazio').AsString := ''; // Coluna vazia
-        // Formata a string conforme solicitado no PDF
-        FView.ClientDataSetTabelas.FieldByName('Dimensoes').AsString :=
-          Format('"%s","%s","%s"', [InfoTabela.Nome, InfoTabela.Dimensoes, InfoTabela.TamanhoMB]);
-        FView.ClientDataSetTabelas.Post;
-      end;
-    end
-    else
-    begin
-      // Nenhuma tabela encontrada
-      FView.ClientDataSetTabelas.Append;
-      FView.ClientDataSetTabelas.FieldByName('Nome').AsString := '(Nenhuma tabela encontrada)';
-      FView.ClientDataSetTabelas.FieldByName('Vazio').AsString := '';
-      FView.ClientDataSetTabelas.FieldByName('Dimensoes').AsString := '';
-      FView.ClientDataSetTabelas.Post;
-    end;
+    if Assigned(FOnGradeTabelasAtualizada) then
+      FOnGradeTabelasAtualizada(ListaInfoTabelas);
   finally
     ListaInfoTabelas.Free;
   end;
+end;
+
+//function TPrincipalController.ExcluirPlanilha(const ANomePlanilha: string): Boolean;
+//begin
+//  // Implementação para excluir planilha via serviço
+//  // ...
+//  Result := False; // Placeholder
+//end;
+
+function TPrincipalController.ValidarNomePlanilha(const ANome: string): Boolean;
+begin
+  Result := FPersistenciaService.ValidarNomeGenerico(ANome);
+end;
+
+procedure TPrincipalController.HandleCriarPlanilha(const ANomeSugerido: string);
+begin
+  if assigned(FOnCriarPlanilha) then
+  ManipuladorCriarPlanilha(ANomeSugerido)
+  else
+  Showmessage('Passou, mas nao passou');
 end;
 
 end.

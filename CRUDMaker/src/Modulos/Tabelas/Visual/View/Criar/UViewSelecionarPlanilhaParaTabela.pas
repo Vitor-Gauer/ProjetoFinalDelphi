@@ -92,12 +92,14 @@ end;
 
 procedure TViewSelecionarPlanilhaParaTabela.BotaoAvancarClick(Sender: TObject);
 begin
+ modalresult := mrOk;
   if Assigned(FOnAvancar) and (FPlanilhaSelecionada <> '') then
     FOnAvancar(Self);
 end;
 
 procedure TViewSelecionarPlanilhaParaTabela.BotaoCancelarClick(Sender: TObject);
 begin
+ modalresult := mrCancel;
   if Assigned(FOnCancelar) then
     FOnCancelar(Self);
 end;

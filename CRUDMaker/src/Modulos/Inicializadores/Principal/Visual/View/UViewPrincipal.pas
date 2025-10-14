@@ -13,22 +13,9 @@ uses
   Vcl.Menus,
 
   Data.DB, Datasnap.DBClient,
-
-  UTabelaDTO, UPlanilhaDTO, URelatorioDTO,
-  UPrincipalController, UShowViewController, UFormBaseMinTopoCentro;
+  UPrincipalController, UFormBaseMinTopoCentro;
 
 type
-  TCriarPlanilhaEvent = procedure(const ANomeSugerido: string) of object;
-
-  TNavegarParaCriadorTabelaEvent = procedure of object;
-  TNavegarParaEditorTabelaEvent = procedure(const APlanilha: TPlanilhaDTO) of object;
-  TNavegarParaNovoRelatorioComBaseEvent = procedure(const APlanilhaBase: TPlanilhaDTO) of object;
-  TNavegarParaEditorRelatorioEvent = procedure(const ARelatorio: TRelatorioDTO) of object;
-  TNavegarParaVisualizadorRelatorioEvent = procedure(const ARelatorio: TRelatorioDTO) of object;
-  TOnSolicitarLogoutEvent = procedure of object;
-  TOnAbrirGerenciadorEvent = procedure of object;
-  TOnAbrirCompartilhamentoEvent = procedure of object;
-
   TViewPrincipal = class(TFormBaseMinTopoCentro)
     MainMenuPrincipal: TMainMenu;
     MenuItemArquivo: TMenuItem;
@@ -68,9 +55,8 @@ type
     BotaoCriarRelatorio: TButton;
     ClientDataSetTabelas: TClientDataSet;
     DataSourceTabelas: TDataSource;
-    procedure MenuItemSairClick(Sender: TObject);
-    procedure MenuItemGerenciarDadosClick(Sender: TObject);
-    procedure MenuItemCompartilharClick(Sender: TObject);
+    procedure MenuItemLogoutClick(Sender: TObject);
+    procedure MenuItemSalvarAssociacaoClick(Sender: TObject);
     procedure BotaoEditarTabelaClick(Sender: TObject);
     procedure BotaoExcluirPlanilhaClick(Sender: TObject);
     procedure BotaoCriarTabelaClick(Sender: TObject);
@@ -81,58 +67,48 @@ type
     procedure BotaoVisualizarRelatorioClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure ListaPlanilhasClick(Sender: TObject);
-    procedure BotaoCriarPlanilhaClick(Sender: TObject);
   private
-    FTabelaSelecionada: TPlanilhaDTO;
-    FRelatorioSelecionado: TRelatorioDTO;
-    FController: TPrincipalController;
-    FOnCriarPlanilha: TCriarPlanilhaEvent;
-    FOnExcluirPlanilha: TExcluirPlanilhaEvent;
-    FOnNavegarParaCriadorTabela: TNavegarParaCriadorTabelaEvent;
-    FOnNavegarParaEditorTabela: TNavegarParaEditorTabelaEvent;
-    FOnNavegarParaNovoRelatorioComBase: TNavegarParaNovoRelatorioComBaseEvent;
-    FOnNavegarParaEditorRelatorio: TNavegarParaEditorRelatorioEvent;
-    FOnNavegarParaVisualizadorRelatorio: TNavegarParaVisualizadorRelatorioEvent;
-    FOnSolicitarLogout: TOnSolicitarLogoutEvent;
-    FOnSolicitarAtualizacaoPlanilha: TNotifyEvent;
-    FOnAbrirGerenciador: TOnAbrirGerenciadorEvent;
-    FOnAbrirCompartilhamento: TOnAbrirCompartilhamentoEvent;
+    procedure HandleListaPlanilhasAtualizada(const ALista: TStringList);
     procedure AtualizarExibicaoPlanilha;
     procedure AtualizarExibicaoRelatorio;
     procedure PopularGradeTabelas(const ANomePlanilha: string);
   public
+    FController: TPrincipalController;
     procedure DefinirNomeUsuario(const ANome: string);
-    property OnCriarPlanilha: TCriarPlanilhaEvent read FOnCriarPlanilha write FOnCriarPlanilha;
-    property OnExcluirPlanilha: TExcluirPlanilhaEvent read FOnExcluirPlanilha write FOnExcluirPlanilha;
-    property OnNavegarParaCriadorTabela: TNavegarParaCriadorTabelaEvent read FOnNavegarParaCriadorTabela write FOnNavegarParaCriadorTabela;
-    property OnNavegarParaEditorTabela: TNavegarParaEditorTabelaEvent read FOnNavegarParaEditorTabela write FOnNavegarParaEditorTabela;
-    property OnNavegarParaNovoRelatorioComBase: TNavegarParaNovoRelatorioComBaseEvent read FOnNavegarParaNovoRelatorioComBase write FOnNavegarParaNovoRelatorioComBase;
-    property OnNavegarParaEditorRelatorio: TNavegarParaEditorRelatorioEvent read FOnNavegarParaEditorRelatorio write FOnNavegarParaEditorRelatorio;
-    property OnNavegarParaVisualizadorRelatorio: TNavegarParaVisualizadorRelatorioEvent read FOnNavegarParaVisualizadorRelatorio write FOnNavegarParaVisualizadorRelatorio;
-    property OnSolicitarLogout: TOnSolicitarLogoutEvent read FOnSolicitarLogout write FOnSolicitarLogout;
-    property OnAbrirGerenciador: TOnAbrirGerenciadorEvent read FOnAbrirGerenciador write FOnAbrirGerenciador;
-    property OnAbrirCompartilhamento: TOnAbrirCompartilhamentoEvent read FOnAbrirCompartilhamento write FOnAbrirCompartilhamento;
   end;
 
 var
   ViewPrincipal: TViewPrincipal;
+
 implementation
-//(* NÃO coloque nenhum comentário acima dessa linha.
-//(* NÃO implemente métodos que não estejam no prompt OU que não estão com //(*
+
 {$R *.dfm}
 
 procedure TViewPrincipal.FormCreate(Sender: TObject);
 begin
-  ControleAbasPrincipal.ActivePageIndex := 0;
-  ClientDataSetTabelas.Close;
-  ClientDataSetTabelas.FieldDefs.Clear;
-  ClientDataSetTabelas.FieldDefs.Add('Nome', ftString, 250, False);
-  ClientDataSetTabelas.FieldDefs.Add('Vazio', ftString, 10, False); // Coluna vazia
-  ClientDataSetTabelas.FieldDefs.Add('Dimensoes', ftString, 500, False); // Para a string formatada
-  ClientDataSetTabelas.CreateDataSet;
-  ClientDataSetTabelas.Open;
-  DataSourceTabelas.DataSet := ClientDataSetTabelas;
-  GradeTabelas.DataSource := DataSourceTabelas;
+  inherited;
+  FController.FPlanilhaSelecionada := nil;
+  FController.FRelatorioSelecionado := nil;
+
+  // Conectar os eventos do Controller para atualizar a View (tem de ser refeito para o próprio controller redirecionar)
+  if Assigned(FController) then
+  begin
+    // Conecta o evento do Controller para atualizar a lista de planilhas
+    FController.OnListaPlanilhasAtualizada := HandleListaPlanilhasAtualizada;
+    // Conecta o evento do Controller para atualizar a grade de tabelas (exemplo)
+    // FController.OnGradeTabelasAtualizada := HandleGradeTabelasAtualizada;
+
+    // Chama o Controller para atualizar a lista na inicialização
+    FController.PopularListaPlanilhasNaView;
+  end;
+  
+  // IMPLEMENTACAO INCOMPLETA!	
+  // Conectar o evento da View para solicitar atualização (ex: botão ou outro evento)
+  // Agora FOnSolicitarAtualizacaoPlanilha será chamado, e ele deve apontar para o próprio método AtualizarExibicaoPlanilha
+  // FController.FOnSolicitarAtualizacaoPlanilha := AtualizarExibicaoPlanilha;
+
+  // Atualiza status
+  BarraStatusPrincipal.SimpleText := 'Pronto - Nenhum arquivo carregado. Use "Carregar".';
 end;
 
 procedure TViewPrincipal.DefinirNomeUsuario(const ANome: string);
@@ -140,117 +116,57 @@ begin
   RotuloBemVindo.Caption := 'Bem-vindo, ' + ANome + '!';
 end;
 
-procedure TViewPrincipal.MenuItemSairClick(Sender: TObject);
+procedure TViewPrincipal.MenuItemLogoutClick(Sender: TObject);
 begin
-  if Assigned(FOnSolicitarLogout) then
-    FOnSolicitarLogout;
+  if Assigned(FController.FOnSolicitarLogout) then
+    FController.FOnSolicitarLogout
+  else
+    ShowMessage('Método: FOnSolicitarLogout não está sendo criado!');
 end;
 
-procedure TViewPrincipal.MenuItemGerenciarDadosClick(Sender: TObject);
+procedure TViewPrincipal.MenuItemSalvarAssociacaoClick(Sender: TObject);
 begin
-  if Assigned(FOnAbrirGerenciador) then
-    FOnAbrirGerenciador;
-end;
-
-procedure TViewPrincipal.MenuItemCompartilharClick(Sender: TObject);
-begin
-   if Assigned(FOnAbrirCompartilhamento) then
-    FOnAbrirCompartilhamento;
+  if Assigned(FController.FOnAbrirSalvarAssociacao) then
+    FController.FOnAbrirSalvarAssociacao
+  else
+    ShowMessage('Método: FOnAbrirSalvarAssociacao não está sendo criado!');
 end;
 
 procedure TViewPrincipal.BotaoEditarTabelaClick(Sender: TObject);
 begin
-   if Assigned(FOnNavegarParaEditorTabela) then
-     OnNavegarParaEditorTabela(FTabelaSelecionada);
-      TViewController.Instance.ShowViewEditorTabela;
-end;
-
-procedure TViewPrincipal.BotaoExcluirPlanilhaClick(Sender: TObject);
-var
-  NomePlanilhaParaExcluir: string;
-begin
-  if Assigned(FPlanilhaSelecionada) and (FPlanilhaSelecionada.Titulo <> '') then
-  begin
-    NomePlanilhaParaExcluir := FPlanilhaSelecionada.Titulo;
-
-    if MessageDlg('Tem certeza que deseja excluir a planilha "' + NomePlanilhaParaExcluir + '"?',
-      mtConfirmation, [mbYes, mbNo], 0) = mrYes then
-    begin
-      if Assigned(FOnExcluirPlanilha) then
-        FOnExcluirPlanilha(NomePlanilhaParaExcluir)
-      else
-        ShowMessage('Evento OnExcluirPlanilha não está conectado.');
-    end;
-  end
+  if Assigned(FController.FOnNavegarParaEditorTabela) then
+    FController.FOnNavegarParaEditorTabela(FController.FTabelaSelecionada) // Passa DTO
   else
-  begin
-    ShowMessage('Nenhuma planilha selecionada para exclusão.');
-  end;
-end;
-
-procedure TViewPrincipal.BotaoCriarPlanilhaClick(Sender: TObject);
-var
-  NomeNovaPlanilha: string;
-  InputResult: Boolean;
-begin
-  NomeNovaPlanilha := 'NovaPlanilha_' + FormatDateTime('yyyymmdd_hhnnss', Now);
-  InputResult := InputQuery('Criar Planilha', 'Digite o nome da nova planilha:', NomeNovaPlanilha);
-  if InputResult and (Trim(NomeNovaPlanilha) <> '') then
-  begin
-    if Assigned(FOnCriarPlanilha) then
-      FOnCriarPlanilha(Trim(NomeNovaPlanilha))
-    else
-      ShowMessage('Evento OnCriarPlanilha não está conectado.');
-  end
-  else
-  begin
-    if InputResult then
-      ShowMessage('Nome da planilha não pode ser vazio.');
-  end;
+    ShowMessage('Método: FOnNavegarParaEditorTabela não está sendo criado!');
 end;
 
 procedure TViewPrincipal.BotaoCriarTabelaClick(Sender: TObject);
 begin
-  if Assigned(FOnNavegarParaCriadorTabela) then
-  begin
-    FOnNavegarParaCriadorTabela();
-  end
+  if Assigned(FController.FOnNavegarParaCriadorTabela) then
+    FController.FOnNavegarParaCriadorTabela
   else
-  begin
-     ShowMessage('Navegação para o criador de tabela não configurada.');
-  end;
+    ShowMessage('Método: FOnNavegarParaCriadorTabela não está sendo criado!');
 end;
 
-procedure TViewPrincipal.BotaoEditarRelatorioClick(Sender: TObject);
+procedure TViewPrincipal.HandleListaPlanilhasAtualizada(const ALista: TStringList);
 begin
-  if Assigned(FOnNavegarParaEditorRelatorio) then
-    FOnNavegarParaEditorRelatorio(FRelatorioSelecionado);
-    TViewController.Instance.ShowViewEditorRelatorio
-end;
-
-procedure TViewPrincipal.BotaoExcluirRelatorioClick(Sender: TObject);
-begin
-  if Assigned(FRelatorioSelecionado) then
-  begin
-    if MessageDlg('Tem certeza que deseja excluir o relatório "' + FRelatorioSelecionado.Titulo + '"?',
-      mtConfirmation, [mbYes, mbNo], 0) = mrYes then
-    begin
-      // TODO: Chamar serviço para excluir o relatório
-      ShowMessage('Exclusão do relatório "' + FRelatorioSelecionado.Titulo + '" solicitada. Implementar no controller.');
-    end;
-  end;
-end;
-
-procedure TViewPrincipal.BotaoVisualizarRelatorioClick(Sender: TObject);
-begin
-    if Assigned(FOnNavegarParaVisualizadorRelatorio) then
-      FOnNavegarParaVisualizadorRelatorio(FRelatorioSelecionado);
+  // Atualiza o TListBox com a nova lista recebida do Controller
+  ListaPlanilhas.Items.Assign(ALista); // Atribui diretamente os itens da lista recebida
 end;
 
 procedure TViewPrincipal.AtualizarExibicaoPlanilha;
 begin
-  if Assigned(FOnSolicitarAtualizacaoPlanilha) then
-      FOnSolicitarAtualizacaoPlanilha();
+  if Assigned(FController) then
+  begin
+    // Chama diretamente o método do Controller responsável por atualizar a lista
+    // Este método (AtualizarListaPlanilhas) irá chamar o Service e disparar o evento.
+    FController.AtualizarListaPlanilhas;
+  end
+  else
+  begin
+    // Tratamento de erro caso o Controller não esteja disponível
+    ShowMessage('Erro: Controller não está disponível para atualizar a lista de planilhas.');
+    // Opcional Futuro : Log de erro
   end;
 end;
 
@@ -280,7 +196,6 @@ begin
     ClientDataSetTabelas.EmptyDataSet;
     ClientDataSetTabelas.Open;
   end;
-  //(* esse IF acima inteiro deveria ser de um service
 end;
 
 procedure TViewPrincipal.PopularGradeTabelas(const ANomePlanilha: string);
@@ -292,6 +207,95 @@ begin
   else
   begin
     ShowMessage('Erro: Controller não disponível para popular a grade de tabelas.');
+  end;
+end;
+
+procedure TViewPrincipal.BotaoEditarRelatorioClick(Sender: TObject);
+begin
+  if Assigned(FController.FOnNavegarParaEditorRelatorio) then
+    FController.FOnNavegarParaEditorRelatorio(FController.FRelatorioSelecionado) // Passa DTO
+  else
+    ShowMessage('Método: FOnNavegarParaEditorRelatorio não está sendo criado!');
+end;
+
+procedure TViewPrincipal.BotaoExcluirRelatorioClick(Sender: TObject);
+begin
+  // Exemplo de como seria com um evento de exclusão no controller (ainda não existe no UPrincipalService/Controller atualizado)
+  // if Assigned(FController.FRelatorioSelecionado) then
+  // begin
+  //   if MessageDlg('Tem certeza que deseja excluir o relatório "' + FController.FRelatorioSelecionado.Titulo + '"?',
+  //     mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+  //   begin
+  //     if Assigned(FController.FOnExcluirRelatorio) then
+  //       FController.FOnExcluirRelatorio(FController.FRelatorioSelecionado)
+  //     else
+  //       ShowMessage('Evento OnExcluirRelatorio não está conectado.');
+  //   end;
+  // end
+  // else
+  // begin
+  //   ShowMessage('Nenhum relatório selecionado para exclusão.');
+  // end;
+
+  ShowMessage('Exclusão de relatório ainda não implementada via novo padrão.');
+end;
+
+procedure TViewPrincipal.BotaoVisualizarRelatorioClick(Sender: TObject);
+begin
+  if Assigned(FController.FOnNavegarParaVisualizadorRelatorio) then
+    FController.FOnNavegarParaVisualizadorRelatorio(FController.FRelatorioSelecionado) // Passa DTO
+  else
+    ShowMessage('Método: FOnNavegarParaVisualizadorRelatorio não está sendo criado!');
+end;
+
+procedure TViewPrincipal.BotaoExcluirPlanilhaClick(Sender: TObject);
+var
+  NomePlanilhaParaExcluir: string;
+begin
+  // Verifica se uma planilha está selecionada
+  if Assigned(FController.FPlanilhaSelecionada) and (FController.FPlanilhaSelecionada.Titulo <> '') then
+  begin
+    NomePlanilhaParaExcluir := FController.FPlanilhaSelecionada.Titulo;
+
+    // Solicita confirmação ao usuário
+    if MessageDlg('Tem certeza que deseja excluir a planilha "' + NomePlanilhaParaExcluir + '"?',
+                  mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+    begin
+      // Dispara o evento de exclusão no Controller, passando o DTO da planilha
+      if Assigned(FController.FOnExcluirPlanilha) then
+        FController.FOnExcluirPlanilha(FController.FPlanilhaSelecionada) // Passa o DTO
+      else
+        ShowMessage('Evento OnExcluirPlanilha não está conectado.');
+    end;
+  end
+  else
+  begin
+    ShowMessage('Nenhuma planilha selecionada para exclusão.');
+  end;
+end;
+
+procedure TViewPrincipal.BotaoCriarPlanilhaClick(Sender: TObject);
+var
+  NomeNovaPlanilha: string;
+  InputResult: Boolean;
+begin
+  // Gera um nome sugerido
+  NomeNovaPlanilha := 'NovaPlanilha_' + FormatDateTime('yyyymmdd_hhnnss', Now);
+  // Solicita o nome ao usuário
+  InputResult := InputQuery('Criar Planilha', 'Digite o nome da nova planilha:', NomeNovaPlanilha);
+
+  if InputResult and (Trim(NomeNovaPlanilha) <> '') then
+  begin
+    // Dispara o evento de criação no Controller, passando o nome sugerido
+    if Assigned(FController.FOnCriarPlanilha) then
+      FController.FOnCriarPlanilha(Trim(NomeNovaPlanilha)) // Passa o nome
+    else
+      ShowMessage('Evento OnCriarPlanilha não está conectado.');
+  end
+  else
+  begin
+    if InputResult then // Se o InputQuery foi cancelado, InputResult é False
+      ShowMessage('Nome da planilha não pode ser vazio.');
   end;
 end;
 
