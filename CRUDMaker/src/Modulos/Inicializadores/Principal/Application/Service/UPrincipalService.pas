@@ -20,7 +20,7 @@ type
   TPrincipalService = class
   public
     function ObterListaPlanilhas: TStringList;
-    function ObterInfoTabelasDaPlanilha(const ANomePlanilha: string): TObjectList<TInfoTabelaPlanilhaDTO>;
+    function ObterInfoTabelasDaPlanilha(const ANomePlanilha: string): TStringList;
   end;
 
 implementation
@@ -72,25 +72,14 @@ begin
   end;
 end;
 
-function TPrincipalService.ObterInfoTabelasDaPlanilha(const ANomePlanilha: string): TObjectList<TInfoTabelaPlanilhaDTO>;
+function TPrincipalService.ObterInfoTabelasDaPlanilha(const ANomePlanilha: string): TStringList;
 var
   DiretorioPlanilha, DiretorioTabelas: string;
   SubDirs: TArray<string>;
   i: Integer;
   NomeTabela: string;
-  CaminhoPastaTabela: string;
-  ArquivosCSV: TArray<string>;
-  CaminhoCSV: string;
-  TamanhoBytes: Int64;
-  TamanhoMB: string;
-  Dimensoes: string;
-  InfoTabela: TInfoTabelaPlanilhaDTO;
-  TabelasProcessadas: TStringList;
-  LCSVService: TCSVService; // Variável local temporária
 begin
-  Result := TObjectList<TInfoTabelaPlanilhaDTO>.Create(True); // OwnsObjects = True
-  TabelasProcessadas := TStringList.Create;
-  LCSVService := TCSVService.Create; // Cria uma instância temporária do CSVService
+  Result := TStringList.Create;
   try
     if ANomePlanilha = '' then
       Exit;
@@ -103,51 +92,22 @@ begin
     SubDirs := TDirectory.GetDirectories(DiretorioTabelas);
 
     for i := Low(SubDirs) to High(SubDirs) do
-    begin
-      NomeTabela := ExtractFileName(SubDirs[i]);
-      CaminhoPastaTabela := SubDirs[i];
-
-      // Procura arquivos .CSV na pasta da tabela
-      ArquivosCSV := TDirectory.GetFiles(CaminhoPastaTabela, '*.csv');
-      if Length(ArquivosCSV) > 0 then
       begin
-        CaminhoCSV := ArquivosCSV[0]; // Assume o primeiro CSV encontrado
-
-        // --- USAR O SERVIÇO IMPLEMENTADO ---
-        try
-          // Obter Dimensões do Arquivo CSV usando o serviço
-          Dimensoes := LCSVService.ObterDimensoesDoCSV(CaminhoCSV);
-          if Dimensoes.StartsWith('Erro') then
-          begin
-             // Se o serviço retornar um erro, use uma string de erro
-             Dimensoes := Dimensoes; // Mantém a mensagem de erro
-          end;
-        except
-          on E: Exception do
-            Dimensoes := 'Erro ao ler CSV: ' + E.Message; // Tratamento de exceção adicional
-        end;
-
-        // Obter Tamanho do Arquivo CSV
-        TamanhoBytes := TFile.GetSize(CaminhoCSV);
-        TamanhoMB := FormatFloat('0.00 MB', TamanhoBytes / (1024 * 1024));
-
-        // Criar o DTO com os dados obtidos (Nome, Dimensoes, TamanhoMB)
-        // O formato (CSV) e o caminho são informações internas para o cálculo,
-        // mas o DTO final só precisa dos dados resumidos.
-        InfoTabela := TInfoTabelaPlanilhaDTO.Create(NomeTabela, Dimensoes, TamanhoMB);
-        Result.Add(InfoTabela);
-        TabelasProcessadas.Add(NomeTabela); // Marca como processada via CSV
+        // Extrair apenas o nome da pasta
+        NomeTabela := ExtractFileName(SubDirs[i]);
+        // Adicionar à lista se o nome não for vazio
+        if NomeTabela <> '' then
+          Result.Add(NomeTabela);
       end;
-      // NÃO PROCESSAR XML - Conforme instrução "Não irá ser feito chamada por XML"
-      // O bloco 'else' que lia XML foi removido.
-    end;
 
-  finally
-    LCSVService.Free; // Libera o serviço temporário
-    TabelasProcessadas.Free;
+  except
+    on E: Exception do
+    begin
+      Result.Clear; // Limpa qualquer dado parcial
+      Result.Add('Erro ao ler pastas de tabelas: ' + E.Message); // Adiciona mensagem de erro
+      // Poderia logar a exceção também, se TLogService estivesse disponível e configurado aqui
+    end;
   end;
 end;
-
-end.
 
 end.

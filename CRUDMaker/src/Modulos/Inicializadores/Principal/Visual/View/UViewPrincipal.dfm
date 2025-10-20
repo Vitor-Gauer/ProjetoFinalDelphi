@@ -53,15 +53,21 @@ object ViewPrincipal: TViewPrincipal
         BevelOuter = bvNone
         TabOrder = 0
         object ListaPlanilhas: TListBox
-          Left = 0
-          Top = 0
-          Width = 200
-          Height = 409
+          AlignWithMargins = True
+          Left = 3
+          Top = 3
+          Width = 194
+          Height = 403
           Align = alClient
           BevelInner = bvNone
           BevelOuter = bvNone
           ItemHeight = 15
           TabOrder = 0
+          OnClick = ListaPlanilhasClick
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 200
+          ExplicitHeight = 409
         end
         object PainelBotaoAtualizar: TPanel
           Left = 0
@@ -72,7 +78,7 @@ object ViewPrincipal: TViewPrincipal
           TabOrder = 1
           object BotaoAtualizarPlanilhas: TButton
             Left = 50
-            Top = 3
+            Top = 1
             Width = 100
             Height = 25
             Caption = 'Atualizar'
@@ -89,31 +95,13 @@ object ViewPrincipal: TViewPrincipal
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 1
-        object GradeTabelas: TDBGrid
-          Left = 0
-          Top = 0
-          Width = 689
-          Height = 408
-          Align = alClient
-          TabOrder = 0
-          TitleFont.Charset = DEFAULT_CHARSET
-          TitleFont.Color = clWindowText
-          TitleFont.Height = -12
-          TitleFont.Name = 'Segoe UI'
-          TitleFont.Style = []
-          Columns = <
-            item
-              Expanded = False
-              Visible = True
-            end>
-        end
         object PainelBotoesTabela: TPanel
           Left = 0
           Top = 408
           Width = 689
           Height = 30
           Align = alBottom
-          TabOrder = 1
+          TabOrder = 0
           object BotaoEditarPlanilha: TButton
             Left = 10
             Top = 2
@@ -150,6 +138,16 @@ object ViewPrincipal: TViewPrincipal
             TabOrder = 3
             OnClick = BotaoCriarTabelaClick
           end
+        end
+        object ListaTabelas: TListBox
+          AlignWithMargins = True
+          Left = 3
+          Top = 3
+          Width = 683
+          Height = 402
+          Align = alClient
+          ItemHeight = 15
+          TabOrder = 1
         end
       end
     end

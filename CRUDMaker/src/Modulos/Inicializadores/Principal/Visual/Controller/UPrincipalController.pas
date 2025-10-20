@@ -23,7 +23,7 @@ type
   TCriarPlanilhaEvent = procedure(const ANomeSugerido: string) of object;
   TSolicitarAtualizacaoPlanilha = procedure(const APlanilha: TPlanilhaDTO) of object;
   TListaPlanilhasAtualizadaEvent = procedure(const AListaPlanilhas: TStringList) of object;
-  TGradeTabelasAtualizadaEvent = procedure(const AInfoTabelas: TObjectList<TInfoTabelaPlanilhaDTO>) of object;
+  TGradeTabelasAtualizadaEvent = procedure(const AInfoTabelas: TStringList) of object;
 
   TPrincipalController = class
   private
@@ -57,7 +57,9 @@ type
     // --- POObj (Propriedades de Objetos de Eventos) ---
     FOnListaPlanilhasAtualizada: TListaPlanilhasAtualizadaEvent;
     FOnGradeTabelasAtualizada: TGradeTabelasAtualizadaEvent;
+    ListaInfoTabelas: TStringList;
     FOnSolicitarAtualizacaoPlanilha: TSolicitarAtualizacaoPlanilha;
+    ListaPlanilhas: TStringList;
     FOnCriarPlanilha: TCriarPlanilhaEvent;
     FOnExcluirPlanilha: TExcluirPlanilhaEvent;
     FOnNavegarParaCriadorTabela: TNavegarParaCriadorTabelaEvent;
@@ -67,6 +69,7 @@ type
     FOnNavegarParaVisualizadorRelatorio: TNavegarParaVisualizadorRelatorioEvent;
     FOnSolicitarLogout: TOnSolicitarLogoutEvent;
     FOnAbrirSalvarAssociacao: TOnAbrirSalvarAssociacaoEvent;
+
 
     // --- Propriedades Públicas para os POObj ---
     property OnNavegarParaCriadorTabela: TNavegarParaCriadorTabelaEvent read FOnNavegarParaCriadorTabela write FOnNavegarParaCriadorTabela;
@@ -239,7 +242,6 @@ end;
 // Método chamado pela View
 procedure TPrincipalController.AtualizarListaPlanilhas;
 begin
-  // Este método delega a atualização interna
   AtualizarListaPlanilhasInterna;
 end;
 
@@ -251,22 +253,8 @@ begin
 end;
 
 procedure TPrincipalController.AtualizarListaPlanilhasInterna;
-var
-  ListaPlanilhas: TStringList;
 begin
-  // Chama o serviço para obter a lista atualizada
-  ListaPlanilhas := FService.ObterListaPlanilhas; // Assume que ObterListaPlanilhas retorna um novo TStringList
-  try
-    // Verifica se alguém está ouvindo o evento
-    if Assigned(FOnListaPlanilhasAtualizada) then
-    begin
-      // Dispara o evento passando a lista atualizada
-      FOnListaPlanilhasAtualizada(ListaPlanilhas);
-      // A View, que está conectada a este evento, receberá a lista e atualizará o ListBox
-    end;
-  finally
-    ListaPlanilhas.Free;
-  end;
+  ListaPlanilhas := FService.ObterListaPlanilhas;
 end;
 
 procedure TPrincipalController.PopularGradeTabelasNaView(const ANomePlanilha: string);
@@ -275,16 +263,8 @@ begin
 end;
 
 procedure TPrincipalController.AtualizarGradeTabelasInterna(const ANomePlanilha: string);
-var
-  ListaInfoTabelas: TObjectList<TInfoTabelaPlanilhaDTO>;
 begin
   ListaInfoTabelas := FService.ObterInfoTabelasDaPlanilha(ANomePlanilha);
-  try
-    if Assigned(FOnGradeTabelasAtualizada) then
-      FOnGradeTabelasAtualizada(ListaInfoTabelas);
-  finally
-    ListaInfoTabelas.Free;
-  end;
 end;
 
 //function TPrincipalController.ExcluirPlanilha(const ANomePlanilha: string): Boolean;

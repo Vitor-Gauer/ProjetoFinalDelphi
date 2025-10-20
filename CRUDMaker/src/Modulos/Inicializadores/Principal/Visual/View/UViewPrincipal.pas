@@ -33,7 +33,6 @@ type
     PainelEsquerdoPlanilhas: TPanel;
     ListaPlanilhas: TListBox;
     PainelDireitoTabelas: TPanel;
-    GradeTabelas: TDBGrid;
     PainelBotoesTabela: TPanel;
     BotaoEditarPlanilha: TButton;
     BotaoExcluirPlanilha: TButton;
@@ -43,6 +42,7 @@ type
     Divisor2: TSplitter;
     PainelEsquerdoRelatorios: TPanel;
     ListaRelatorios: TListBox;
+    ListaTabelas: TListBox;
     PainelDireitoRelatorios: TPanel;
     MemoVisualizadorRelatorio: TMemo;
     PainelBotoesRelatorio: TPanel;
@@ -71,7 +71,7 @@ type
     procedure HandleListaPlanilhasAtualizada(const ALista: TStringList);
     procedure AtualizarExibicaoPlanilha;
     procedure AtualizarExibicaoRelatorio;
-    procedure PopularGradeTabelas(const ANomePlanilha: string);
+    procedure PopularGradeTabelas(const ANomeTabela: string);
   public
     FController: TPrincipalController;
     procedure DefinirNomeUsuario(const ANome: string);
@@ -161,6 +161,7 @@ begin
     // Chama diretamente o método do Controller responsável por atualizar a lista
     // Este método (AtualizarListaPlanilhas) irá chamar o Service e disparar o evento.
     FController.AtualizarListaPlanilhas;
+    ListaPlanilhas.Items.Assign(FController.ListaPlanilhas);
   end
   else
   begin
@@ -198,11 +199,12 @@ begin
   end;
 end;
 
-procedure TViewPrincipal.PopularGradeTabelas(const ANomePlanilha: string);
+procedure TViewPrincipal.PopularGradeTabelas(const ANomeTabela: string);
 begin
   if Assigned(FController) then
   begin
-    FController.PopularGradeTabelasNaView(ANomePlanilha);
+    FController.PopularGradeTabelasNaView(ANomeTabela);
+    ListaTabelas.Items.Assign(FController.ListaInfoTabelas)
   end
   else
   begin
