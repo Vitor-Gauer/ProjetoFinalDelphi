@@ -35,6 +35,7 @@ object ViewPrincipal: TViewPrincipal
     ActivePage = AbaPlanilhas
     Align = alClient
     TabOrder = 0
+    StyleElements = [seFont, seClient]
     object AbaPlanilhas: TTabSheet
       Caption = 'Planilhas'
       object Divisor1: TSplitter
@@ -49,16 +50,41 @@ object ViewPrincipal: TViewPrincipal
         Width = 200
         Height = 438
         Align = alLeft
+        BevelOuter = bvNone
         TabOrder = 0
         object ListaPlanilhas: TListBox
-          Left = 1
-          Top = 1
-          Width = 198
-          Height = 436
-          HelpType = htKeyword
+          AlignWithMargins = True
+          Left = 3
+          Top = 3
+          Width = 194
+          Height = 403
           Align = alClient
+          BevelInner = bvNone
+          BevelOuter = bvNone
           ItemHeight = 15
           TabOrder = 0
+          OnClick = ListaPlanilhasClick
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 200
+          ExplicitHeight = 409
+        end
+        object PainelBotaoAtualizar: TPanel
+          Left = 0
+          Top = 409
+          Width = 200
+          Height = 29
+          Align = alBottom
+          TabOrder = 1
+          object BotaoAtualizarPlanilhas: TButton
+            Left = 50
+            Top = 1
+            Width = 100
+            Height = 25
+            Caption = 'Atualizar'
+            TabOrder = 0
+            OnClick = BotaoAtualizarPlanilhaClick
+          end
         end
       end
       object PainelDireitoTabelas: TPanel
@@ -67,32 +93,15 @@ object ViewPrincipal: TViewPrincipal
         Width = 689
         Height = 438
         Align = alClient
+        BevelOuter = bvNone
         TabOrder = 1
-        object GradeTabelas: TDBGrid
-          Left = 1
-          Top = 1
-          Width = 687
-          Height = 406
-          Align = alClient
-          TabOrder = 0
-          TitleFont.Charset = DEFAULT_CHARSET
-          TitleFont.Color = clWindowText
-          TitleFont.Height = -12
-          TitleFont.Name = 'Segoe UI'
-          TitleFont.Style = []
-          Columns = <
-            item
-              Expanded = False
-              Visible = True
-            end>
-        end
         object PainelBotoesTabela: TPanel
-          Left = 1
-          Top = 407
-          Width = 687
+          Left = 0
+          Top = 408
+          Width = 689
           Height = 30
           Align = alBottom
-          TabOrder = 1
+          TabOrder = 0
           object BotaoEditarPlanilha: TButton
             Left = 10
             Top = 2
@@ -129,6 +138,16 @@ object ViewPrincipal: TViewPrincipal
             TabOrder = 3
             OnClick = BotaoCriarTabelaClick
           end
+        end
+        object ListaTabelas: TListBox
+          AlignWithMargins = True
+          Left = 3
+          Top = 3
+          Width = 683
+          Height = 402
+          Align = alClient
+          ItemHeight = 15
+          TabOrder = 1
         end
       end
     end

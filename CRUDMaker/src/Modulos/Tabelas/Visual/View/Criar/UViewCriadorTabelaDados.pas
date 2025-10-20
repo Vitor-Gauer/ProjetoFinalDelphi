@@ -58,11 +58,11 @@ end;
 destructor TViewCriadorTabelaDados.Destroy;
 begin
   // Libera os recursos alocados
-  FController.Free;
-  FTabela.Free;
+  FreeandNil(FController);
+  FreeandNil(FTabela);
   // FConfiguracao é liberada aqui pois foi passada no construtor
-  if Assigned(FConfiguracao) then
-    FConfiguracao.Free;
+//  if Assigned(FConfiguracao) then
+//    FConfiguracao.Free;
   inherited;
 end;
 
@@ -152,7 +152,6 @@ begin
         // Sucesso na criação
         ShowMessage('Tabela criada com sucesso!');
         Self.ModalResult := mrOk; // Fecha o form como sucesso
-        // Ou Self.Close; dependendo de como for chamado (ShowModal ou Show)
       end;
       // Se não for sucesso, o controller já mostra a mensagem de erro
     except
@@ -172,7 +171,6 @@ procedure TViewCriadorTabelaDados.BotaoCancelarClick(Sender: TObject);
 begin
   // Fecha o form sem salvar
   Self.ModalResult := mrCancel;
-  // Ou Self.Close;
 end;
 
 procedure TViewCriadorTabelaDados.DBGridDadosMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);

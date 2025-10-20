@@ -1,0 +1,22 @@
+Ex. Criar tabela:
+UShowViewController tem 
+TNavegarParaCriadorTabelaEvent que é POObj
+Classe TEventosShowViewController que carrega: 
+
+FOnNavegarParaCriadorTabela tipo TNavegarParaCriadorTabelaEvent
+
+e Property OnNavegarParaCriadorTabela tipo TNavegarParaCriadorTabelaEvent 
+
+que lê e escreve na FOnNavegarParaCriadorTabela
+
+Em View Principal,
+
+FEventosController carrega o evento que será utilizado,
+
+Ao abrir um método,
+Create FEventosController
+try
+finally
+FEventosController.free
+end;
+    LView.OnNavegarParaCriadorTabela := TempOnNavegarParaCriadorTabelaHandler;
