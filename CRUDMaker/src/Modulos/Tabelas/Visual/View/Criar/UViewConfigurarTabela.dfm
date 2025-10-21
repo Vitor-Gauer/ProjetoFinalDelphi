@@ -1,6 +1,7 @@
 object ViewConfigurarTabela: TViewConfigurarTabela
   Left = 0
   Top = 0
+  BorderIcons = [biSystemMenu]
   Caption = 'Configurar Tabela'
   ClientHeight = 200
   ClientWidth = 400
