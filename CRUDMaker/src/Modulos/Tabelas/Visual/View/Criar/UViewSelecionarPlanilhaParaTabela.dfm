@@ -1,6 +1,7 @@
 object ViewSelecionarPlanilhaParaTabela: TViewSelecionarPlanilhaParaTabela
   Left = 0
   Top = 0
+  BorderIcons = [biSystemMenu]
   Caption = 'Selecionar Planilha'
   ClientHeight = 300
   ClientWidth = 400

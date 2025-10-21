@@ -10,13 +10,15 @@ type
   TFormBaseMinTopoCentro = class(TForm)
   private
     FEstaMinimizadoNoTopo: Boolean;
+    FLarguraOriginal, FAlturaOriginal: Integer;
     procedure WMSysCommand(var Message: TWMSysCommand); message WM_SYSCOMMAND;
+    procedure WMNCLButtonDblClk(var Message: TMessage);
     procedure AtualizarLayoutFormsMinimizados;
   protected
     procedure CreateParams(var Params: TCreateParams); override;
     procedure CreateWnd; override;
     procedure DoMinimizarParaTopo;
-    procedure DoRestaurarDoTopo;
+    procedure DoRestaurarParaTopo;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -37,7 +39,7 @@ constructor TFormBaseMinTopoCentro.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
   FEstaMinimizadoNoTopo := False;
-  // Inicializa a lista global se ainda não estiver
+  // Inicializa a lista global se ainda não estiver sido
   if not Assigned(ListaFormsMinimizados) then
     ListaFormsMinimizados := TList.Create;
 end;
@@ -51,6 +53,22 @@ begin
     FEstaMinimizadoNoTopo := False;
     AtualizarLayoutFormsMinimizados; // Atualiza layout após remover
   end;
+  inherited;
+end;
+
+procedure TFormBaseMinTopoCentro.WMNCLButtonDblClk(var Message: TMessage);
+begin
+  // A mensagem WM_NCLBUTTONDBLCLK é enviada com o Hittest Code no parâmetro WParam.
+  // Se o clique duplo foi na barra de título, o código será HTCAPTION.
+  if (Message.WParam = HTCAPTION) and FEstaMinimizadoNoTopo then
+  begin
+    Message.Result := 0; // Consome a mensagem para evitar comportamento padrão
+    DoRestaurarParaTopo;
+    Exit;
+  end;
+
+  // Se não for clique duplo na barra de título, ou não estiver minimizado,
+  // permite que o processamento padrão (ex: maximizar) ocorra.
   inherited;
 end;
 
@@ -89,12 +107,30 @@ end;
 
 procedure TFormBaseMinTopoCentro.WMSysCommand(var Message: TWMSysCommand);
 begin
-  if (Message.CmdType = SC_MINIMIZE) then
-  begin
-    Message.Result := 0;
-    DoMinimizarParaTopo;
-    Exit;
+  // O valor do CmdType deve ser mascarado com $FFF0 para ignorar bits de posição.
+  case Message.CmdType and $FFF0 of
+    SC_MINIMIZE:
+    begin
+      Message.Result := 0;
+      DoMinimizarParaTopo;
+      Exit;
+    end;
+
+    // Foca apenas no RESTORE
+    SC_MAXIMIZE:
+    begin
+      // VERIFICA SE O FORMULÁRIO ESTÁ NA SUA LISTA PERSONALIZADA
+      if Assigned(ListaFormsMinimizados) and (ListaFormsMinimizados.IndexOf(Self) <> -1) then
+      begin
+        // A flag interna FEstaMinimizadoNoTopo deve ser True se ele está na lista,
+        // mas usar a lista é mais seguro
+        Message.Result := 0; // Consome a mensagem
+        DoRestaurarParaTopo;
+        Exit;
+      end;
+    end;
   end;
+
   inherited;
 end;
 
@@ -103,6 +139,9 @@ begin
   if FEstaMinimizadoNoTopo then
     Exit;
 
+  FLarguraOriginal := Width;
+  FAlturaOriginal := Height;
+  SendToback;
   FEstaMinimizadoNoTopo := True;
   if Assigned(ListaFormsMinimizados) then // Verifica se a lista foi criada
   begin
@@ -111,48 +150,66 @@ begin
   end;
 end;
 
-procedure TFormBaseMinTopoCentro.DoRestaurarDoTopo;
+procedure TFormBaseMinTopoCentro.DoRestaurarParaTopo;
+var
+  NovaPosicaoleft, NovaPosicaoTop: Integer;
 begin
   if not FEstaMinimizadoNoTopo then
     Exit;
 
-  if Assigned(ListaFormsMinimizados) then // Verifica se a lista foi criada
+  if Assigned(ListaFormsMinimizados) then
   begin
     ListaFormsMinimizados.Remove(Self);
     FEstaMinimizadoNoTopo := False;
   end;
+
+  Width := FLarguraOriginal;
+  Height := FAlturaOriginal;
+
+  // Centralização: (Largura da Área de Trabalho - Altura do Formulário) / 2
+  NovaPosicaoLeft := (Screen.WorkAreaWidth - Width) div 2;
+
+  // Centralização: (Altura da Área de Trabalho - Altura do Formulário) / 2
+  NovaPosicaoTop := (Screen.WorkAreaHeight - Height) div 2;
+
+  // 3. Define a nova posição (o VCL usará SendMessage/SetWindowPos internamente)
+  Left := NovaPosicaoLeft;
+  Top := NovaPosicaoTop;
+
+  // Tira o formulário do estado de minimizado e o restaura para a posição e tamanho normais
   ShowWindow(Handle, SW_RESTORE);
+
+  // Traz para frente e atualiza a lista de minimizados restantes
   BringToFront;
   AtualizarLayoutFormsMinimizados;
 end;
 
 procedure TFormBaseMinTopoCentro.AtualizarLayoutFormsMinimizados;
+const
+  FLarguraForm = 1000;
+  FormHeight = 40;
 var
-  ScreenWidth, FormWidth, TotalWidth, StartX, i: Integer;
-  NewRect: TRect;
+  FLarguraTela, FLarguraTotal, FStartX, i: Integer;
+  FNovoTamanho: TRect;
   Form: TFormBaseMinTopoCentro;
-  FormHeight: Integer;
 begin
   if not Assigned(ListaFormsMinimizados) or (ListaFormsMinimizados.Count = 0) then
     Exit;
 
-  ScreenWidth := Screen.WorkAreaWidth;
-  FormWidth := 200;
-  FormHeight := 40;
+  FLarguraTela := Screen.WorkAreaWidth;
+  FLarguraTotal := ListaFormsMinimizados.Count * FLarguraForm;
 
-  TotalWidth := ListaFormsMinimizados.Count * FormWidth;
-
-  StartX := (ScreenWidth - TotalWidth) div 2;
+  FStartX := (FLarguraTela - FLarguraTotal) div 2;
 
   for i := 0 to ListaFormsMinimizados.Count - 1 do
   begin
     Form := TFormBaseMinTopoCentro(ListaFormsMinimizados.Items[i]);
     if Assigned(Form) and Form.FEstaMinimizadoNoTopo then
     begin
-      NewRect := Rect(StartX + (i * FormWidth), 0, StartX + (i * FormWidth) + FormWidth, FormHeight);
+      FNovoTamanho := Rect(FStartX + (i * FLarguraForm), 0, FStartX + (i * FLarguraForm) + FLarguraForm, FormHeight);
       SetWindowPos(Form.Handle, 0,
-                   NewRect.Left, NewRect.Top,
-                   NewRect.Right - NewRect.Left, NewRect.Bottom - NewRect.Top,
+                   FNovoTamanho.Left, FNovoTamanho.Top,
+                   FNovoTamanho.Right - FNovoTamanho.Left, FNovoTamanho.Bottom - FNovoTamanho.Top,
                    SWP_NOZORDER or SWP_NOACTIVATE or SWP_SHOWWINDOW);
     end;
   end;
