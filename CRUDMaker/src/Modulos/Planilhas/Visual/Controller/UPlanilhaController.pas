@@ -4,7 +4,7 @@ interface
 
 uses
   System.SysUtils, System.Classes, System.Generics.Collections,
-  UTabelaDTO, UPlanilhaDTO, UInfoTabelaPlanilhaDTO,
+  UTabelaDTO, UPlanilhaDTO,
   UPlanilhaService;
 
 type

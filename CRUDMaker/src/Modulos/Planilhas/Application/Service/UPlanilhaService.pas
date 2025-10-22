@@ -5,7 +5,7 @@ interface
 uses
   System.SysUtils, System.Classes, System.Generics.Collections,
   System.IOUtils, VCL.Forms, VCL.Dialogs,
-  UTabelaDTO, UPlanilhaDTO, UInfoTabelaPlanilhaDTO,
+  UTabelaDTO, UPlanilhaDTO,
   UXMLService, UCSVService, UPostgresDAO;
 
 type

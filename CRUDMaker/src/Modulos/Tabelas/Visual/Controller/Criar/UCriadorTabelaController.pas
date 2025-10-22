@@ -99,11 +99,14 @@ begin
   try
     TituloFormatado := CapitalizarPrimeiraLetra(ATabela.Titulo);
     PlanilhaFormatada := CapitalizarPrimeiraLetra(AConfiguracao.PlanilhaNome);
-    NomeBaseArquivo := TituloFormatado + PlanilhaFormatada;
+    NomeBaseArquivo := TituloFormatado;
 
   // 3. Determinar caminho do executável e diretórios de destino
-    ExePath := IncludeTrailingPathDelimiter(ExtractFilePath(Application.ExeName)); // <<< Correção: Application.ExeName é string
-    DiretorioBase := ExePath + 'Planilhas' + PathDelim + AConfiguracao.PlanilhaNome + PathDelim + 'Tabelas'; // <<< Correção: Concatenação de strings
+    ExePath := IncludeTrailingPathDelimiter(ExtractFilePath(Application.ExeName));
+    DiretorioBase :=
+    ExePath + 'Planilhas' +
+    PathDelim + AConfiguracao.PlanilhaNome +
+    PathDelim + 'Tabelas';
 
     // Garante que o diretório base exista
     if not ForceDirectories(DiretorioBase) then

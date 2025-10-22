@@ -2,6 +2,7 @@ program GridFlow;
 
 uses
   Vcl.Forms,
+  System.SysUtils {* Para Reportar memory leaks *},
   UConfigurarBD in 'src\Config\UConfigurarBD.pas',
   ULogBancoDados in 'src\Config\ULogBancoDados.pas',
   UConstantesGlobais in 'src\Utils\UConstantesGlobais.pas',
@@ -19,6 +20,7 @@ uses
   UTabelaConfiguracaoDTO in 'src\DTO\UTabelaConfiguracaoDTO.pas',
   UAceiteTermoDTO in 'src\DTO\UAceiteTermoDTO.pas',
   ULogEntryDTO in 'src\DTO\ULogEntryDTO.pas',
+  UInfoTabelaPlanilhaDTO in 'src\DTO\UInfoTabelaPlanilhaDTO.pas',
   UPersistenciaLocalService in 'src\Modulos\Arquivos\Common\UPersistenciaLocalService.pas',
   UXMLService in 'src\Modulos\Arquivos\XML\UXMLService.pas',
   UCSVService in 'src\Modulos\Arquivos\CSV\UCSVService.pas',
@@ -33,7 +35,7 @@ uses
   UViewModalTermos in 'src\Modulos\Inicializadores\Termos\Visual\View\UViewModalTermos.pas' {ViewModalTermos},
   UViewPrincipal in 'src\Modulos\Inicializadores\Principal\Visual\View\UViewPrincipal.pas' {ViewPrincipal},
   UPrincipalService in 'src\Modulos\Inicializadores\Principal\Application\Service\UPrincipalService.pas',
-  UViewEditorTabela in 'src\Modulos\Tabelas\Application\Editar\UViewEditorTabela.pas' {ViewEditorTabela},
+  UViewEditorTabela in 'src\Modulos\Tabelas\Visual\View\Editar\UViewEditorTabela.pas' {ViewEditorTabela},
   UViewSalvarAssociacao in 'src\Modulos\Associações\Salvar\UViewSalvarAssociacao.pas' {ViewCompartilhamento},
   UViewEditorRelatorio in 'src\Modulos\Relatorios\Visual\View\Editar\UViewEditorRelatorio.pas' {ViewEditorRelatorio},
   UViewImprimirRelatorioPronto in 'src\Modulos\Relatorios\Visual\View\Imprimir\UViewImprimirRelatorioPronto.pas' {ViewVisualizadorRelatorio},
@@ -43,13 +45,13 @@ uses
   UViewCriadorTabelaDados in 'src\Modulos\Tabelas\Visual\View\Criar\UViewCriadorTabelaDados.pas' {ViewCriadorTabelaDados},
   UEditorTabelaController in 'src\Modulos\Tabelas\Visual\Controller\Editar\UEditorTabelaController.pas',
   UPlanilhaController in 'src\Modulos\Planilhas\Visual\Controller\UPlanilhaController.pas',
-  UInfoTabelaPlanilhaDTO in 'src\DTO\UInfoTabelaPlanilhaDTO.pas',
   UPrincipalController in 'src\Modulos\Inicializadores\Principal\Visual\Controller\UPrincipalController.pas',
   ULoginController in 'src\Modulos\Inicializadores\Login\Visual\Controller\ULoginController.pas';
 
 {$R *.res}
 
 begin
+  ReportMemoryLeaksOnShutdown := True;
   Application.Initialize;
   TShowViewService.Instance.IniciarAplicacao;
   Application.Run;

@@ -59,6 +59,7 @@ type
   public
     constructor Create(AOwner: TComponent); reintroduce; overload;
     constructor Create(AOwner: TComponent; ATabela: TTabelaDTO); reintroduce; overload;
+    class function CreateEditorComDados(const ATabelaDTO: TTabelaDTO; ADataSetCarregado: TDataSet): TViewEditorTabela;
     destructor Destroy; override;
     property EventoSalvar: TEventoSolicitarSalvarTabela read FEventoSalvar write FEventoSalvar;
     property EventoCancelar: TEventoSolicitarCancelarEdicao read FEventoCancelar write FEventoCancelar;
@@ -87,12 +88,58 @@ begin
   FController := TEditorTabelaController.Create;
 end;
 
+class function TViewEditorTabela.CreateEditorComDados(const ATabelaDTO: TTabelaDTO; ADataSetCarregado: TDataSet): TViewEditorTabela;
+var
+  NewView: TViewEditorTabela;
+  NewController: TEditorTabelaController; // Controller a ser criado
+begin
+  NewView := TViewEditorTabela.Create(nil); // Cria a instância da view
+  NewController := TEditorTabelaController.Create; // Cria o Controller *dentro* do construtor da View
+  try
+    // Injeta o DTO
+    NewView.FTabela := ATabelaDTO; // Armazena referência ao DTO (cuidado com posse!)
+    // Injeta o Controller
+    NewView.FController := NewController; // Armazena referência ao Controller criado
+    // Associa o DataSet carregado ao DataSource da View (e consequentemente ao DBGrid)
+    if assigned(ADataSetCarregado) then
+    showmessage('Nao e nil')
+    else
+    showmessage('ita porr');
+
+    NewView.DataSourceEditor.DataSet := ADataSetCarregado; // O DataSet carregado é associado diretamente
+
+    // Opcional: Atualizar a interface com base nos dados do DTO
+    if Assigned(ATabelaDTO) then
+      NewView.EditarTituloTabela.Text := ATabelaDTO.Titulo;
+
+    // Opcional: Atualizar status
+    if Assigned(ATabelaDTO) and (ATabelaDTO.CaminhoArquivoCSV <> '') then
+      NewView.BarraStatusEditor.SimpleText := 'Dados carregados do CSV: ' + ATabelaDTO.CaminhoArquivoCSV
+    else
+      NewView.BarraStatusEditor.SimpleText := 'Dados carregados (origem desconhecida).';
+
+    // A View está pronta, mas o DataSet pode estar aberto ou fechado dependendo de como o CSVService o deixou.
+    // Se o CSVService o abriu, pode não ser necessário abrir novamente.
+    // Se o CSVService o deixou fechado, abrir aqui.
+    if Assigned(ADataSetCarregado) and not ADataSetCarregado.Active then
+      ADataSetCarregado.Open; // Abrir o DataSet se necessário
+
+    Result := NewView; // Retorna a view pronta com seu controller e dados
+  except
+    on E: Exception do
+    begin
+      // Se ocorrer erro, liberar o Controller criado e a View parcialmente criada
+      NewController.Free; // Libera o controller em caso de erro
+      NewView.Free; // Libera a view em caso de erro
+      raise; // Relevanta a exceção
+    end;
+  end;
+end;
+
 destructor TViewEditorTabela.Destroy;
 begin
   // Libera os recursos alocados
-  FController.Free;
-  if not FSendoEditada and Assigned(FTabela) then
-    FTabela.Free;
+  FreeandNil(FController);
   inherited;
 end;
 
@@ -100,10 +147,9 @@ procedure TViewEditorTabela.AoCriarFormulario(Sender: TObject);
 begin
   // Configuração inicial do DataSource
   DataSourceEditor.DataSet := ClientDataSetEditor;
-  ClientDataSetEditor.Close; // Inicia fechado
-
   // O ClientDataSet permanece fechado até que o usuário carregue um arquivo
   BarraStatusEditor.SimpleText := 'Pronto - Nenhum arquivo carregado. Use "Carregar".';
+  ClientDataSetEditor.Close;
   // O título pode vir do DTO se for uma edição
   if Assigned(FTabela) then
     EditarTituloTabela.Text := FTabela.Titulo;
@@ -286,14 +332,21 @@ procedure TViewEditorTabela.DBGridEditorMouseMove(Sender: TObject; Shift: TShift
 var
   Coord: TGridCoord;
   ColIndex, RowIndex: Integer;
+  DataSetAtivo: TDataSet; // Referência local para o DataSet do DataSource
 begin
   Coord := DBGridEditor.MouseCoord(X, Y);
   ColIndex := Coord.X;
   RowIndex := Coord.Y;
 
-  if (ColIndex >= 0) and (ColIndex < DBGridEditor.Columns.Count) and
-     (RowIndex >= 0) and (RowIndex <= ClientDataSetEditor.RecordCount) and
-     (ClientDataSetEditor.Active) and not (ClientDataSetEditor.IsEmpty) then
+  // Obter referência ao DataSet do DataSource para evitar acessos diretos ao componente DFM
+  DataSetAtivo := DataSourceEditor.DataSet; // <-- Use DataSourceEditor.DataSet
+
+  // Verificar primeiro se o DataSet está ativo e se os índices são válidos
+  if Assigned(DataSetAtivo) and // Verificar se o DataSet está associado
+     DataSetAtivo.Active and   // Verificar se está aberto ANTES de acessar RecordCount ou IsEmpty
+     (ColIndex >= 0) and (ColIndex < DBGridEditor.Columns.Count) and
+     (RowIndex >= 0) and (RowIndex <= DataSetAtivo.RecordCount) and // Agora, RecordCount é seguro
+     not DataSetAtivo.IsEmpty then // E IsEmpty também é seguro
   begin
     try
       if RowIndex = 0 then

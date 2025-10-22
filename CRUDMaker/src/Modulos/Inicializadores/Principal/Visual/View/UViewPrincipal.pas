@@ -12,7 +12,7 @@ uses
   Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls,
   Vcl.Menus,
 
-  Data.DB, Datasnap.DBClient,
+  Data.DB, Datasnap.DBClient, UTabelaDTO,
   UPrincipalController, UFormBaseMinTopoCentro;
 
 type
@@ -95,17 +95,10 @@ begin
   begin
     // Conecta o evento do Controller para atualizar a lista de planilhas
     FController.OnListaPlanilhasAtualizada := HandleListaPlanilhasAtualizada;
-    // Conecta o evento do Controller para atualizar a grade de tabelas (exemplo)
-    // FController.OnGradeTabelasAtualizada := HandleGradeTabelasAtualizada;
 
     // Chama o Controller para atualizar a lista na inicialização
     FController.PopularListaPlanilhasNaView;
   end;
-  
-  // IMPLEMENTACAO INCOMPLETA!	
-  // Conectar o evento da View para solicitar atualização (ex: botão ou outro evento)
-  // Agora FOnSolicitarAtualizacaoPlanilha será chamado, e ele deve apontar para o próprio método AtualizarExibicaoPlanilha
-  // FController.FOnSolicitarAtualizacaoPlanilha := AtualizarExibicaoPlanilha;
 
   // Atualiza status
   BarraStatusPrincipal.SimpleText := 'Pronto - Nenhum arquivo carregado. Use "Carregar".';
@@ -133,11 +126,42 @@ begin
 end;
 
 procedure TViewPrincipal.BotaoEditarTabelaClick(Sender: TObject);
+var
+  NomeTabelaSelecionada: string;
+  NomePlanilhaSelecionada: string;
 begin
-  if Assigned(FController.FOnNavegarParaEditorTabela) then
-    FController.FOnNavegarParaEditorTabela(FController.FTabelaSelecionada) // Passa DTO
+  // Obter o nome da tabela selecionada na ListBox
+  if ListaTabelas.ItemIndex >= 0 then
+  begin
+    NomeTabelaSelecionada := ListaTabelas.Items[ListaTabelas.ItemIndex];
+//    showmessage('Tabela é: ');
+
+    // Obter o nome da planilha selecionada
+    if ListaPlanilhas.ItemIndex >= 0 then
+    begin
+      NomePlanilhaSelecionada := ListaPlanilhas.Items[ListaPlanilhas.ItemIndex];
+    end
+    else
+    begin
+      ShowMessage('Nenhuma planilha selecionada. Selecione uma planilha primeiro.');
+      Exit; // Interrompe a execução se nenhuma planilha estiver selecionada
+    end;
+
+    // Chamar o evento do controller, passando os nomes
+    if Assigned(FController.FOnNavegarParaEditorTabela) then
+    begin
+      // Passa os nomes diretamente
+      FController.FOnNavegarParaEditorTabela(NomePlanilhaSelecionada, NomeTabelaSelecionada);
+    end
+    else
+    begin
+      ShowMessage('Método: FOnNavegarParaEditorTabela não está sendo criado!');
+    end;
+  end
   else
-    ShowMessage('Método: FOnNavegarParaEditorTabela não está sendo criado!');
+  begin
+    ShowMessage('Selecione uma tabela para editar.');
+  end;
 end;
 
 procedure TViewPrincipal.BotaoCriarTabelaClick(Sender: TObject);

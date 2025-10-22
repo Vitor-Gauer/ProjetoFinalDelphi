@@ -4,7 +4,7 @@ interface
 
 uses
   System.Classes, System.SysUtils, Data.DB, Datasnap.DBClient,
-  System.StrUtils, System.Math, // Para Random,
+  System.StrUtils, System.Math, System.IOUtils, // Para Random,
   UTabelaDTO; // Adiciona UTabelaDTO
 
 type
@@ -32,10 +32,6 @@ type
 
     // Função auxiliar para obter o hash gerado (se necessário fora do GravarCSV).
     function ObterUltimoHashGerado: string;
-
-    // Obtém as dimensões (número de linhas e colunas) de um arquivo CSV.
-    // Conta linhas (exceto o cabeçalho) e colunas (baseado no cabeçalho).
-    function ObterDimensoesDoCSV(const ACaminhoArquivo: string): string;
   end;
 
 implementation
@@ -153,61 +149,75 @@ begin
 end;
 
 procedure TCSVService.LerCSV(const AClientDataSet: TClientDataSet; const ACaminhoArquivo: string);
+var
+  FileStream: TStreamReader; // Usar StreamReader para lidar com codificação
+  Line: string;
+  Headers: TArray<string>;
+  i: Integer;
+  FieldDef: TFieldDef;
+  RowValues: TArray<string>;
 begin
   if not Assigned(AClientDataSet) then
     raise Exception.Create('ClientDataSet inválido.');
 
-  if (ACaminhoArquivo = '') or not FileExists(ACaminhoArquivo) then
-    raise Exception.Create('Caminho do arquivo CSV inválido ou arquivo não encontrado.');
+  if (ACaminhoArquivo = '') or not TFile.Exists(ACaminhoArquivo) then
+    raise Exception.Create('Caminho do arquivo CSV inválido ou arquivo não encontrado: ' + ACaminhoArquivo);
 
+  // Certifica que o DataSet está fechado antes de começar
   AClientDataSet.Close;
-  AClientDataSet.LoadFromFile(ACaminhoArquivo);
-  AClientDataSet.Open;
-end;
+  AClientDataSet.FieldDefs.Clear; // Limpa definições anteriores
 
-function TCSVService.ObterDimensoesDoCSV(const ACaminhoArquivo: string): string;
-var
-  TempClientDataSet: TClientDataSet;
-  NumLinhas: Integer;
-  NumColunas: Integer;
-begin
-  Result := 'Erro desconhecido';
-  if (ACaminhoArquivo = '') or not FileExists(ACaminhoArquivo) then
-  begin
-    Result := 'Arquivo não encontrado';
-    Exit;
-  end;
-
-  TempClientDataSet := TClientDataSet.Create(nil);
+  FileStream := TStreamReader.Create(ACaminhoArquivo, TEncoding.UTF8);
   try
-    try
-      // Lê o CSV para o ClientDataSet temporário
-      Self.LerCSV(TempClientDataSet, ACaminhoArquivo);
+    // --- Ler a primeira linha (cabeçalho) ---
+    if FileStream.EndOfStream then
+      Exit; // Arquivo vazio
 
-      if TempClientDataSet.Active and not TempClientDataSet.IsEmpty then
-      begin
-        // Número de registros de dados (linhas) - desconsidera o registro de inserção
-        NumLinhas := TempClientDataSet.RecordCount;
-        // Número de campos (colunas) - baseado na estrutura carregada do CSV
-        NumColunas := TempClientDataSet.FieldCount;
+    Line := FileStream.ReadLine;
+    if Line = '' then
+      Exit; // Primeira linha vazia
 
-        // Formata a string de dimensões
-        Result := IntToStr(NumLinhas) + 'x' + IntToStr(NumColunas);
-      end
-      else
+    Headers := Line.Split([',']);
+
+    // --- Criar definições de campo baseadas nos cabeçalhos ---
+    for i := Low(Headers) to High(Headers) do
+    begin
+      Headers[i] := Trim(Headers[i]); // Remover espaços em branco
+      if Headers[i] = '' then
+        Headers[i] := 'Campo' + IntToStr(i); // Nome padrão se o cabeçalho estiver vazio
+
+      FieldDef := AClientDataSet.FieldDefs.AddFieldDef;
+      FieldDef.Name := Headers[i];
+      FieldDef.DataType := ftString; // Começamos com string, pode ser refinado posteriormente
+      FieldDef.Size := 255; // Tamanho padrão, ajustável
+    end;
+
+    // --- Abrir o DataSet ---
+    AClientDataSet.CreateDataSet;
+    AClientDataSet.Open;
+
+    // --- Ler linhas de dados ---
+    while not FileStream.EndOfStream do
+    begin
+      Line := FileStream.ReadLine;
+      if Line <> '' then // Ignorar linhas vazias
       begin
-        // CSV vazio ou não carregado corretamente
-        Result := '0x0';
-      end;
-    except
-      on E: Exception do
-      begin
-        // Captura qualquer erro durante a leitura ou contagem
-        Result := 'Erro: ' + E.Message;
+        // Separar os valores da linha (simplificado)
+        RowValues := Line.Split([',']);
+
+        AClientDataSet.Append;
+        // Preencher campos da linha
+        for i := Low(RowValues) to Min(High(RowValues), High(Headers)) do
+        begin
+          if i < AClientDataSet.FieldCount then
+            AClientDataSet.Fields[i].AsString := Trim(RowValues[i]);
+        end;
+        AClientDataSet.Post;
       end;
     end;
+
   finally
-    TempClientDataSet.Free; // Libera o ClientDataSet temporário
+    FileStream.Free;
   end;
 end;
 

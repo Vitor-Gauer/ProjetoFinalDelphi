@@ -9,33 +9,23 @@ uses
   UCSVService;
 
 type
-  TInfoTabelaPlanilhaDTO = class
-  public
-    Nome: string;
-    Dimensoes: string; // Ex: "100x200" ou mensagem de erro
-    TamanhoMB: string; // Ex: "2.50 MB"
-    constructor Create(const ANome, ADimensoes, ATamanhoMB: string);
-  end;
-
   TPrincipalService = class
   public
     function ObterListaPlanilhas: TStringList;
     function ObterInfoTabelasDaPlanilha(const ANomePlanilha: string): TStringList;
+    function ObterCaminhoCSV(const APlanilhaNome, ATabelaNome: string): string;
   end;
 
 implementation
 
-{ TInfoTabelaPlanilhaDTO }
-
-constructor TInfoTabelaPlanilhaDTO.Create(const ANome, ADimensoes, ATamanhoMB: string);
-begin
-  inherited Create;
-  Nome := ANome;
-  Dimensoes := ADimensoes;
-  TamanhoMB := ATamanhoMB;
-end;
-
 { TPrincipalService }
+
+function TPrincipalService.ObterCaminhoCSV(const APlanilhaNome, ATabelaNome: string): string;
+begin
+  result := IncludeTrailingPathDelimiter(ExtractFilePath(Application.ExeName)) +
+            'Planilhas' + PathDelim + APlanilhaNome + PathDelim +
+            'Tabelas' + PathDelim + ATabelaNome + PathDelim + ATabelaNome + '.csv';
+end;
 
 function TPrincipalService.ObterListaPlanilhas: TStringList;
 var

@@ -157,6 +157,7 @@
         <DCCReference Include="src\DTO\UTabelaConfiguracaoDTO.pas"/>
         <DCCReference Include="src\DTO\UAceiteTermoDTO.pas"/>
         <DCCReference Include="src\DTO\ULogEntryDTO.pas"/>
+        <DCCReference Include="src\DTO\UInfoTabelaPlanilhaDTO.pas"/>
         <DCCReference Include="src\Modulos\Arquivos\Common\UPersistenciaLocalService.pas"/>
         <DCCReference Include="src\Modulos\Arquivos\XML\UXMLService.pas"/>
         <DCCReference Include="src\Modulos\Arquivos\CSV\UCSVService.pas"/>
@@ -177,7 +178,7 @@
             <Form>ViewPrincipal</Form>
         </DCCReference>
         <DCCReference Include="src\Modulos\Inicializadores\Principal\Application\Service\UPrincipalService.pas"/>
-        <DCCReference Include="src\Modulos\Tabelas\Application\Editar\UViewEditorTabela.pas">
+        <DCCReference Include="src\Modulos\Tabelas\Visual\View\Editar\UViewEditorTabela.pas">
             <Form>ViewEditorTabela</Form>
         </DCCReference>
         <DCCReference Include="src\Modulos\Associações\Salvar\UViewSalvarAssociacao.pas">
@@ -201,7 +202,6 @@
         </DCCReference>
         <DCCReference Include="src\Modulos\Tabelas\Visual\Controller\Editar\UEditorTabelaController.pas"/>
         <DCCReference Include="src\Modulos\Planilhas\Visual\Controller\UPlanilhaController.pas"/>
-        <DCCReference Include="src\DTO\UInfoTabelaPlanilhaDTO.pas"/>
         <DCCReference Include="src\Modulos\Inicializadores\Principal\Visual\Controller\UPrincipalController.pas"/>
         <DCCReference Include="src\Modulos\Inicializadores\Login\Visual\Controller\ULoginController.pas"/>
         <BuildConfiguration Include="Base">

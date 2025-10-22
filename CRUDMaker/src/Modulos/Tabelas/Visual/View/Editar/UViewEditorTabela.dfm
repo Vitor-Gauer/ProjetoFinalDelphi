@@ -25,7 +25,7 @@ object ViewEditorTabela: TViewEditorTabela
     object RotuloTituloTabela: TLabel
       Left = 5
       Top = 10
-      Width = 33
+      Width = 34
       Height = 15
       Caption = 'T'#237'tulo:'
     end

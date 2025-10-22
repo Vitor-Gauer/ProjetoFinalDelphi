@@ -6,6 +6,7 @@ interface
 uses
   System.SysUtils, System.Classes, System.UITypes,
   Vcl.Forms, VCL.Dialogs,
+  Data.Db,
   UCriadorTabelaController, UPrincipalController,
   UTabelaConfiguracaoDTO, UTabelaDTO, UPlanilhaDTO,
   URelatorioDTO,
@@ -14,7 +15,7 @@ uses
 type
   // --- Tipos de Evento (POObj)
   TNavegarParaCriadorTabelaEvent = procedure of object;
-  TNavegarParaEditorTabelaEvent = procedure(const ATabela: TTabelaDTO) of object;
+  TNavegarParaEditorTabelaEvent = procedure(const APlanilhaNome, ATabelaNome: string) of object;
   TNavegarParaNovoRelatorioComBaseEvent = procedure(const ATabelaBase: TTabelaDTO) of object;
   TNavegarParaEditorRelatorioEvent = procedure(const ARelatorio: TRelatorioDTO) of object;
   TNavegarParaVisualizadorRelatorioEvent = procedure(const ARelatorio: TRelatorioDTO) of object;
@@ -42,7 +43,7 @@ type
     procedure IniciarAplicacao;
     procedure ShowViewSalvarAssociacao;
     procedure ShowViewEditorRelatorio(ARelatorio: TRelatorioDTO = nil; APlanilhaBase: TPlanilhaDTO = nil);
-    procedure ShowViewEditorTabela(ATabela: TTabelaDTO = nil);
+    procedure ShowViewEditorTabela(const ATabela: TTabelaDTO; ADataSet: TDataSet);
     procedure ShowViewLogin(AModal: Boolean = False);
     function ShowViewModalTermos: Boolean;
     procedure ShowViewPrincipalModal(AUsuarioNome: string);
@@ -52,7 +53,7 @@ type
     // --- Manipuladores Estáticos
     class procedure ManipuladorSolicitarLogout;
     class procedure ManipuladorNavegarParaCriadorTabela;
-    class procedure ManipuladorNavegarParaEditorTabela(const ATabela: TTabelaDTO); // Passa DTO
+    class procedure ManipuladorNavegarParaEditorTabela(const ATabela: TTabelaDTO; ADataSet: TDataSet);
     class procedure ManipuladorNavegarParaNovoRelatorioComBase(const ATabelaBase: TTabelaDTO);
     class procedure ManipuladorNavegarParaEditorRelatorio(const ARelatorio: TRelatorioDTO);
     class procedure ManipuladorNavegarParaVisualizadorRelatorio(const ARelatorio: TRelatorioDTO);
@@ -85,9 +86,9 @@ begin
   Instance.ShowViewCriadorTabela; // Chama o serviço via instância
 end;
 
-class procedure TShowViewService.ManipuladorNavegarParaEditorTabela(const ATabela: TTabelaDTO);
+class procedure TShowViewService.ManipuladorNavegarParaEditorTabela(const ATabela: TTabelaDTO; ADataSet: TDataSet);
 begin
-  Instance.ShowViewEditorTabela(ATabela); // Chama o serviço via instância, passando DTO
+  Instance.ShowViewEditorTabela(ATabela, ADataSet); // Chama o serviço via instância, passando DTO
 end;
 
 class procedure TShowViewService.ManipuladorNavegarParaNovoRelatorioComBase(const ATabelaBase: TTabelaDTO);
@@ -273,14 +274,14 @@ begin
 
   //Criadores
   LPlanilhaService := TPlanilhaService.Create(nil {DAO}, nil {XMLService}, nil {CSVService}); // Ajustar injeção real após BD
-  LPrincipalController := TPrincipalController.Create(TPrincipalService.Create, TPersistenciaLocalService.Create, LPlanilhaService); // Passar LPlanilhaService
+  LPrincipalController := TPrincipalController.Create(TPrincipalService.Create, TPersistenciaLocalService.Create, LPlanilhaService);;
   LView.FController := LPrincipalController;
 
   // Conectar os manipuladores estáticos do serviço aos eventos do novo controller
-  LPrincipalController.OnNavegarParaCriadorTabela := TShowViewService.ManipuladorNavegarParaCriadorTabela;
-  LPrincipalController.OnSolicitarLogout := TShowViewService.ManipuladorSolicitarLogout;
-  LPrincipalController.OnAbrirSalvarAssociacao := TShowViewService.ManipuladorAbrirSalvarAssociacao;
-  // LPrincipalController.OnNavegarParaEditorTabela := TShowViewService.ManipuladorNavegarParaEditorTabela; // Conectar quando for chamado
+  LPrincipalController.OnNavegarParaCriadorTabela := Self.ManipuladorNavegarParaCriadorTabela;
+  LPrincipalController.OnSolicitarLogout := Self.ManipuladorSolicitarLogout;
+  LPrincipalController.OnAbrirSalvarAssociacao := Self.ManipuladorAbrirSalvarAssociacao;
+  // LPrincipalController.OnNavegarParaEditorTabela := Self.ManipuladorNavegarParaEditorTabela; // Conectar quando for chamado
 
   try
     LView.DefinirNomeUsuario(AUsuarioNome);
@@ -313,12 +314,25 @@ begin
   LView.Show;
 end;
 
-procedure TShowViewService.ShowViewEditorTabela(ATabela: TTabelaDTO = nil);
+procedure TShowViewService.ShowViewEditorTabela(const ATabela: TTabelaDTO; ADataSet: TDataSet); // <- Novo parâmetro
 var
   LView: TViewEditorTabela;
 begin
-  LView := TViewEditorTabela.Create(Application, ATabela); // Passa DTO para o construtor da view
-  LView.Show;
+  try
+    LView := TViewEditorTabela.CreateEditorComDados(ATabela, ADataSet); // <- Novo construtor estático, sem LController
+    try
+      // Exibir a view
+      LView.ShowModal; // ou LView.Show se for não-modal
+    finally
+      LView.Free; // Libera a view
+    end;
+  except
+    on E: Exception do
+    begin
+      ShowMessage('Erro ao Criar TViewEditorTabela no ShowViewService: ' + E.Message);
+      raise;
+    end;
+  end;
 end;
 
 procedure TShowViewService.ShowViewImprimirRelatorioPronto(ARelatorio: TRelatorioDTO);
