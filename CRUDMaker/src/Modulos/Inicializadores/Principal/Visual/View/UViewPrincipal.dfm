@@ -37,27 +37,38 @@ object ViewPrincipal: TViewPrincipal
     TabOrder = 0
     StyleElements = [seFont, seClient]
     object AbaPlanilhas: TTabSheet
+      BorderWidth = 10
       Caption = 'Planilhas'
-      object Divisor1: TSplitter
-        Left = 200
+      ParentShowHint = False
+      ShowHint = False
+      object DivisorPlanilha: TSplitter
+        Left = 206
         Top = 0
-        Height = 438
-        ExplicitHeight = 437
+        Height = 418
+        Beveled = True
+        Color = clBlack
+        ParentColor = False
+        ExplicitLeft = 209
+        ExplicitTop = 3
+        ExplicitHeight = 450
       end
       object PainelEsquerdoPlanilhas: TPanel
-        Left = 0
-        Top = 0
+        AlignWithMargins = True
+        Left = 3
+        Top = 3
         Width = 200
-        Height = 438
+        Height = 412
         Align = alLeft
+        BevelKind = bkFlat
         BevelOuter = bvNone
         TabOrder = 0
         object ListaPlanilhas: TListBox
           AlignWithMargins = True
           Left = 3
           Top = 3
-          Width = 194
-          Height = 403
+          Width = 190
+          Height = 373
+          Cursor = crArrow
           Align = alClient
           BevelInner = bvNone
           BevelOuter = bvNone
@@ -67,11 +78,16 @@ object ViewPrincipal: TViewPrincipal
         end
         object PainelBotaoAtualizar: TPanel
           Left = 0
-          Top = 409
-          Width = 200
+          Top = 379
+          Width = 196
           Height = 29
           Align = alBottom
+          BevelOuter = bvNone
+          BiDiMode = bdLeftToRight
+          BorderWidth = 1
+          ParentBiDiMode = False
           TabOrder = 1
+          OnClick = BotaoAtualizarPlanilhaClick
           object BotaoAtualizarPlanilhas: TButton
             Left = 50
             Top = 1
@@ -84,19 +100,22 @@ object ViewPrincipal: TViewPrincipal
         end
       end
       object PainelDireitoTabelas: TPanel
-        Left = 203
-        Top = 0
-        Width = 689
-        Height = 438
+        AlignWithMargins = True
+        Left = 212
+        Top = 3
+        Width = 657
+        Height = 412
         Align = alClient
+        BevelKind = bkFlat
         BevelOuter = bvNone
         TabOrder = 1
         object PainelBotoesTabela: TPanel
           Left = 0
-          Top = 408
-          Width = 689
+          Top = 378
+          Width = 653
           Height = 30
           Align = alBottom
+          BevelOuter = bvNone
           TabOrder = 0
           object BotaoEditarPlanilha: TButton
             Left = 10
@@ -139,8 +158,8 @@ object ViewPrincipal: TViewPrincipal
           AlignWithMargins = True
           Left = 3
           Top = 3
-          Width = 683
-          Height = 402
+          Width = 647
+          Height = 372
           Align = alClient
           ItemHeight = 15
           TabOrder = 1
@@ -148,57 +167,76 @@ object ViewPrincipal: TViewPrincipal
       end
     end
     object AbaRelatorios: TTabSheet
+      BorderWidth = 10
       Caption = 'Relat'#243'rios'
       ImageIndex = 1
-      object Divisor2: TSplitter
-        Left = 200
-        Top = 0
-        Height = 438
+      object DivisorRelatorio: TSplitter
+        AlignWithMargins = True
+        Left = 209
+        Top = 3
+        Height = 412
+        ExplicitLeft = 200
+        ExplicitTop = 0
         ExplicitHeight = 437
       end
       object PainelEsquerdoRelatorios: TPanel
-        Left = 0
-        Top = 0
+        AlignWithMargins = True
+        Left = 3
+        Top = 3
         Width = 200
-        Height = 438
+        Height = 412
         Align = alLeft
+        BevelKind = bkTile
+        BevelOuter = bvNone
         TabOrder = 0
         object ListaRelatorios: TListBox
-          Left = 1
-          Top = 1
-          Width = 198
-          Height = 436
+          AlignWithMargins = True
+          Left = 3
+          Top = 3
+          Width = 190
+          Height = 402
           Align = alClient
           ItemHeight = 15
           TabOrder = 0
+          ExplicitLeft = 4
+          ExplicitTop = 4
+          ExplicitWidth = 192
+          ExplicitHeight = 404
         end
       end
       object PainelDireitoRelatorios: TPanel
-        Left = 203
-        Top = 0
-        Width = 689
-        Height = 438
+        AlignWithMargins = True
+        Left = 218
+        Top = 3
+        Width = 651
+        Height = 412
         Align = alClient
+        BevelKind = bkTile
+        BevelOuter = bvNone
         TabOrder = 1
         object MemoVisualizadorRelatorio: TMemo
-          Left = 1
-          Top = 1
-          Width = 687
-          Height = 406
+          AlignWithMargins = True
+          Left = 3
+          Top = 3
+          Width = 641
+          Height = 372
           Align = alClient
+          BevelKind = bkFlat
+          BevelOuter = bvNone
           ScrollBars = ssVertical
           TabOrder = 0
         end
         object PainelBotoesRelatorio: TPanel
-          Left = 1
-          Top = 407
-          Width = 687
+          Left = 0
+          Top = 378
+          Width = 647
           Height = 30
           Align = alBottom
+          BevelOuter = bvNone
           TabOrder = 1
           object BotaoEditarRelatorio: TButton
             Left = 10
-            Top = 2
+            Top = 1
             Width = 100
             Height = 25
             Caption = 'Editar'
@@ -207,7 +245,7 @@ object ViewPrincipal: TViewPrincipal
           end
           object BotaoExcluirRelatorio: TButton
             Left = 120
-            Top = 2
+            Top = 1
             Width = 100
             Height = 25
             Caption = 'Excluir'
@@ -216,7 +254,7 @@ object ViewPrincipal: TViewPrincipal
           end
           object BotaoVisualizarRelatorio: TButton
             Left = 230
-            Top = 2
+            Top = 1
             Width = 100
             Height = 25
             Caption = 'Visualizar'
@@ -225,7 +263,7 @@ object ViewPrincipal: TViewPrincipal
           end
           object BotaoCriarRelatorio: TButton
             Left = 340
-            Top = 2
+            Top = 1
             Width = 150
             Height = 25
             Caption = 'Criar Relat'#243'rio'
@@ -263,16 +301,16 @@ object ViewPrincipal: TViewPrincipal
   object ClientDataSetTabelas: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 48
-    Top = 80
+    Left = 464
+    Top = 8
   end
   object DataSourceTabelas: TDataSource
     DataSet = ClientDataSetTabelas
-    Left = 128
-    Top = 80
+    Left = 584
+    Top = 8
   end
   object MainMenuPrincipal: TMainMenu
-    Left = 696
+    Left = 704
     Top = 8
     object MenuItemArquivo: TMenuItem
       Caption = '&Arquivo'

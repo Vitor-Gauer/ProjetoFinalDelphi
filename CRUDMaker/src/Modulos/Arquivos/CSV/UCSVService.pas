@@ -177,8 +177,18 @@ begin
     if Line = '' then
       Exit; // Primeira linha vazia
 
-    Headers := Line.Split([',']);
+    Headers := Line.Split(['","']);
 
+    if Length(Headers) > 0 then // se está dentro do headers
+    begin
+      // Remove a aspa de abertura da primeira coluna
+      if (Length(Headers[Low(Headers)]) > 0) and (Headers[Low(Headers)][1] = '"') then
+        Headers[Low(Headers)] := Copy(Headers[Low(Headers)], 2, MaxInt);
+
+      // Remove a aspa de fechamento da última coluna
+      if (Length(Headers[High(Headers)]) > 0) and (Headers[High(Headers)][Length(Headers[High(Headers)])] = '"') then
+        Headers[High(Headers)] := Copy(Headers[High(Headers)], 1, Length(Headers[High(Headers)]) - 1);
+    end;
     // --- Criar definições de campo baseadas nos cabeçalhos ---
     for i := Low(Headers) to High(Headers) do
     begin
@@ -189,7 +199,7 @@ begin
       FieldDef := AClientDataSet.FieldDefs.AddFieldDef;
       FieldDef.Name := Headers[i];
       FieldDef.DataType := ftString; // Começamos com string, pode ser refinado posteriormente
-      FieldDef.Size := 255; // Tamanho padrão, ajustável
+      FieldDef.Size := 40;
     end;
 
     // --- Abrir o DataSet ---
@@ -203,7 +213,20 @@ begin
       if Line <> '' then // Ignorar linhas vazias
       begin
         // Separar os valores da linha (simplificado)
-        RowValues := Line.Split([',']);
+        RowValues := Line.Split(['","']);
+
+        if Length(RowValues) > 0 then
+        begin
+          // Remove a aspa de abertura da primeira coluna
+          (* Se primeiro valor posicional é não vazio e se primeiro valor posicional, '[1]', for '"' então... *)
+          if (Length(RowValues[Low(RowValues)]) > 0) and (RowValues[Low(RowValues)][1] = '"') then
+            RowValues[Low(RowValues)] := Copy(RowValues[Low(RowValues)], 2, MaxInt);
+
+          // Remove a aspa de fechamento da última coluna:
+          (* Se array é não vazio e se ultimo valor posicional for '"' então *)
+          if (Length(RowValues[High(RowValues)]) > 0) and (RowValues[High(RowValues)][Length(RowValues[High(RowValues)])] = '"') then
+            RowValues[High(RowValues)] := Copy(RowValues[High(RowValues)], 1, Length(RowValues[High(RowValues)]) - 1);
+        end;
 
         AClientDataSet.Append;
         // Preencher campos da linha

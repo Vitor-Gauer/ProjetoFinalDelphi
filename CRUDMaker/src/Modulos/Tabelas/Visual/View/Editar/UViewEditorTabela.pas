@@ -3,11 +3,11 @@
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.ComCtrls,
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,  System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.ComCtrls, Math,
   Vcl.DBCtrls, Data.DB, Data.FMTBcd, Datasnap.DBClient,
   UTabelaDTO, UEditorTabelaController,
-  Math, UFormBaseMinTopoCentro;
+   UFormBaseMinTopoCentro;
 
 type
   TEventoSolicitarSalvarTabela = procedure(const ATabela: TTabelaDTO) of object;
@@ -101,10 +101,9 @@ begin
     // Injeta o Controller
     NewView.FController := NewController; // Armazena referência ao Controller criado
     // Associa o DataSet carregado ao DataSource da View (e consequentemente ao DBGrid)
-    if assigned(ADataSetCarregado) then
-    showmessage('Nao e nil')
-    else
-    showmessage('ita porr');
+    if not assigned(ADataSetCarregado) then
+        showmessage('ita porr');
+
 
     NewView.DataSourceEditor.DataSet := ADataSetCarregado; // O DataSet carregado é associado diretamente
 
@@ -339,14 +338,14 @@ begin
   RowIndex := Coord.Y;
 
   // Obter referência ao DataSet do DataSource para evitar acessos diretos ao componente DFM
-  DataSetAtivo := DataSourceEditor.DataSet; // <-- Use DataSourceEditor.DataSet
+  DataSetAtivo := DataSourceEditor.DataSet;
 
   // Verificar primeiro se o DataSet está ativo e se os índices são válidos
   if Assigned(DataSetAtivo) and // Verificar se o DataSet está associado
      DataSetAtivo.Active and   // Verificar se está aberto ANTES de acessar RecordCount ou IsEmpty
      (ColIndex >= 0) and (ColIndex < DBGridEditor.Columns.Count) and
-     (RowIndex >= 0) and (RowIndex <= DataSetAtivo.RecordCount) and // Agora, RecordCount é seguro
-     not DataSetAtivo.IsEmpty then // E IsEmpty também é seguro
+     (RowIndex >= 0) and (RowIndex <= DataSetAtivo.RecordCount) and
+     not DataSetAtivo.IsEmpty then
   begin
     try
       if RowIndex = 0 then

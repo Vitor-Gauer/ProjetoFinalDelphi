@@ -29,7 +29,7 @@ type
     RotuloBemVindo: TLabel;
     ControleAbasPrincipal: TPageControl;
     AbaPlanilhas: TTabSheet;
-    Divisor1: TSplitter;
+    DivisorPlanilha: TSplitter;
     PainelEsquerdoPlanilhas: TPanel;
     ListaPlanilhas: TListBox;
     PainelDireitoTabelas: TPanel;
@@ -39,7 +39,7 @@ type
     BotaoCriarPlanilha: TButton;
     BotaoCriarTabela: TButton;
     AbaRelatorios: TTabSheet;
-    Divisor2: TSplitter;
+    DivisorRelatorio: TSplitter;
     PainelEsquerdoRelatorios: TPanel;
     ListaRelatorios: TListBox;
     ListaTabelas: TListBox;
@@ -216,10 +216,8 @@ begin
   end
   else
   begin
-    // Limpa a grade se nenhuma planilha estiver selecionada
-    ClientDataSetTabelas.Close;
-    ClientDataSetTabelas.EmptyDataSet;
-    ClientDataSetTabelas.Open;
+    // Atualiza a grade se nenhuma planilha estiver selecionada
+    AtualizarExibicaoPlanilha;
   end;
 end;
 
