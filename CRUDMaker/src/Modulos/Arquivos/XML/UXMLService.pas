@@ -4,8 +4,8 @@ interface
 
 uses
   System.Classes, System.SysUtils, Data.DB, Datasnap.DBClient, System.IOUtils,
-  System.StrUtils, System.Math,  // Para Random, StringReplace, TryStrToInt, CharInSet etc.
-  Xml.XMLDoc, Xml.XMLIntf, UTabelaDTO; // Adiciona unidades XML
+  System.StrUtils, System.Math, VCL.Forms,  // Para Random, StringReplace, TryStrToInt, CharInSet etc.
+  XMLDoc, XMLIntf, MSXML, UTabelaDTO, UTabelaConfiguracaoDTO; // Adiciona unidades XML
 
 type
   TXMLService = class
@@ -18,7 +18,7 @@ type
     procedure LerXML(const AClientDataSet: TClientDataSet; const ACaminhoArquivo: string);
 
     // Salva os dados do ClientDataSet em um arquivo XML personalizado.
-    procedure GravarXML(const AClientDataSet: TClientDataSet; const ACaminhoArquivo: string; ATabelaDTO: TTabelaDTO);
+    procedure GravarXML(const AClientDataSet: TClientDataSet; const ACaminhoArquivo: string; ATabelaDTO: TTabelaDTO; const AConfiguracao: TConfiguracaoTabelaDTO);
 
     // Fun��o auxiliar para obter o hash gerado (se necess�rio fora do GravarXML).
     function ObterUltimoHashGerado: string;
@@ -158,16 +158,17 @@ begin
   end;
 end;
 
-procedure TXMLService.GravarXML(const AClientDataSet: TClientDataSet; const ACaminhoArquivo: string; ATabelaDTO: TTabelaDTO);
+procedure TXMLService.GravarXML(const AClientDataSet: TClientDataSet; const ACaminhoArquivo: string; ATabelaDTO: TTabelaDTO; const AConfiguracao: TConfiguracaoTabelaDTO);
 var
-  XMLDoc: IXMLDocument;
-  RootNode, Redor1Node, Redor2Node, TabelaNode, TituloNode: IXMLNode;
+  XMLDoc: TXMLDocument;
+  RootNode, CorpoNode, Redor1Node, Redor2Node, TabelaNode, TituloNode: IXMLNode;
   LinhaNode, ColunasNode, CelulaNode: IXMLNode;
   Bookmark: TBookmark;
   i, j: Integer;
   Field: TField;
-  NovoHashXML: string;
+  FXMLEstilo, NovoHashXML, FEstilocss, FEstilocsscaminho, ExePath: string;
 begin
+  ExePath := IncludeTrailingPathDelimiter(ExtractFilePath(Application.ExeName));
   if not Assigned(AClientDataSet) or not AClientDataSet.Active then
     raise Exception.Create('ClientDataSet inv�lido ou n�o ativo.');
 
@@ -179,16 +180,31 @@ begin
 
   XMLDoc := TXMLDocument.Create(nil);
   try
-    // Cria a estrutura b�sica do XML
+    // Cria a estrutura básica do XML
     XMLDoc.Active := True;
-    RootNode := XMLDoc.AddChild('Corpo');
-    Redor1Node := RootNode.AddChild('Redor');
+    XMLDoc.Version := '1.0';
+    XMLDoc.Encoding := 'UTF-8';
+    case (AConfiguracao.TipoCabecalho) of
+      tcLinha:
+      begin
+        FEstilocsscaminho := ExePath + 'estilolinha.css';
+        FEstilocss := 'type="text/css" href="' + FEstilocsscaminho + '"';
+      end;
+      tcColuna:
+      begin
+        FEstilocsscaminho := ExePath + 'estilocoluna.css';
+        FEstilocss := 'type="text/css" href="' + FEstilocsscaminho + '"';
+      end;
+    end;
+    RootNode := XMLDoc.CreateNode('xml-stylesheet', ntProcessingInstr, FEstilocss);
+    XMLDoc.ChildNodes.Insert(1, RootNode); // lembre-se: 0-index
+    CorpoNode := XMLDoc.AddChild('Corpo');
+    Redor1Node := CorpoNode.AddChild('Redor');
     Redor2Node := Redor1Node.AddChild('Redor');
     TabelaNode := Redor2Node.AddChild('Tabela');
     TituloNode := TabelaNode.AddChild('Titulo');
-    TituloNode.Text := ATabelaDTO.Titulo; // Usa o t�tulo do DTO
+    TituloNode.Text := ATabelaDTO.Titulo;
 
-    // Salva posi��o atual
     AClientDataSet.DisableControls;
     Bookmark := AClientDataSet.GetBookmark;
     try
@@ -222,7 +238,7 @@ begin
     ATabelaDTO.CaminhoArquivoXML := ACaminhoArquivo; // Garante que o caminho est� atualizado
 
   finally
-    XMLDoc := nil;
+    XMLDoc := nil; // Freeandnil não funciona, mas nil funciona
   end;
 end;
 

@@ -25,7 +25,7 @@ object ViewEditorTabela: TViewEditorTabela
     object RotuloTituloTabela: TLabel
       Left = 5
       Top = 10
-      Width = 33
+      Width = 34
       Height = 15
       Caption = 'T'#237'tulo:'
     end
@@ -107,12 +107,12 @@ object ViewEditorTabela: TViewEditorTabela
   object ClientDataSetEditor: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 48
-    Top = 80
+    Left = 576
+    Top = 8
   end
   object DataSourceEditor: TDataSource
     DataSet = ClientDataSetEditor
-    Left = 48
-    Top = 128
+    Left = 616
+    Top = 8
   end
 end

@@ -61,8 +61,8 @@ begin
   FreeandNil(FController);
   FreeandNil(FTabela);
   // FConfiguracao é liberada aqui pois foi passada no construtor
-//  if Assigned(FConfiguracao) then
-//    FConfiguracao.Free;
+  if Assigned(FConfiguracao) then
+    FConfiguracao.Free;
   inherited;
 end;
 

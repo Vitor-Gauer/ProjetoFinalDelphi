@@ -6,14 +6,10 @@ uses
   System.Classes, System.SysUtils;
 
 type
-  /// <summary>
-  /// Enum para definir o tipo de cabeçalho da tabela.
-  /// </summary>
+  // Enum para definir o tipo de cabeçalho da tabela.
   TTipoCabecalho = (tcLinha, tcColuna);
 
-  /// <summary>
-  /// DTO para transportar as configurações iniciais da tabela durante o processo de criação.
-  /// </summary>
+  // DTO para transportar as configurações iniciais da tabela durante o processo de criação.
   TConfiguracaoTabelaDTO = class
   private
     FNumLinhas: Integer;

@@ -77,7 +77,7 @@ Celula {
 }
 
 /* Estilos para a primeira linha (cabeçalho da tabela) */
-Celula[numero="1"] {
+Linha[numero="1"] Celula {
     background-color: #e2e2e2;
     font-weight: bold;
     color: #333;

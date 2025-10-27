@@ -199,12 +199,18 @@ begin
       FieldDef := AClientDataSet.FieldDefs.AddFieldDef;
       FieldDef.Name := Headers[i];
       FieldDef.DataType := ftString; // Começamos com string, pode ser refinado posteriormente
-      FieldDef.Size := 40;
+      FieldDef.Size := 50000;
     end;
 
     // --- Abrir o DataSet ---
     AClientDataSet.CreateDataSet;
     AClientDataSet.Open;
+
+    // --- Definir o tamanho das colunas que serão mostradas para o usuario ---
+    for i := 0 to AClientDataSet.FieldCount - 1 do
+    begin
+        AClientDataSet.Fields[i].DisplayWidth := 80;
+    end;
 
     // --- Ler linhas de dados ---
     while not FileStream.EndOfStream do

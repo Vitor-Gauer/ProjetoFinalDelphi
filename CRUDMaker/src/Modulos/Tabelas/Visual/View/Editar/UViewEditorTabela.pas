@@ -13,7 +13,6 @@ type
   TEventoSolicitarSalvarTabela = procedure(const ATabela: TTabelaDTO) of object;
   TEventoSolicitarCancelarEdicao = procedure of object;
 
-  // --- Declaração da TSalvarConfirmacaoDialog ---
   TSalvarConfirmacaoDialog = class(TForm)
   private
     FTimer: TTimer;
@@ -28,7 +27,6 @@ type
     constructor Create(AOwner: TComponent; const ATituloTabela: string); reintroduce;
     function Execute: Boolean;
   end;
-  // --- FIM: Declaração da TSalvarConfirmacaoDialog ---
 
   TViewEditorTabela = class(TFormBaseMinTopoCentro)
     PainelEditorTopo: TPanel;

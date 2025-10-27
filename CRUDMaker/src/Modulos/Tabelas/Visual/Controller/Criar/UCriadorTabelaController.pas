@@ -95,7 +95,7 @@ begin
     Exit;
   end;
 
-  // 2. Formatar nomes conforme especificação do PDF
+  // 2. Formatar nomes
   try
     TituloFormatado := CapitalizarPrimeiraLetra(ATabela.Titulo);
     PlanilhaFormatada := CapitalizarPrimeiraLetra(AConfiguracao.PlanilhaNome);
@@ -127,10 +127,10 @@ begin
     CaminhoCompletoBase := IncludeTrailingPathDelimiter(DiretorioTabelaEspecifica) + NomeBaseArquivo;
     CaminhoXML := CaminhoCompletoBase + '.xml';
     CaminhoCSV := CaminhoCompletoBase + '.csv';
-    CaminhoPDF := CaminhoCompletoBase + '.pdf'; // Caminho para o PDF gerado
+    CaminhoPDF := CaminhoCompletoBase + '.pdf';
 
   // 5. Salvar XML
-    FXMLService.GravarXML(AClientDataSet, CaminhoXML, ATabela);
+    FXMLService.GravarXML(AClientDataSet, CaminhoXML, ATabela, AConfiguracao);
 
   // 6. Salvar CSV
     FCSVService.GravarCSV(AClientDataSet, CaminhoCSV, ATabela);
@@ -163,7 +163,7 @@ begin
                         ExtractFileName(CaminhoPDF)]));
 
   except
-    on E: Exception do // <<< Correção: 'on E: Exception do' para capturar erros do bloco principal
+    on E: Exception do
     begin
       ShowMessage('Erro ao criar/salvar a tabela: ' + E.Message);
       Result := False; // Garante que o resultado seja False em caso de exceção
