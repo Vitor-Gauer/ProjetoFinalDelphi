@@ -14,6 +14,8 @@ type
     function ObterListaPlanilhas: TStringList;
     function ObterInfoTabelasDaPlanilha(const ANomePlanilha: string): TStringList;
     function ObterCaminhoCSV(const APlanilhaNome, ATabelaNome: string): string;
+    function ExcluirPlanilha(const APlanilhaNome: string): boolean;
+    function ExcluirTabela(const ATabelaNome: string; APlanilhaNome:string ): boolean;
   end;
 
 implementation
@@ -97,6 +99,43 @@ begin
       Result.Add('Erro ao ler pastas de tabelas: ' + E.Message); // Adiciona mensagem de erro
       // Poderia logar a exceção também, se TLogService estivesse disponível e configurado aqui
     end;
+  end;
+end;
+
+function TPrincipalService.ExcluirPlanilha(const APlanilhaNome: string): boolean;
+var
+CaminhoDiretorio: string;
+begin
+  CaminhoDiretorio := IncludeTrailingPathDelimiter(ExtractFilePath(Application.ExeName)) +
+            'Planilhas' + PathDelim + APlanilhaNome;
+  if TDirectory.Exists(CaminhoDiretorio) then
+  begin
+    // Exclui o diretório e todo o seu conteúdo (arquivos e subdiretórios)
+    TDirectory.Delete(CaminhoDiretorio, True);
+    Result := true;
+  end
+  else
+  begin
+    result := false;
+  end;
+end;
+
+function TPrincipalService.ExcluirTabela(const ATabelaNome: string; APlanilhaNome:string): boolean;
+var
+CaminhoDiretorio: string;
+begin
+  CaminhoDiretorio := IncludeTrailingPathDelimiter(ExtractFilePath(Application.ExeName)) +
+            'Planilhas' + PathDelim + APlanilhaNome + PathDelim + 'Tabelas' + PathDelim + ATabelaNome;
+  if TDirectory.Exists(CaminhoDiretorio) then
+  begin
+    // Exclui o diretório e todo o seu conteúdo (arquivos e subdiretórios)
+    TDirectory.Delete(CaminhoDiretorio, True);
+    Result := true;
+  end
+  else
+  begin
+    result := false;
+    exit;
   end;
 end;
 

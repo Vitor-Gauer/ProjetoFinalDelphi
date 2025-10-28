@@ -75,6 +75,8 @@ object ViewPrincipal: TViewPrincipal
           ItemHeight = 15
           TabOrder = 0
           OnClick = ListaPlanilhasClick
+          ExplicitLeft = 5
+          ExplicitTop = 1
         end
         object PainelBotaoAtualizar: TPanel
           Left = 0
@@ -117,7 +119,7 @@ object ViewPrincipal: TViewPrincipal
           Align = alBottom
           BevelOuter = bvNone
           TabOrder = 0
-          object BotaoEditarPlanilha: TButton
+          object BotaoEditarTabela: TButton
             Left = 10
             Top = 2
             Width = 100
@@ -126,14 +128,14 @@ object ViewPrincipal: TViewPrincipal
             TabOrder = 0
             OnClick = BotaoEditarTabelaClick
           end
-          object BotaoExcluirPlanilha: TButton
+          object BotaoExcluir: TButton
             Left = 120
             Top = 2
             Width = 100
             Height = 25
             Caption = 'Excluir'
             TabOrder = 1
-            OnClick = BotaoExcluirPlanilhaClick
+            OnClick = BotaoExcluirClick
           end
           object BotaoCriarPlanilha: TButton
             Left = 230
@@ -198,10 +200,6 @@ object ViewPrincipal: TViewPrincipal
           Align = alClient
           ItemHeight = 15
           TabOrder = 0
-          ExplicitLeft = 4
-          ExplicitTop = 4
-          ExplicitWidth = 192
-          ExplicitHeight = 404
         end
       end
       object PainelDireitoRelatorios: TPanel

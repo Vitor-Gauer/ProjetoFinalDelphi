@@ -34,8 +34,8 @@ type
     ListaPlanilhas: TListBox;
     PainelDireitoTabelas: TPanel;
     PainelBotoesTabela: TPanel;
-    BotaoEditarPlanilha: TButton;
-    BotaoExcluirPlanilha: TButton;
+    BotaoEditarTabela: TButton;
+    BotaoExcluir: TButton;
     BotaoCriarPlanilha: TButton;
     BotaoCriarTabela: TButton;
     AbaRelatorios: TTabSheet;
@@ -58,7 +58,7 @@ type
     procedure MenuItemLogoutClick(Sender: TObject);
     procedure MenuItemSalvarAssociacaoClick(Sender: TObject);
     procedure BotaoEditarTabelaClick(Sender: TObject);
-    procedure BotaoExcluirPlanilhaClick(Sender: TObject);
+    procedure BotaoExcluirClick(Sender: TObject);
     procedure BotaoCriarTabelaClick(Sender: TObject);
     procedure BotaoCriarPlanilhaClick(Sender: TObject);
     procedure BotaoAtualizarPlanilhaClick(Sender: TObject);
@@ -134,7 +134,6 @@ begin
   if ListaTabelas.ItemIndex >= 0 then
   begin
     NomeTabelaSelecionada := ListaTabelas.Items[ListaTabelas.ItemIndex];
-//    showmessage('Tabela é: ');
 
     // Obter o nome da planilha selecionada
     if ListaPlanilhas.ItemIndex >= 0 then
@@ -186,12 +185,13 @@ begin
     // Este método (AtualizarListaPlanilhas) irá chamar o Service e disparar o evento.
     FController.AtualizarListaPlanilhas;
     ListaPlanilhas.Items.Assign(FController.ListaPlanilhas);
+    PopularGradeTabelas('Tirar tudo da grade tabelas');
   end
   else
   begin
     // Tratamento de erro caso o Controller não esteja disponível
     ShowMessage('Erro: Controller não está disponível para atualizar a lista de planilhas.');
-    // Opcional Futuro : Log de erro
+    // Log de erro
   end;
 end;
 
@@ -272,29 +272,79 @@ begin
     ShowMessage('Método: FOnNavegarParaVisualizadorRelatorio não está sendo criado!');
 end;
 
-procedure TViewPrincipal.BotaoExcluirPlanilhaClick(Sender: TObject);
+procedure TViewPrincipal.BotaoExcluirClick(Sender: TObject);
 var
   NomePlanilhaParaExcluir: string;
+  NomeTabelaSelecionada, NomePlanilhaSelecionada: string;
+  Resultado: integer;
 begin
   // Verifica se uma planilha está selecionada
-  if Assigned(FController.FPlanilhaSelecionada) and (FController.FPlanilhaSelecionada.Titulo <> '') then
+  if ListaTabelas.ItemIndex >= 0 then
   begin
-    NomePlanilhaParaExcluir := FController.FPlanilhaSelecionada.Titulo;
+    NomeTabelaSelecionada := ListaTabelas.Items[ListaTabelas.ItemIndex];
+    NomePlanilhaSelecionada := ListaPlanilhas.Items[ListaPlanilhas.ItemIndex];
+    Resultado := MessageDlg(
+      'Você selecionou a tabela: ' + NomeTabelaSelecionada + ' para exclusão.' + slinebreak + slinebreak +
+      'Clique "Sim" se você quer continuar com essa tabela, "Não" se você quiser deletar a planilha dessa tabela e "Cancelar" para sair dessa caixa', // Sua pergunta
+      mtConfirmation, // Tipo de mensagem (ícone de confirmação)
+      [mbYes, mbNo, mbCancel], // Botões: Sim, Não, Cancelar
+      0
+    );
+    case Resultado of
+      mrYes:
+        begin
+          Resultado := MessageDlg(
+            'Opção selecionada: excluir a tabela: ' + NomeTabelaSelecionada + slinebreak + slinebreak +
+            'Clique "Sim" se você quer continuar com essa exclusão e "Cancelar" se você não quiser deletar', // Sua pergunta
+            mtConfirmation,
+            [mbYes, mbCancel],
+            0
+          );
+          case Resultado of
+            mrYes:
+              begin
+                // Log + Deletação Lógica no BD
+                FController.FOnExcluirTabela(NomeTabelaSelecionada, NomePlanilhaSelecionada);
+                PopularGradeTabelas(NomePlanilhaSelecionada);
+                Exit;
+              end;
+            mrCancel:
+              begin
+               Exit;
+              end;
+          end;
+        end;
 
-    // Solicita confirmação ao usuário
-    if MessageDlg('Tem certeza que deseja excluir a planilha "' + NomePlanilhaParaExcluir + '"?',
-                  mtConfirmation, [mbYes, mbNo], 0) = mrYes then
-    begin
-      // Dispara o evento de exclusão no Controller, passando o DTO da planilha
-      if Assigned(FController.FOnExcluirPlanilha) then
-        FController.FOnExcluirPlanilha(FController.FPlanilhaSelecionada) // Passa o DTO
-      else
-        ShowMessage('Evento OnExcluirPlanilha não está conectado.');
+      mrNo:
+        begin
+          Resultado := MessageDlg(
+            'Opção selecionada: excluir a planilha associada: ' + NomePlanilhaSelecionada + slinebreak + slinebreak +
+            'Clique "Sim" se você quer continuar com a exclusão da planilha: '+ NomePlanilhaSelecionada + ' e "Cancelar" se você não quiser deletar', // Sua pergunta
+            mtConfirmation,
+            [mbYes, mbCancel],
+            0
+          );
+          case Resultado of
+            mrYes:
+            begin
+              // Log + Deletação Lógica no BD
+              FController.FOnExcluirPlanilha(NomePlanilhaSelecionada);
+              PopularGradeTabelas(NomePlanilhaSelecionada);
+              AtualizarExibicaoPlanilha;
+              Exit;
+            end;
+            mrCancel:
+            begin
+               Exit;
+            end;
+          end;
+        end;
+
+      mrCancel:
+        begin
+          Exit;
+        end;
     end;
-  end
-  else
-  begin
-    ShowMessage('Nenhuma planilha selecionada para exclusão.');
   end;
 end;
 

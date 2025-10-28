@@ -19,9 +19,9 @@ type
   TNavegarParaVisualizadorRelatorioEvent = procedure(const ARelatorio: TRelatorioDTO) of object;
   TOnSolicitarLogoutEvent = procedure of object;
   TOnAbrirSalvarAssociacaoEvent = procedure of object;
-  TExcluirPlanilhaEvent = procedure(const APlanilha: TPlanilhaDTO) of object;
+  TExcluirPlanilhaEvent = procedure(const APlanilha: string) of object;
+  TExcluirTabelaEvent = procedure(const ATabela: string; APlanilha:string) of object;
   TCriarPlanilhaEvent = procedure(const ANomeSugerido: string) of object;
-  TSolicitarAtualizacaoPlanilha = procedure(const APlanilha: TPlanilhaDTO) of object;
   TListaPlanilhasAtualizadaEvent = procedure(const AListaPlanilhas: TStringList) of object;
   TGradeTabelasAtualizadaEvent = procedure(const AInfoTabelas: TStringList) of object;
 
@@ -42,7 +42,8 @@ type
     procedure ManipuladorAbrirSalvarAssociacao;
 
     // --- MÉTODOS MANIPULADORES EXISTENTES (renomeados) ---
-    procedure ManipuladorExcluirPlanilha(const APlanilha: TPlanilhaDTO);
+    procedure ManipuladorExcluirPlanilha(const APlanilha:string);
+    procedure ManipuladorExcluirTabela(const ATabela: string; APlanilha:string);
     procedure ManipuladorSolicitarAtualizacaoPlanilha(const APlanilha: TPlanilhaDTO);
     procedure ManipuladorCriarPlanilha(const ANomeSugerido: string); // Este manipulador já existia, mas foi renomeado
 
@@ -55,10 +56,10 @@ type
     FOnListaPlanilhasAtualizada: TListaPlanilhasAtualizadaEvent;
     FOnGradeTabelasAtualizada: TGradeTabelasAtualizadaEvent;
     ListaInfoTabelas: TStringList;
-    FOnSolicitarAtualizacaoPlanilha: TSolicitarAtualizacaoPlanilha;
     ListaPlanilhas: TStringList;
     FOnCriarPlanilha: TCriarPlanilhaEvent;
     FOnExcluirPlanilha: TExcluirPlanilhaEvent;
+    FOnExcluirTabela: TExcluirTabelaEvent;
     FOnNavegarParaCriadorTabela: TNavegarParaCriadorTabelaEvent;
     FOnNavegarParaEditorTabela: TNavegarParaEditorTabelaEvent;
     FOnNavegarParaNovoRelatorioComBase: TNavegarParaNovoRelatorioComBaseEvent;
@@ -70,7 +71,7 @@ type
     constructor Create(AService: TPrincipalService; APersistenciaService: TPersistenciaLocalService; APlanilhaService: TPlanilhaService);
     destructor Destroy; override;
 
-    // --- Propriedades Públicas para os POObj ---
+    // --- Propriedades que ativem ShowViewService ---
     property OnNavegarParaCriadorTabela: TNavegarParaCriadorTabelaEvent read FOnNavegarParaCriadorTabela write FOnNavegarParaCriadorTabela;
     property OnNavegarParaEditorTabela: TNavegarParaEditorTabelaEvent read FOnNavegarParaEditorTabela write FOnNavegarParaEditorTabela;
     property OnNavegarParaNovoRelatorioComBase: TNavegarParaNovoRelatorioComBaseEvent read FOnNavegarParaNovoRelatorioComBase write FOnNavegarParaNovoRelatorioComBase;
@@ -79,12 +80,12 @@ type
     property OnSolicitarLogout: TOnSolicitarLogoutEvent read FOnSolicitarLogout write FOnSolicitarLogout;
     property OnAbrirSalvarAssociacao: TOnAbrirSalvarAssociacaoEvent read FOnAbrirSalvarAssociacao write FOnAbrirSalvarAssociacao;
 
-    // --- PROPRIEDADES EXISTENTES ---
+    // --- Propriedades que ativem PrincipalService ---
     property OnListaPlanilhasAtualizada: TListaPlanilhasAtualizadaEvent read FOnListaPlanilhasAtualizada write FOnListaPlanilhasAtualizada;
     property OnGradeTabelasAtualizada: TGradeTabelasAtualizadaEvent read FOnGradeTabelasAtualizada write FOnGradeTabelasAtualizada;
-    property OnSolicitarAtualizacaoPlanilha: TSolicitarAtualizacaoPlanilha read FOnSolicitarAtualizacaoPlanilha write FOnSolicitarAtualizacaoPlanilha;
     property OnCriarPlanilha: TCriarPlanilhaEvent read FOnCriarPlanilha write FOnCriarPlanilha;
     property OnExcluirPlanilha: TExcluirPlanilhaEvent read FOnExcluirPlanilha write FOnExcluirPlanilha;
+    property OnExcluirTabela: TExcluirTabelaEvent read FOnExcluirTabela write FOnExcluirTabela;
 
     // --- Propriedades para DTOs selecionados ---
     property TabelaSelecionada: TTabelaDTO read FTabelaSelecionada write FTabelaSelecionada;
@@ -93,6 +94,8 @@ type
 
     // --- MÉTODOS EXISTENTES ---
     procedure AtualizarListaPlanilhas;
+    function ExcluirPlanilha(const ANomePlanilha: string): Boolean;
+    function ExcluirTabela(const ANomeTabela: string; ANomePlanilha: string): boolean;
     procedure PopularListaPlanilhasNaView;
     procedure PopularGradeTabelasNaView(const ANomePlanilha: string);
     procedure AtualizarListaPlanilhasInterna;
@@ -131,7 +134,7 @@ begin
   FOnAbrirSalvarAssociacao := ManipuladorAbrirSalvarAssociacao;
   FOnExcluirPlanilha := ManipuladorExcluirPlanilha;
   FOnCriarPlanilha := ManipuladorCriarPlanilha;
-  FOnSolicitarAtualizacaoPlanilha := ManipuladorSolicitarAtualizacaoPlanilha;
+  FOnExcluirTabela := ManipuladorExcluirTabela;
   // FOnListaPlanilhasAtualizada := ManipuladorListaPlanilhasAtualizada; // Exemplo - A View conecta diretamente
   // FOnGradeTabelasAtualizada := ManipuladorGradeTabelasAtualizada; // Exemplo - A View conecta diretamente
 end;
@@ -222,22 +225,39 @@ begin
   TShowViewService.ManipuladorSolicitarLogout; // Chama o manipulador estático que encapsula a lógica de logout e navegação
 end;
 
-// procedure TPrincipalController.ManipuladorAbrirGerenciador; // REMOVIDO
-// begin
-//   // Chamada direta ao serviço
-//   TShowViewService.ManipuladorAbrirGerenciador; // Chama o manipulador estático
-// end;
-
 procedure TPrincipalController.ManipuladorAbrirSalvarAssociacao;
 begin
   TShowViewService.Instance.ShowViewSalvarAssociacao; // Chamada direta ao serviço
 end;
 
-// --- MÉTODOS MANIPULADORES EXISTENTES ---
-procedure TPrincipalController.ManipuladorExcluirPlanilha(const APlanilha: TPlanilhaDTO);
+procedure TPrincipalController.ManipuladorExcluirPlanilha(const APlanilha: string);
 begin
-  // TODO: Implementar lógica de exclusão via serviço
-  ShowMessage('Exclusão de planilha "' + APlanilha.Titulo + '" solicitada via manipulador.');
+    // Log de exclusão
+  if ExcluirPlanilha(APlanilha) then
+  begin
+    ShowMessage('A Planilha: ' + APlanilha + ' foi excluida');
+    // Log que excluiu
+  end
+  else
+  begin
+    showmessage('Deu algo errado no serviço de excluir planilha');
+    // Log de erro
+  end;
+end;
+
+procedure TPrincipalController.ManipuladorExcluirTabela(const ATabela: string; APlanilha:string);
+begin
+    // Log de exclusão
+  if ExcluirTabela(ATabela, APlanilha) then
+  begin
+    ShowMessage('A Tabela: ' + ATabela + ' foi excluida');
+    // Log que excluiu
+  end
+  else
+  begin
+    showmessage('Deu algo errado no serviço de excluir tabela');
+    // Log de erro
+  end;
 end;
 
 procedure TPrincipalController.ManipuladorSolicitarAtualizacaoPlanilha(const APlanilha: TPlanilhaDTO);
@@ -283,17 +303,20 @@ begin
   AtualizarGradeTabelasInterna(ANomePlanilha);
 end;
 
+function TPrincipalController.ExcluirPlanilha(const ANomePlanilha: string): boolean;
+begin
+  Result := FService.ExcluirPlanilha(ANomePlanilha);
+end;
+
+function TPrincipalController.ExcluirTabela(const ANomeTabela: string; ANomePlanilha: string): boolean;
+begin
+  Result := FService.ExcluirTabela(ANomeTabela,ANomePlanilha);
+end;
+
 procedure TPrincipalController.AtualizarGradeTabelasInterna(const ANomePlanilha: string);
 begin
   ListaInfoTabelas := FService.ObterInfoTabelasDaPlanilha(ANomePlanilha);
 end;
-
-//function TPrincipalController.ExcluirPlanilha(const ANomePlanilha: string): Boolean;
-//begin
-//  // Implementação para excluir planilha via serviço
-//  // ...
-//  Result := False; // Placeholder
-//end;
 
 function TPrincipalController.ValidarNomePlanilha(const ANome: string): Boolean;
 begin
