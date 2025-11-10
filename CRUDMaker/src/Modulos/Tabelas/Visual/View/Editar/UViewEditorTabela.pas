@@ -11,7 +11,6 @@ uses
 
 type
   TEventoSolicitarSalvarTabela = procedure(const ATabela: TTabelaDTO) of object;
-  TEventoSolicitarCancelarEdicao = procedure of object;
 
   TSalvarConfirmacaoDialog = class(TForm)
   private
@@ -24,7 +23,7 @@ type
     procedure SalvarVerdadeiroClick(Sender: TObject);
     procedure SalvarFalsoClick(Sender: TObject);
   public
-    constructor Create(AOwner: TComponent; const ATituloTabela: string); reintroduce;
+    constructor Create(AOwner: TComponent); reintroduce;
     function Execute: Boolean;
   end;
 
@@ -33,39 +32,38 @@ type
     RotuloTituloTabela: TLabel;
     EditarTituloTabela: TEdit;
     BotaoSalvarTabela: TButton;
-    BotaoCancelarTabela: TButton;
-    BotaoCarregarTabela: TButton;
+    BotaoSairTabela: TButton;
     DBGridEditor: TDBGrid;
     PainelEditorRodape: TPanel;
     BarraStatusEditor: TStatusBar;
     ClientDataSetEditor: TClientDataSet;
     DataSourceEditor: TDataSource;
+    RotuloTituloPlanilha: TLabel;
+    EditarTituloPlanilha: TEdit;
     procedure BotaoSalvarClick(Sender: TObject);
-    procedure BotaoCancelarClick(Sender: TObject);
-    procedure BotaoCarregarClick(Sender: TObject);
-    procedure AoCriarFormulario(Sender: TObject);
+    procedure BotaoSairClick(Sender: TObject);
     procedure DBGridEditorMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure DBGridEditorExit(Sender: TObject);
   private
     FTabela: TTabelaDTO;
     FSendoEditada: Boolean;
     FController: TEditorTabelaController;
-    FEventoSalvar: TEventoSolicitarSalvarTabela;
-    FEventoCancelar: TEventoSolicitarCancelarEdicao;
     procedure AtualizarTabelaDoInterface;
     procedure ExecutarSalvarComConfirmacao;
   public
     constructor Create(AOwner: TComponent); reintroduce; overload;
     constructor Create(AOwner: TComponent; ATabela: TTabelaDTO); reintroduce; overload;
-    class function CreateEditorComDados(const ATabelaDTO: TTabelaDTO; ADataSetCarregado: TDataSet): TViewEditorTabela;
+    class function CreateEditorComDados(const APlanilhaNome:string;ATabelaDTO: TTabelaDTO; ADataSetCarregado: TDataSet): TViewEditorTabela;
     destructor Destroy; override;
-    property EventoSalvar: TEventoSolicitarSalvarTabela read FEventoSalvar write FEventoSalvar;
-    property EventoCancelar: TEventoSolicitarCancelarEdicao read FEventoCancelar write FEventoCancelar;
   end;
 
 var
   ViewEditorTabela: TViewEditorTabela;
-
+  NewView: TViewEditorTabela;
+  NewController: TEditorTabelaController;
+  HojeTempo : TDateTime;
+  NomePlanilha, NomeTabela, DiretorioExatoDaTabela, DiretorioExatoDaTabelaBackup, HojeString: string;
+  booleana:bool;
 implementation
 
 {$R *.dfm}
@@ -84,13 +82,17 @@ begin
   FSendoEditada := Assigned(ATabela);
   // Cria uma nova instância do controller
   FController := TEditorTabelaController.Create;
+  DataSourceEditor.DataSet := ClientDataSetEditor;
+  // O ClientDataSet permanece fechado até que o usuário carregue um arquivo
+  BarraStatusEditor.SimpleText := 'Pronto - Nenhum arquivo carregado. Use "Carregar".';
+  ClientDataSetEditor.Close;
+  if Assigned(FTabela) then
+  EditarTituloTabela.Text := FTabela.Titulo;
 end;
 
-class function TViewEditorTabela.CreateEditorComDados(const ATabelaDTO: TTabelaDTO; ADataSetCarregado: TDataSet): TViewEditorTabela;
-var
-  NewView: TViewEditorTabela;
-  NewController: TEditorTabelaController; // Controller a ser criado
+class function TViewEditorTabela.CreateEditorComDados(const APlanilhaNome:string; ATabelaDTO: TTabelaDTO; ADataSetCarregado: TDataSet): TViewEditorTabela;
 begin
+  booleana := false;
   NewView := TViewEditorTabela.Create(nil); // Cria a instância da view
   NewController := TEditorTabelaController.Create; // Cria o Controller *dentro* do construtor da View
   try
@@ -105,19 +107,19 @@ begin
 
     NewView.DataSourceEditor.DataSet := ADataSetCarregado; // O DataSet carregado é associado diretamente
 
-    // Opcional: Atualizar a interface com base nos dados do DTO
     if Assigned(ATabelaDTO) then
-      NewView.EditarTituloTabela.Text := ATabelaDTO.Titulo;
+    begin
+      NomeTabela := ATabelaDTO.Titulo;
+      NomePlanilha := APlanilhaNome;
+      NewView.EditarTituloTabela.Text := NomeTabela;
+      NewView.EditarTituloPlanilha.Text := NomePlanilha;
+    end;
 
-    // Opcional: Atualizar status
     if Assigned(ATabelaDTO) and (ATabelaDTO.CaminhoArquivoCSV <> '') then
       NewView.BarraStatusEditor.SimpleText := 'Dados carregados do CSV: ' + ATabelaDTO.CaminhoArquivoCSV
     else
       NewView.BarraStatusEditor.SimpleText := 'Dados carregados (origem desconhecida).';
 
-    // A View está pronta, mas o DataSet pode estar aberto ou fechado dependendo de como o CSVService o deixou.
-    // Se o CSVService o abriu, pode não ser necessário abrir novamente.
-    // Se o CSVService o deixou fechado, abrir aqui.
     if Assigned(ADataSetCarregado) and not ADataSetCarregado.Active then
       ADataSetCarregado.Open; // Abrir o DataSet se necessário
 
@@ -135,139 +137,23 @@ end;
 
 destructor TViewEditorTabela.Destroy;
 begin
-  // Libera os recursos alocados
-  FreeandNil(FController);
+  FController.Destroy;
   inherited;
-end;
-
-procedure TViewEditorTabela.AoCriarFormulario(Sender: TObject);
-begin
-  // Configuração inicial do DataSource
-  DataSourceEditor.DataSet := ClientDataSetEditor;
-  // O ClientDataSet permanece fechado até que o usuário carregue um arquivo
-  BarraStatusEditor.SimpleText := 'Pronto - Nenhum arquivo carregado. Use "Carregar".';
-  ClientDataSetEditor.Close;
-  // O título pode vir do DTO se for uma edição
-  if Assigned(FTabela) then
-    EditarTituloTabela.Text := FTabela.Titulo;
-end;
-
-// --- MODIFICADO: Handler para o botão Carregar ---
-procedure TViewEditorTabela.BotaoCarregarClick(Sender: TObject);
-var
-  OpenDialog: TOpenDialog;
-  FilePath: string;
-  FileExt: string;
-begin
-  OpenDialog := TOpenDialog.Create(nil);
-  try
-    // Atualiza o filtro para incluir XML e CSV
-    OpenDialog.Filter := 'Arquivos de Dados (XML/CSV)|*.xml;*.csv|XML Files (*.xml)|*.xml|CSV Files (*.csv)|*.csv|All Files (*.*)|*.*';
-    OpenDialog.DefaultExt := 'xml'; // Padrão para XML
-    if OpenDialog.Execute then
-    begin
-      FilePath := OpenDialog.FileName;
-      FileExt := LowerCase(ExtractFileExt(FilePath));
-
-      ClientDataSetEditor.Close; // Fecha o dataset antes de carregar novos dados
-
-      try
-        if FileExt = '.xml' then
-        begin
-          // Carrega usando o serviço XML personalizado
-          if Assigned(FController) then
-          begin
-            // Chama o método do controller, passando o DTO (que pode ser modificado) e o ClientDataSet
-            (*if FController.CarregarTabela(FTabela, ClientDataSetEditor) then
-            begin
-              // Se bem-sucedido, o controller atualizou o ClientDataSet e potencialmente o FTabela
-              ClientDataSetEditor.Open; // Garante que esteja aberto
-              if not ClientDataSetEditor.IsEmpty then
-                ClientDataSetEditor.First;
-
-              // Atualiza a interface com base nos dados carregados
-              if Assigned(FTabela) then
-              begin
-                EditarTituloTabela.Text := FTabela.Titulo;
-                // Se o título não estivesse no DTO, poderia inferir do nome do arquivo:
-                // if FTabela.Titulo = '' then
-                //   EditarTituloTabela.Text := ChangeFileExt(ExtractFileName(FTabela.CaminhoArquivoXML), '');
-              end;
-              BarraStatusEditor.SimpleText := 'Arquivo XML carregado com sucesso.';
-            end
-            else
-            begin
-              // O controller ou o serviço já mostrou mensagem de erro
-              BarraStatusEditor.SimpleText := 'Falha no carregamento do XML.';
-              ClientDataSetEditor.Close; // Mantém fechado
-            end;*)
-          end
-          else
-          begin
-            ShowMessage('Erro: Controller não disponível para carregamento.');
-          end;
-        end
-        else if FileExt = '.csv' then
-        begin
-          // Carrega usando o serviço CSV
-          if Assigned(FController) then
-          begin
-            // Chama o método do controller, passando o DTO (que pode ser modificado) e o ClientDataSet
-            (* if FController.CarregarTabela(FTabela, ClientDataSetEditor) then
-            begin
-              // Se bem-sucedido, o controller atualizou o ClientDataSet e potencialmente o FTabela
-              ClientDataSetEditor.Open; // Garante que esteja aberto
-              if not ClientDataSetEditor.IsEmpty then
-                ClientDataSetEditor.First;
-
-              // Atualiza a interface com base nos dados carregados
-              if Assigned(FTabela) then
-              begin
-                EditarTituloTabela.Text := FTabela.Titulo;
-                // Se o título não estivesse no DTO, poderia inferir do nome do arquivo:
-                // if FTabela.Titulo = '' then
-                //   EditarTituloTabela.Text := ChangeFileExt(ExtractFileName(FTabela.CaminhoArquivoXML), '');
-              end;
-              BarraStatusEditor.SimpleText := 'Arquivo CSV carregado com sucesso.';
-            end
-            else
-            begin
-              // O controller ou o serviço já mostrou mensagem de erro
-              BarraStatusEditor.SimpleText := 'Falha no carregamento do CSV.';
-              ClientDataSetEditor.Close; // Mantém fechado
-            end;*)
-          end
-          else
-          begin
-            ShowMessage('Erro: Controller não disponível para carregamento.');
-          end;
-        end
-        else
-        begin
-          ShowMessage('Formato de arquivo não suportado para carregamento: ' + FileExt);
-          Exit; // Sai sem atualizar o título ou DTO
-        end;
-
-      except
-        on E: Exception do
-        begin
-          ShowMessage('Erro ao carregar o arquivo: ' + E.Message);
-          BarraStatusEditor.SimpleText := 'Erro ao carregar.';
-          ClientDataSetEditor.Close; // Garante que está fechado em caso de erro
-        end;
-      end;
-    end;
-  finally
-    OpenDialog.Free;
-  end;
 end;
 
 procedure TViewEditorTabela.ExecutarSalvarComConfirmacao;
 var
   TituloTabela: string;
+  LocalDoArquivo, LocalDoArquivoBackup: string;
   ConfirmForm: TSalvarConfirmacaoDialog;
   Resposta: Boolean;
+  DataSetOrigem: TDataSet;
 begin
+  // Garante que qualquer edição pendente no DBGrid seja aplicada ao DataSet
+  DataSetOrigem := NewView.DataSourceEditor.DataSet;
+  if assigned(DataSetOrigem) and DataSetOrigem.Active then
+    DataSetOrigem.CheckBrowseMode;
+
   AtualizarTabelaDoInterface();
 
   if Assigned(FTabela) and (FTabela.Titulo <> '') then
@@ -275,30 +161,37 @@ begin
   else
     TituloTabela := 'Sem Título';
 
-  ConfirmForm := TSalvarConfirmacaoDialog.Create(Self, TituloTabela);
+  ConfirmForm := TSalvarConfirmacaoDialog.Create(Self);
   try
     Resposta := ConfirmForm.Execute;
     if Resposta then
     begin
-       if Assigned(FController) then
-       begin
-         try
-           // Chama o controller para salvar
-           if FController.ExecutarSalvarTabela(FTabela, ClientDataSetEditor) then
-           begin
-              ShowMessage('Tabela salva com sucesso!');
-              Self.Close;
-           end;
-         except
-           on E: Exception do
-           begin
-             ShowMessage('Erro ao iniciar o salvamento: ' + E.Message);
-           end;
-         end;
-       end else
-       begin
-         ShowMessage('Erro: Controller não disponível.');
-       end;
+      LocalDoArquivo := DiretorioExatoDaTabela;
+      LocalDoArquivoBackup := DiretorioExatoDaTabelaBackup;
+      if (LocalDoArquivo <> '') and Assigned(FController) then
+      begin
+        try
+          if FController.ExecutarSalvarTabela(DataSetOrigem, LocalDoArquivo, FTabela) then
+          begin
+            FController.ExecutarSalvarTabela(DataSetOrigem, LocalDoArquivoBackup, FTabela);
+            ShowMessage('Tabela salva com sucesso!');
+            Self.Close;
+          end;
+        except
+          on E: Exception do
+          begin
+            ShowMessage('Erro ao iniciar o salvamento: ' + E.Message);
+          end;
+        end;
+      end
+      else if LocalDoArquivo = '' then
+      begin
+         ShowMessage('Operação de salvamento cancelada. O local do arquivo não foi especificado.');
+      end
+      else
+      begin
+        ShowMessage('Erro: Controller não disponível.');
+      end;
     end;
   finally
     ConfirmForm.Free;
@@ -310,19 +203,20 @@ begin
   ExecutarSalvarComConfirmacao;
 end;
 
-procedure TViewEditorTabela.BotaoCancelarClick(Sender: TObject);
+procedure TViewEditorTabela.BotaoSairClick(Sender: TObject);
 begin
-  if Assigned(FEventoCancelar) then
-    FEventoCancelar;
-  Self.Close;
+  if booleana then
+  Self.Close
+  else
+  showmessage('Tenha certeza que você já salvou as alterações');
+  booleana := true;
 end;
 
 procedure TViewEditorTabela.AtualizarTabelaDoInterface;
 begin
-  if not Assigned(FTabela) then // Cria o DTO se não existir
+  if not Assigned(FTabela) then
     FTabela := TTabelaDTO.Create;
   FTabela.Titulo := EditarTituloTabela.Text;
-  // Outros campos do DTO seriam atualizados aqui, se houvesse
 end;
 
 procedure TViewEditorTabela.DBGridEditorMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
@@ -365,12 +259,12 @@ end;
 
 { TSalvarConfirmacaoDialog }
 
-constructor TSalvarConfirmacaoDialog.Create(AOwner: TComponent; const ATituloTabela: string);
+constructor TSalvarConfirmacaoDialog.Create(AOwner: TComponent);
 begin
   inherited CreateNew(AOwner);
   Self.BorderStyle := bsDialog;
   Self.Caption := 'Confirmar Salvar';
-  Self.Width := 400;
+  Self.Width := 700;
   Self.Height := 150;
   Self.Position := poMainFormCenter;
 
@@ -378,11 +272,11 @@ begin
   FLabel.Parent := Self;
   FLabel.AutoSize := False;
   FLabel.WordWrap := True;
-  FLabel.Width := Self.ClientWidth - 20;
+  FLabel.Width := Self.ClientWidth-20;
   FLabel.Left := 10;
   FLabel.Top := 10;
   // Armazena o título para uso no Timer/Execute
-  FLabel.Caption := ATituloTabela;
+  FLabel.Caption := NomeTabela;
 
   FYesButton := TButton.Create(Self);
   FYesButton.Parent := Self;
@@ -407,17 +301,43 @@ begin
   FTimer.OnTimer := TimerTimer;
 
   FSecondsLeft := 5;
+  DiretorioExatoDaTabela := ExtractFilePath(Application.ExeName);
+  DiretorioExatoDaTabela := DiretorioExatoDaTabela + 'planilhas';
+  DiretorioExatoDaTabela := DiretorioExatoDaTabela + pathdelim + NomePlanilha;
+  DiretorioExatoDaTabela := DiretorioExatoDaTabela + pathdelim + 'tabelas';
+  DiretorioExatoDaTabela := DiretorioExatoDaTabela + pathdelim + NomeTabela + pathdelim + NomeTabela + '.csv';
+
+  HojeTempo := Now;
+  HojeString := FormatDateTime(' yyyy-mm-dd hh_nn_ss ', HojeTempo);
+  DiretorioExatoDaTabelaBackup := ExtractFilePath(Application.ExeName);
+  DiretorioExatoDaTabelaBackup := DiretorioExatoDaTabelaBackup + 'backup';
+  DiretorioExatoDaTabelaBackup := DiretorioExatoDaTabelaBackup + pathdelim + 'planilhas';
+  DiretorioExatoDaTabelaBackup := DiretorioExatoDaTabelaBackup + pathdelim + NomePlanilha;
+  DiretorioExatoDaTabelaBackup := DiretorioExatoDaTabelaBackup + pathdelim + 'tabelas';
+  DiretorioExatoDaTabelaBackup := DiretorioExatoDaTabelaBackup + pathdelim + NomeTabela + pathdelim + NomeTabela + ' ('+HojeString+')' + '.csv';
 end;
 
 function TSalvarConfirmacaoDialog.Execute: Boolean;
+var
+  ResultadoModal: TModalResult;
 begin
   FSecondsLeft := 5;
+
   // Atualiza o caption com o título da tabela
-  FLabel.Caption := Format('Tem certeza que deseja salvar as alterações na tabela "%s"?', [FLabel.Caption]);
+  FLabel.Caption := Format('Tem certeza que deseja salvar as alterações na tabela: "%s"?', [FLabel.Caption]);
   FYesButton.Caption := Format('Sim (%d)', [FSecondsLeft]);
   FYesButton.Enabled := False;
-  FTimer.Enabled := True; // Inicia o timer quando o diálogo é mostrado
-  Result := ShowModal = mrYes;
+  FTimer.Enabled := True;
+
+  // O ShowModal exibe a janela e o código PAUSA até o usuário clicar em Sim ou Não
+  ResultadoModal := Self.ShowModal;
+
+  // Desabilita o timer após o retorno do modal, caso o usuário feche a janela ou clique
+  FTimer.Enabled := False;
+  if ResultadoModal = mrYes then
+  Result:=True
+  else
+  Result:=False;
 end;
 
 procedure TSalvarConfirmacaoDialog.TimerTimer(Sender: TObject);

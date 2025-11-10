@@ -4,7 +4,7 @@ interface
 
 uses
   System.SysUtils, System.Classes, Data.DB, Datasnap.DBClient, Vcl.Dialogs,
-  UTabelaDTO, UXMLService;
+  UTabelaDTO, UCSVService;
 
 type
   // Record para representar uma célula válida
@@ -25,27 +25,27 @@ type
 
   TEditarTabelaService = class
   private
-    FXMLService: TXMLService;
+    FCSVService: TCSVService;
     function ContemConteudoPerigoso(const ATexto: string): Boolean;
     function ExtrairTextoParaValidacao(const ATexto: string): string; // Remove espaços para validação
   public
-    constructor Create(AXMLService: TXMLService);
+    constructor Create(ACSVService: TCSVService);
     destructor Destroy; override;
 
     function Carregar(ATabelaDTO: TTabelaDTO): TTabelaDTO;
-    function ValidarDados(ADataSet: TClientDataSet): Boolean;
+    function ValidarDados(ADataSet: TDataSet): Boolean;
     function PrepararParaTransformacao(ADataSet: TClientDataSet): TPreparedData; // Novo método
-    procedure Salvar(ATabelaDTO: TTabelaDTO; ADataSet: TClientDataSet); // Atualizado para receber DataSet
+    procedure Salvar(ADataSet: TDataSet; ACaminhoArquivo: string; ATabelaDTO: TTabelaDTO);
   end;
 
 implementation
 
 { TEditarTabelaService }
 
-constructor TEditarTabelaService.Create(AXMLService: TXMLService);
+constructor TEditarTabelaService.Create(ACSVService: TCSVService);
 begin
   inherited Create;
-  FXMLService := AXMLService;
+  FCSVService := ACSVService;
 end;
 
 destructor TEditarTabelaService.Destroy;
@@ -93,7 +93,7 @@ begin
   // Adicione mais verificações conforme necessário
 end;
 
-function TEditarTabelaService.ValidarDados(ADataSet: TClientDataSet): Boolean;
+function TEditarTabelaService.ValidarDados(ADataSet: TDataSet): Boolean;
 var
   HasData: Boolean;
   HasInvalidData: Boolean;
@@ -106,7 +106,7 @@ begin
   HasInvalidData := False;
   MsgErro := '';
 
-  if not Assigned(ADataSet) or not ADataSet.Active then
+  if not Assigned(ADataSet) or not ADataSet.Active then // Se ADataSet Nao existir ou Se o DataSet estiver Inativo,
   begin
     MsgErro := 'DataSet inválido ou inativo.';
     ShowMessage(MsgErro);
@@ -128,12 +128,6 @@ begin
           if TrimmedValueForValidation <> '' then
           begin
             HasData := True;
-            if Length(CellValue) > 300 then
-            begin
-              HasInvalidData := True;
-              MsgErro := Format('Célula na linha %d, coluna %d excede 300 caracteres.', [ADataSet.RecNo, j + 1]);
-              Break;
-            end;
             if ContemConteudoPerigoso(TrimmedValueForValidation) then
             begin
               HasInvalidData := True;
@@ -227,13 +221,12 @@ begin
 end;
 
 
-procedure TEditarTabelaService.Salvar(ATabelaDTO: TTabelaDTO; ADataSet: TClientDataSet);
+procedure TEditarTabelaService.Salvar(ADataSet: TDataSet; ACaminhoArquivo: string; ATabelaDTO: TTabelaDTO);
 begin
   if not Assigned(ATabelaDTO) or not Assigned(ADataSet) then
     raise Exception.Create('DTO ou DataSet não fornecidos para salvamento.');
 
-  // Chama o XMLService para salvar o arquivo XML
-//  FXMLService.SalvarArquivoXML(ATabelaDTO, ADataSet);
+  FCSVService.GravarCSV(ADataSet, ACaminhoArquivo, ATabelaDTO)
 end;
 
 end.

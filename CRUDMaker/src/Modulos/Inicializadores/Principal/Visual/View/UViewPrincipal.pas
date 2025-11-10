@@ -278,11 +278,11 @@ var
   NomeTabelaSelecionada, NomePlanilhaSelecionada: string;
   Resultado: integer;
 begin
-  // Verifica se uma planilha está selecionada
   if ListaTabelas.ItemIndex >= 0 then
   begin
     NomeTabelaSelecionada := ListaTabelas.Items[ListaTabelas.ItemIndex];
     NomePlanilhaSelecionada := ListaPlanilhas.Items[ListaPlanilhas.ItemIndex];
+
     Resultado := MessageDlg(
       'Você selecionou a tabela: ' + NomeTabelaSelecionada + ' para exclusão.' + slinebreak + slinebreak +
       'Clique "Sim" se você quer continuar com essa tabela, "Não" se você quiser deletar a planilha dessa tabela e "Cancelar" para sair dessa caixa', // Sua pergunta
@@ -317,6 +317,10 @@ begin
 
       mrNo:
         begin
+          if not (NomePlanilhaSelecionada <> '') then
+          begin
+            showmessage('Selecione uma planilha!');
+          end;
           Resultado := MessageDlg(
             'Opção selecionada: excluir a planilha associada: ' + NomePlanilhaSelecionada + slinebreak + slinebreak +
             'Clique "Sim" se você quer continuar com a exclusão da planilha: '+ NomePlanilhaSelecionada + ' e "Cancelar" se você não quiser deletar', // Sua pergunta
@@ -345,6 +349,13 @@ begin
           Exit;
         end;
     end;
+  end
+  else
+  begin
+    BarraStatusPrincipal.SimpleText := ' - Selecione uma Planilha e Tabela antes de começar uma exclusão';
+    Sleep(3000);
+    BarraStatusPrincipal.SimpleText := '';
+    exit;
   end;
 end;
 

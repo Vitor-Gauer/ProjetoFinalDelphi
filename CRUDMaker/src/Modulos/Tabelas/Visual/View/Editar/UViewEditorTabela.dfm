@@ -29,46 +29,52 @@ object ViewEditorTabela: TViewEditorTabela
       Height = 15
       Caption = 'T'#237'tulo:'
     end
+    object RotuloTituloPlanilha: TLabel
+      Left = 280
+      Top = 10
+      Width = 45
+      Height = 15
+      Caption = 'Planilha:'
+    end
     object EditarTituloTabela: TEdit
-      Left = 46
+      Left = 45
       Top = 7
-      Width = 300
+      Width = 230
       Height = 23
       Anchors = [akLeft, akTop, akRight]
+      Enabled = False
       TabOrder = 0
-    end
-    object BotaoCarregarTabela: TButton
-      AlignWithMargins = True
-      Left = 360
-      Top = 4
-      Width = 98
-      Height = 30
-      Anchors = [akTop, akRight]
-      Caption = 'Carregar'
-      TabOrder = 1
-      OnClick = BotaoCarregarClick
     end
     object BotaoSalvarTabela: TButton
       AlignWithMargins = True
-      Left = 462
+      Left = 580
       Top = 4
       Width = 98
       Height = 30
       Anchors = [akTop, akRight]
       Caption = 'Salvar'
-      TabOrder = 2
+      TabOrder = 1
       OnClick = BotaoSalvarClick
     end
-    object BotaoCancelarTabela: TButton
+    object BotaoSairTabela: TButton
       AlignWithMargins = True
       Left = 690
       Top = 4
       Width = 100
       Height = 30
       Anchors = [akTop, akRight]
-      Caption = 'Cancelar'
+      Caption = 'Sair'
+      TabOrder = 2
+      OnClick = BotaoSairClick
+    end
+    object EditarTituloPlanilha: TEdit
+      Left = 330
+      Top = 7
+      Width = 230
+      Height = 23
+      Anchors = [akLeft, akTop, akRight]
+      Enabled = False
       TabOrder = 3
-      OnClick = BotaoCancelarClick
     end
   end
   object DBGridEditor: TDBGrid
@@ -107,12 +113,12 @@ object ViewEditorTabela: TViewEditorTabela
   object ClientDataSetEditor: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 576
-    Top = 8
+    Left = 560
+    Top = 160
   end
   object DataSourceEditor: TDataSource
     DataSet = ClientDataSetEditor
-    Left = 616
-    Top = 8
+    Left = 600
+    Top = 160
   end
 end

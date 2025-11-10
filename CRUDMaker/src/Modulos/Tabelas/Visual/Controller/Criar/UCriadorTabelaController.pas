@@ -68,11 +68,16 @@ end;
 
 function TCriadorTabelaController.ExecutarCriarTabela(const AConfiguracao: TConfiguracaoTabelaDTO; const ATabela: TTabelaDTO; AClientDataSet: TClientDataSet): Boolean;
 var
-  TituloFormatado, PlanilhaFormatada, NomeBaseArquivo: string;
+  TituloFormatado, PlanilhaFormatada, NomeBaseArquivo, NomeBaseArquivoBackup: string;
   DiretorioBase, DiretorioTabelaEspecifica, CaminhoCompletoBase: string;
-  CaminhoXML, CaminhoCSV, CaminhoPDF: string;
+  CaminhoXML, CaminhoCSV: string;
   CaminhoCSS: string;
   ExePath: string;
+  HojeTempo: TDateTime;
+  HojeString: string;
+  i:integer;
+  CaminhosPrincipais, CaminhosBackup: TArray<string>;
+  DiretorioPrincipal, DiretorioBackup: string;
 begin
   Result := False;
 
@@ -103,65 +108,80 @@ begin
 
   // 3. Determinar caminho do executável e diretórios de destino
     ExePath := IncludeTrailingPathDelimiter(ExtractFilePath(Application.ExeName));
-    DiretorioBase :=
-    ExePath + 'Planilhas' +
-    PathDelim + AConfiguracao.PlanilhaNome +
-    PathDelim + 'Tabelas';
-
-    // Garante que o diretório base exista
-    if not ForceDirectories(DiretorioBase) then
+    for i := 0 to 1 do
     begin
-      ShowMessage('Erro: Falha ao criar o diretório base para tabelas: ' + DiretorioBase);
-      Exit;
+      if i = 1 then
+        DiretorioBase := ExePath + 'Backup'
+        + PathDelim + 'Planilhas'
+        + PathDelim + AConfiguracao.PlanilhaNome
+        + PathDelim + 'Tabelas'
+      else
+        DiretorioBase := ExePath + 'Planilhas'
+        + PathDelim + AConfiguracao.PlanilhaNome + PathDelim + 'Tabelas';
+
+      // Garante que o diretório base exista
+      if not ForceDirectories(DiretorioBase) then
+      begin
+        ShowMessage('Erro: Falha ao criar o diretório base para tabelas: ' + DiretorioBase);
+        Exit;
+      end;
+
+      DiretorioTabelaEspecifica := IncludeTrailingPathDelimiter(DiretorioBase) + TituloFormatado;
+      // Garante que o diretório específico da tabela exista
+      if not ForceDirectories(DiretorioTabelaEspecifica) then
+      begin
+        ShowMessage('Erro: Falha ao criar o diretório específico da tabela: ' + DiretorioTabelaEspecifica);
+        Exit;
+      end;
+
+      if i = 0 then
+      begin
+        // 4. Definir caminhos completos dos arquivos (Principal)
+        CaminhoCompletoBase := IncludeTrailingPathDelimiter(DiretorioTabelaEspecifica) + NomeBaseArquivo;
+        CaminhoXML := CaminhoCompletoBase + '.xml';
+        CaminhoCSV := CaminhoCompletoBase + '.csv';
+
+        // Salvar os caminhos e diretório para uso posterior
+        CaminhosPrincipais := [CaminhoXML, CaminhoCSV];
+        DiretorioPrincipal := DiretorioTabelaEspecifica;
+
+        // 5. Salvar XML
+        FXMLService.GravarXML(AClientDataSet, CaminhoXML, ATabela, AConfiguracao);
+
+        // 6. Salvar CSV
+        FCSVService.GravarCSV(AClientDataSet, CaminhoCSV, ATabela);
+      end;
+
+      if i = 1 then
+      begin
+        // 4. Definir caminhos completos dos arquivos (Backup)
+        HojeTempo := Now;
+        HojeString := FormatDateTime(' yyyy-mm-dd hh_nn_ss ', HojeTempo);
+        NomeBaseArquivoBackup := TituloFormatado + HojeString;
+        CaminhoCompletoBase := IncludeTrailingPathDelimiter(DiretorioTabelaEspecifica) + NomeBaseArquivoBackup;
+        CaminhoXML := CaminhoCompletoBase + '.xml';
+        CaminhoCSV := CaminhoCompletoBase + '.csv';
+        // CaminhoPDF não é salvo no backup, então não precisa ser definido aqui, a menos que você queira salvá-lo também
+
+        // Salvar os caminhos e diretório para uso posterior
+        CaminhosBackup := [CaminhoXML, CaminhoCSV]; // CaminhoPDF omitido se não for salvo no backup
+        DiretorioBackup := DiretorioTabelaEspecifica;
+
+        // Salvar XML e CSV no backup
+        FXMLService.GravarXML(AClientDataSet, CaminhoXML, ATabela, AConfiguracao);
+        FCSVService.GravarCSV(AClientDataSet, CaminhoCSV, ATabela);
+      end;
+      Result := True; // Marca como sucesso após cada iteração bem-sucedida
     end;
 
-    DiretorioTabelaEspecifica := IncludeTrailingPathDelimiter(DiretorioBase) + TituloFormatado;
-    // Garante que o diretório específico da tabela exista
-    if not ForceDirectories(DiretorioTabelaEspecifica) then
-    begin
-      ShowMessage('Erro: Falha ao criar o diretório específico da tabela: ' + DiretorioTabelaEspecifica);
-      Exit;
-    end;
-
-  // 4. Definir caminhos completos dos arquivos
-    CaminhoCompletoBase := IncludeTrailingPathDelimiter(DiretorioTabelaEspecifica) + NomeBaseArquivo;
-    CaminhoXML := CaminhoCompletoBase + '.xml';
-    CaminhoCSV := CaminhoCompletoBase + '.csv';
-    CaminhoPDF := CaminhoCompletoBase + '.pdf';
-
-  // 5. Salvar XML
-    FXMLService.GravarXML(AClientDataSet, CaminhoXML, ATabela, AConfiguracao);
-
-  // 6. Salvar CSV
-    FCSVService.GravarCSV(AClientDataSet, CaminhoCSV, ATabela);
-
-  // 7. Gerar PDF (simulado)
-    //    Utiliza o estilo.css do diretório do executável.
-    CaminhoCSS := ExePath + 'estilo.css'; // Caminho do CSS
-    try
-       // Quando o método de UPDFService for atualizado para receber XML, CSS e destino:
-       // FPDFService.GerarAPartirDeXML(CaminhoXML, CaminhoCSS, CaminhoPDF);
-    except
-       on E: Exception do
-       begin
-         ShowMessage('Aviso: Erro ao gerar o PDF (a tabela foi salva em XML/CSV): ' + E.Message);
-         // Decide se continua como sucesso ou marca como falha.
-         // Por agora, considera como sucesso se XML/CSV foram salvos.
-       end;
-    end;
-
-  // 8. Sucesso
-    Result := True;
-    ShowMessage(Format('Tabela "%s" criada com sucesso!' + sLineBreak +
-                       'Arquivos gerados em: %s' + sLineBreak +
-                       'XML: %s' + sLineBreak +
-                       'CSV: %s' + sLineBreak +
-                       'PDF: %s',
-                       [ATabela.Titulo, DiretorioTabelaEspecifica,
-                        ExtractFileName(CaminhoXML),
-                        ExtractFileName(CaminhoCSV),
-                        ExtractFileName(CaminhoPDF)]));
-
+  // Exibe a mensagem de sucesso com os arquivos do diretório principal
+  ShowMessage(Format('Tabela "%s" criada com sucesso!' + sLineBreak +
+                     'Arquivos gerados em: %s' + sLineBreak +
+                     'XML: %s' + sLineBreak +
+                     'CSV: %s',
+                     [ATabela.Titulo, DiretorioPrincipal,
+                      ExtractFileName(CaminhosPrincipais[0]),
+                      ExtractFileName(CaminhosPrincipais[1])]));
   except
     on E: Exception do
     begin

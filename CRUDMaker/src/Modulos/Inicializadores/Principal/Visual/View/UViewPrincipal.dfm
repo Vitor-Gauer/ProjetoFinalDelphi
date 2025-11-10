@@ -75,8 +75,6 @@ object ViewPrincipal: TViewPrincipal
           ItemHeight = 15
           TabOrder = 0
           OnClick = ListaPlanilhasClick
-          ExplicitLeft = 5
-          ExplicitTop = 1
         end
         object PainelBotaoAtualizar: TPanel
           Left = 0

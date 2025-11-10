@@ -15,11 +15,12 @@ type
     function GerarHashCSV: string;
     // Escreve o cabeçalho CSV (nomes das colunas) no Stream.
     // <param name="AStream">Stream onde o CSV está sendo escrito.</param>
-    procedure EscreverCabecalhoCSV(AStream: TStream; AClientDataSet: TClientDataSet);
+    procedure EscreverCabecalhoCSV(AStream: TStream; AClientDataSet: TDataSet);
+
 
     // Escreve os dados de uma linha do ClientDataSet no Stream como CSV.
     // <param name="ADelimitador">Caractere delimitador (geralmente vírgula).</param>
-    procedure EscreverLinhaCSV(AStream: TStream; AClientDataSet: TClientDataSet; const ADelimitador: Char = ',');
+    procedure EscreverLinhaCSV(AStream: TStream; AClientDataSet: TDataSet; const ADelimitador: Char = ',');
   public
     // Carrega os dados de um arquivo CSV para o ClientDataSet.
     // Assume que a primeira linha contém os cabeçalhos.
@@ -28,7 +29,7 @@ type
     // Exporta os dados do ClientDataSet para um arquivo CSV.
     // Gera um hash único para o DTO.
     // <param name="ATabelaDTO">DTO da tabela para atualizar o caminho e o hash.</param>
-    procedure GravarCSV(const AClientDataSet: TClientDataSet; const ACaminhoArquivo: string; ATabelaDTO: TTabelaDTO);
+    procedure GravarCSV(const AClientDataSet: TDataSet; const ACaminhoArquivo: string; ATabelaDTO: TTabelaDTO);
 
     // Função auxiliar para obter o hash gerado (se necessário fora do GravarCSV).
     function ObterUltimoHashGerado: string;
@@ -62,7 +63,7 @@ begin
   Result := GerarHashCSV;
 end;
 
-procedure TCSVService.EscreverCabecalhoCSV(AStream: TStream; AClientDataSet: TClientDataSet);
+procedure TCSVService.EscreverCabecalhoCSV(AStream: TStream; AClientDataSet: TDataSet);
 var
   i: Integer;
   Field: TField;
@@ -82,7 +83,7 @@ begin
   AStream.WriteBuffer(Bytes, Length(Bytes));
 end;
 
-procedure TCSVService.EscreverLinhaCSV(AStream: TStream; AClientDataSet: TClientDataSet; const ADelimitador: Char = ',');
+procedure TCSVService.EscreverLinhaCSV(AStream: TStream; AClientDataSet: TDataSet; const ADelimitador: Char = ',');
 var
   i: Integer;
   Field: TField;
@@ -106,7 +107,7 @@ begin
   AStream.WriteBuffer(Bytes, Length(Bytes));
 end;
 
-procedure TCSVService.GravarCSV(const AClientDataSet: TClientDataSet; const ACaminhoArquivo: string; ATabelaDTO: TTabelaDTO);
+procedure TCSVService.GravarCSV(const AClientDataSet: TDataSet; const ACaminhoArquivo: string; ATabelaDTO: TTabelaDTO);
 var
   FileStream: TFileStream;
   Bookmark: TBookmark;
@@ -157,6 +158,8 @@ var
   FieldDef: TFieldDef;
   RowValues: TArray<string>;
 begin
+  if acaminhoarquivo = '0' then
+
   if not Assigned(AClientDataSet) then
     raise Exception.Create('ClientDataSet inválido.');
 

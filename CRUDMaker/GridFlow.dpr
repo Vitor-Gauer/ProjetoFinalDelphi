@@ -1,8 +1,8 @@
 program GridFlow;
 
 uses
+  System.SysUtils,
   Vcl.Forms,
-  System.SysUtils (* Para Reportar memory leaks *),
   UConfigurarBD in 'src\Config\UConfigurarBD.pas',
   ULogBancoDados in 'src\Config\ULogBancoDados.pas',
   UConstantesGlobais in 'src\Utils\UConstantesGlobais.pas',

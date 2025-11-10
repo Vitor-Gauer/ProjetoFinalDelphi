@@ -172,13 +172,13 @@ begin
 
     DataSetCarregado := TClientDataSet.Create(nil); // Criar um DataSet temporário para carregar os dados
     try
-      FCSVService.LerCSV(DataSetCarregado, CaminhoCSV);; // O serviço lê o CSV e preenche o DataSet
+      FCSVService.LerCSV(DataSetCarregado, CaminhoCSV); // O serviço lê o CSV e preenche o DataSet
 
       // Agora, o DataSetCarregado contém os dados do CSV.
 
       // --- Chamar o TShowViewService para mostrar a View ---
       // Passa o DTO e o DataSet carregado
-      TShowViewService.Instance.ShowViewEditorTabela(TabelaDTO, DataSetCarregado);
+      TShowViewService.Instance.ShowViewEditorTabela(APlanilhaNome, TabelaDTO, DataSetCarregado);
 
     except
       on E: Exception do

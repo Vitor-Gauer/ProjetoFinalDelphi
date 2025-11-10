@@ -4,7 +4,7 @@ unit UShowViewService;
 interface
 
 uses
-  System.SysUtils, System.Classes, System.UITypes,
+  System.SysUtils, System.Classes, System.UITypes, System.variants,
   Vcl.Forms, VCL.Dialogs,
   Data.Db,
   UCriadorTabelaController, UPrincipalController,
@@ -43,7 +43,7 @@ type
     procedure IniciarAplicacao;
     procedure ShowViewSalvarAssociacao;
     procedure ShowViewEditorRelatorio(ARelatorio: TRelatorioDTO = nil; APlanilhaBase: TPlanilhaDTO = nil);
-    procedure ShowViewEditorTabela(const ATabela: TTabelaDTO; ADataSet: TDataSet);
+    procedure ShowViewEditorTabela(const APlanilhaNome:string ; ATabela: TTabelaDTO; ADataSet: TDataSet);
     procedure ShowViewLogin(AModal: Boolean = False);
     function ShowViewModalTermos: Boolean;
     procedure ShowViewPrincipalModal(AUsuarioNome: string);
@@ -53,7 +53,6 @@ type
     // --- Manipuladores Estáticos
     class procedure ManipuladorSolicitarLogout;
     class procedure ManipuladorNavegarParaCriadorTabela;
-    class procedure ManipuladorNavegarParaEditorTabela(const ATabela: TTabelaDTO; ADataSet: TDataSet);
     class procedure ManipuladorNavegarParaNovoRelatorioComBase(const ATabelaBase: TTabelaDTO);
     class procedure ManipuladorNavegarParaEditorRelatorio(const ARelatorio: TRelatorioDTO);
     class procedure ManipuladorNavegarParaVisualizadorRelatorio(const ARelatorio: TRelatorioDTO);
@@ -84,11 +83,6 @@ end;
 class procedure TShowViewService.ManipuladorNavegarParaCriadorTabela;
 begin
   Instance.ShowViewCriadorTabela; // Chama o serviço via instância
-end;
-
-class procedure TShowViewService.ManipuladorNavegarParaEditorTabela(const ATabela: TTabelaDTO; ADataSet: TDataSet);
-begin
-  Instance.ShowViewEditorTabela(ATabela, ADataSet); // Chama o serviço via instância, passando DTO
 end;
 
 class procedure TShowViewService.ManipuladorNavegarParaNovoRelatorioComBase(const ATabelaBase: TTabelaDTO);
@@ -314,15 +308,15 @@ begin
   LView.Show;
 end;
 
-procedure TShowViewService.ShowViewEditorTabela(const ATabela: TTabelaDTO; ADataSet: TDataSet); // <- Novo parâmetro
+procedure TShowViewService.ShowViewEditorTabela(const APlanilhaNome:string ; ATabela: TTabelaDTO; ADataSet: TDataSet); // <- Novo parâmetro
 var
   LView: TViewEditorTabela;
 begin
   try
-    LView := TViewEditorTabela.CreateEditorComDados(ATabela, ADataSet); // <- Novo construtor estático, sem LController
+    LView := TViewEditorTabela.CreateEditorComDados(APlanilhaNome, ATabela, ADataSet); // <- Novo construtor estático, sem LController
     try
       // Exibir a view
-      LView.ShowModal; // ou LView.Show se for não-modal
+      LView.ShowModal;
     finally
       LView.Free; // Libera a view
     end;

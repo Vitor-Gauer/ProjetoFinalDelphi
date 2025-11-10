@@ -45,6 +45,7 @@ function TPlanilhaService.CriarNovaPlanilha(const ANomeSugerido: string): Boolea
 var
   DiretorioPlanilhas, DiretorioNovaPlanilha: string;
   PlanilhaDTO: TPlanilhaDTO;
+  i: Integer;
 begin
   Result := False;
   try
@@ -56,44 +57,51 @@ begin
 
     // Usa o padrão encontrado no exemplo: caminho base + subpasta
     DiretorioPlanilhas := IncludeTrailingPathDelimiter(ExtractFilePath(Application.ExeName)) + 'Planilhas';
-    DiretorioNovaPlanilha := IncludeTrailingPathDelimiter(DiretorioPlanilhas) + ANomeSugerido;
 
-    // Verifica se a planilha já existe
-    if TDirectory.Exists(DiretorioNovaPlanilha) then
+    for i := 0 to 1 do
     begin
-      ShowMessage('Já existe uma planilha com este nome.');
-      Exit;
-    end;
+      if i = 1 then
+      DiretorioPlanilhas := IncludeTrailingPathDelimiter(ExtractFilePath(Application.ExeName)) + 'Backup' + pathdelim + 'Planilhas';
 
-    // Tenta criar o diretório da nova planilha
-    if not ForceDirectories(DiretorioNovaPlanilha) then
-    begin
-      ShowMessage('Falha ao criar o diretório da nova planilha.');
-      Exit;
-    end;
+      DiretorioNovaPlanilha := IncludeTrailingPathDelimiter(DiretorioPlanilhas) + ANomeSugerido;
+      // Verifica se a planilha já existe
+      if TDirectory.Exists(DiretorioNovaPlanilha) then
+      begin
+        ShowMessage('Já existe uma planilha com este nome.');
+        Exit;
+      end;
 
-    // Criar subdiretório 'Tabelas' dentro da nova planilha
-    if not ForceDirectories(IncludeTrailingPathDelimiter(DiretorioNovaPlanilha) + 'Tabelas') then
-    begin
-      ShowMessage('Falha ao criar o subdiretório "Tabelas" da nova planilha.');
-      Exit;
-    end;
+      // Tenta criar o diretório da nova planilha
+      if not ForceDirectories(DiretorioNovaPlanilha) then
+      begin
+        ShowMessage('Falha ao criar o diretório da nova planilha.');
+        Exit;
+      end;
 
-    // Criar subdiretório 'Relatorios' dentro da nova planilha
-    if not ForceDirectories(IncludeTrailingPathDelimiter(DiretorioNovaPlanilha) + 'Associações') then
-    begin
-      ShowMessage('Falha ao criar o subdiretório "Associações" da nova planilha.');
-      Exit;
-    end;
+      // Criar subdiretório 'Tabelas' dentro da nova planilha
+      if not ForceDirectories(IncludeTrailingPathDelimiter(DiretorioNovaPlanilha) + 'Tabelas') then
+      begin
+        ShowMessage('Falha ao criar o subdiretório "Tabelas" da nova planilha.');
+        Exit;
+      end;
 
-    // Criar DTO para a nova planilha (exemplo)
-    PlanilhaDTO := TPlanilhaDTO.Create;
-    try
-      PlanilhaDTO.Titulo := ANomeSugerido;
-      PlanilhaDTO.Caminho := DiretorioNovaPlanilha; // Pode ser útil para o DTO
-      // FDAO.SalvarPlanilha(PlanilhaDTO); // Exemplo de persistência via DAO
-    finally
-      PlanilhaDTO.Free;
+      // Criar subdiretório 'Relatorios' dentro da nova planilha
+      if not ForceDirectories(IncludeTrailingPathDelimiter(DiretorioNovaPlanilha) + 'Associações') then
+      begin
+        ShowMessage('Falha ao criar o subdiretório "Associações" da nova planilha.');
+        Exit;
+      end;
+
+
+//       Criar DTO para a nova planilha (exemplo)
+//      PlanilhaDTO := TPlanilhaDTO.Create;
+//      try
+//        PlanilhaDTO.Titulo := ANomeSugerido;
+//        PlanilhaDTO.Caminho := DiretorioNovaPlanilha; // Pode ser útil para o DTO
+//        // FDAO.SalvarPlanilha(PlanilhaDTO); // Exemplo de persistência via DAO
+//      finally
+//        PlanilhaDTO.Free;
+//      end;
     end;
 
     Result := True;
