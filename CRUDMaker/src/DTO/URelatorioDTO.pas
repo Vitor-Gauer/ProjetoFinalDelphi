@@ -3,41 +3,45 @@ unit URelatorioDTO;
 interface
 
 uses
-  System.Classes, System.SysUtils;
+  System.SysUtils;
 
 type
-  // DTO Armazena apenas o identificador único do relatório.
-  // As configurações reais (layout, formatação) são gerenciadas externamente
   TRelatorioDTO = class
   private
-    FId: string;      // Identificador único do relatório (ex: hash)
-    FTitulo: string;  // Nome/Título do relatório para exibição
-    FDescricao: string; // Caso for necessário no futuro implementar uma view disso
+    FId: string; // ID único do relatório (ex: hash ou nome do arquivo de configuração)
+    FTitulo: string; // Título do relatório
+    FDescricao: string; // Descrição (opcional)
+    FNomeArquivo: string; // Nome do arquivo XML de configuração (ex: "Titulo_Tipo.xml")
   public
     constructor Create; overload;
     constructor Create(const AId, ATitulo: string; const ADescricao: string = ''); overload;
+
     property Id: string read FId write FId;
     property Titulo: string read FTitulo write FTitulo;
     property Descricao: string read FDescricao write FDescricao;
+    property NomeArquivo: string read FNomeArquivo write FNomeArquivo;
   end;
 
 implementation
 
-constructor TRelatorioDTO.Create;  // Criar DTO vazio, exemplo quando
-                                   // é criado um novo relatório
+{ TRelatorioDTO }
+
+constructor TRelatorioDTO.Create;
 begin
   inherited Create;
   FId := '';
   FTitulo := '';
   FDescricao := '';
+  FNomeArquivo := '';
 end;
 
 constructor TRelatorioDTO.Create(const AId, ATitulo: string; const ADescricao: string = '');
-begin                              // Criar DTO com dados
-  inherited Create;
+begin
+  Create; // Chama o construtor padrão
   FId := AId;
   FTitulo := ATitulo;
   FDescricao := ADescricao;
+  FNomeArquivo := AId + '.xml'; // Exemplo: ID como base para nome de arquivo
 end;
 
 end.

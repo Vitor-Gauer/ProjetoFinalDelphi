@@ -36,7 +36,7 @@ uses
   UViewPrincipal in 'src\Modulos\Inicializadores\Principal\Visual\View\UViewPrincipal.pas' {ViewPrincipal},
   UPrincipalService in 'src\Modulos\Inicializadores\Principal\Application\Service\UPrincipalService.pas',
   UViewEditorTabela in 'src\Modulos\Tabelas\Visual\View\Editar\UViewEditorTabela.pas' {ViewEditorTabela},
-  UViewSalvarAssociacao in 'src\Modulos\Associações\Salvar\UViewSalvarAssociacao.pas' {ViewCompartilhamento},
+  UViewSalvarAssociacao in 'src\Modulos\Associacoes\Salvar\UViewSalvarAssociacao.pas' {ViewCompartilhamento},
   UViewEditorRelatorio in 'src\Modulos\Relatorios\Visual\View\Editar\UViewEditorRelatorio.pas' {ViewEditorRelatorio},
   UViewImprimirRelatorioPronto in 'src\Modulos\Relatorios\Visual\View\Imprimir\UViewImprimirRelatorioPronto.pas' {ViewVisualizadorRelatorio},
   UCriadorTabelaController in 'src\Modulos\Tabelas\Visual\Controller\Criar\UCriadorTabelaController.pas',
@@ -46,7 +46,13 @@ uses
   UEditorTabelaController in 'src\Modulos\Tabelas\Visual\Controller\Editar\UEditorTabelaController.pas',
   UPlanilhaController in 'src\Modulos\Planilhas\Visual\Controller\UPlanilhaController.pas',
   UPrincipalController in 'src\Modulos\Inicializadores\Principal\Visual\Controller\UPrincipalController.pas',
-  ULoginController in 'src\Modulos\Inicializadores\Login\Visual\Controller\ULoginController.pas';
+  ULoginController in 'src\Modulos\Inicializadores\Login\Visual\Controller\ULoginController.pas',
+  UAssociacaoDTO in 'src\DTO\UAssociacaoDTO.pas',
+  UAssociacaoService in 'src\Modulos\Associacoes\Application\Service\UAssociacaoService.pas',
+  UViewCriadorRelatorio in 'src\Modulos\Relatorios\Visual\View\Criar\UViewCriadorRelatorio.pas' {ViewCriadorRelatorio},
+  URelatorioConfiguracaoDTO in 'src\DTO\URelatorioConfiguracaoDTO.pas',
+  UViewCriadorAssociacao in 'src\Modulos\Associacoes\Criar\View\UViewCriadorAssociacao.pas' {ViewCriadorAssociacao},
+  UViewEditorAssociacao in 'src\Modulos\Associacoes\Editar\View\UViewEditorAssociacao.pas' {ViewEditorAssociacao};
 
 {$R *.res}
 

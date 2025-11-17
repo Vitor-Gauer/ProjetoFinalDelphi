@@ -5,7 +5,8 @@ interface
 uses
   System.Classes, System.SysUtils, Data.DB, Datasnap.DBClient, System.IOUtils,
   System.StrUtils, System.Math, VCL.Forms,  // Para Random, StringReplace, TryStrToInt, CharInSet etc.
-  XMLDoc, XMLIntf, MSXML, UTabelaDTO, UTabelaConfiguracaoDTO; // Adiciona unidades XML
+  XMLDoc, XMLIntf, MSXML,
+  UTabelaDTO, UTabelaConfiguracaoDTO;
 
 type
   TXMLService = class
@@ -19,8 +20,15 @@ type
 
     // Salva os dados do ClientDataSet em um arquivo XML personalizado.
     procedure GravarXML(const AClientDataSet: TClientDataSet; const ACaminhoArquivo: string; ATabelaDTO: TTabelaDTO; const AConfiguracao: TConfiguracaoTabelaDTO);
+    // --- Relatórios ---
+    class function LerXMLConfiguraçãoRelatório(const ACaminhoArquivo: string): string;
 
-    // Fun��o auxiliar para obter o hash gerado (se necess�rio fora do GravarXML).
+    class function GravarXMLConfiguraçãoRelatório(const ACaminhoArquivo: string; const AConfiguracaoString: string): Boolean;
+    // --- Associações ---
+    class function LerXMLAssociacao(const ACaminhoArquivo: string): string;
+
+    class function GravarXMLAssociacao(const ACaminhoArquivo: string; const AAssociacaoString: string): Boolean;
+
     function ObterUltimoHashGerado: string;
 
     function ObterDimensoesDoXML(const ACaminhoArquivo: string): string;
@@ -283,5 +291,99 @@ begin
     TempClientDataSet.Free;
   end;
 end;
+
+class function TXMLService.LerXMLConfiguraçãoRelatório(const ACaminhoArquivo: string): string;
+var
+  LConteudoArquivo: string;
+  LTagInicio, LTagFim: string;
+  LPosicaoInicio, LPosicaoFim: Integer;
+begin
+  Result := '';
+  if not TFile.Exists(ACaminhoArquivo) then
+    Exit;
+
+  LConteudoArquivo := TFile.ReadAllText(ACaminhoArquivo, TEncoding.UTF8);
+
+  // Assume que o conteúdo relevante está dentro do elemento <Relatorio>
+  LTagInicio := '<Relatorio>';
+  LTagFim := '</Relatorio>';
+  LPosicaoInicio := Pos(LTagInicio, LConteudoArquivo);
+  LPosicaoFim := Pos(LTagFim, LConteudoArquivo);
+
+  if (LPosicaoInicio > 0) and (LPosicaoFim > LPosicaoInicio) then
+  begin
+    Inc(LPosicaoInicio, Length(LTagInicio));
+    Result := Copy(LConteudoArquivo, LPosicaoInicio, LPosicaoFim - LPosicaoInicio);
+  end;
+end;
+
+class function TXMLService.GravarXMLConfiguraçãoRelatório(const ACaminhoArquivo: string; const AConfiguracaoString: string): Boolean;
+var
+  LDiretorio: string;
+  LConteudoXML: string;
+begin
+  Result := False;
+  // Obtém o diretório do caminho completo do arquivo
+  LDiretorio := TPath.GetDirectoryName(ACaminhoArquivo);
+
+  // Cria o diretório se ele não existir
+  if not TDirectory.Exists(LDiretorio) then
+    TDirectory.CreateDirectory(LDiretorio);
+
+  // Monta o conteúdo XML completo
+  LConteudoXML := '<?xml version="1.0" encoding="utf-8"?>' + sLineBreak +
+                  '<Relatorio>' + AConfiguracaoString + '</Relatorio>';
+
+  try
+    // Escreve o conteúdo no arquivo
+    TFile.WriteAllText(ACaminhoArquivo, LConteudoXML, TEncoding.UTF8);
+    Result := True;
+  except
+    // Em caso de erro na gravação
+    Result := False;
+  end;
+end;
+
+class function TXMLService.LerXMLAssociacao(const ACaminhoArquivo: string): string;
+var
+  XMLContent: string;
+  StartPos, EndPos: Integer;
+begin
+  Result := '';
+  if not TFile.Exists(ACaminhoArquivo) then
+    Exit;
+
+  XMLContent := TFile.ReadAllText(ACaminhoArquivo, TEncoding.UTF8);
+
+  // Procura pela tag <Associacao>...</Associacao>
+  StartPos := Pos('<Associacao>', XMLContent);
+  if StartPos > 0 then
+  begin
+    Inc(StartPos, Length('<Associacao>'));
+    EndPos := Pos('</Associacao>', XMLContent);
+    if EndPos > StartPos then
+      Result := Copy(XMLContent, StartPos, EndPos - StartPos);
+  end;
+end;
+
+class function TXMLService.GravarXMLAssociacao(const ACaminhoArquivo: string; const AAssociacaoString: string): Boolean;
+var
+  XMLContent: string;
+begin
+  Result := False;
+  try
+    XMLContent := '<?xml version="1.0" encoding="utf-8"?>' + sLineBreak +
+                  '<Associacao>' + AAssociacaoString + '</Associacao>' + sLineBreak;
+    TFile.WriteAllText(ACaminhoArquivo, XMLContent, TEncoding.UTF8);
+    Result := True;
+  except
+    on E: Exception do
+    begin
+      Result := False;
+    end;
+  end;
+end;
+
+end.
 
 end.

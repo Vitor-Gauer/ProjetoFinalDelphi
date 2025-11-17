@@ -1,5 +1,4 @@
-﻿// UShowViewService.pas
-unit UShowViewService;
+﻿unit UShowViewService;
 
 interface
 
@@ -9,7 +8,7 @@ uses
   Data.Db,
   UCriadorTabelaController, UPrincipalController,
   UTabelaConfiguracaoDTO, UTabelaDTO, UPlanilhaDTO,
-  URelatorioDTO,
+  URelatorioDTO, UAssociacaoDTO,
   UPrincipalService, UPersistenciaLocalService, UPlanilhaService;
 
 type
@@ -50,6 +49,11 @@ type
     class procedure ShowViewCriadorTabela;
     procedure ShowViewImprimirRelatorioPronto(ARelatorio: TRelatorioDTO);
 
+    // --- NOVOS MÉTODOS PARA RELATÓRIOS E ASSOCIAÇÕES ---
+    procedure ShowViewCriadorRelatorio(ATabelaBase: TTabelaDTO);
+    procedure ShowViewCriadorAssociacao(APlanilhaBase: TPlanilhaDTO);
+    procedure ShowViewEditorAssociacao(AAssociacao: TAssociacaoDTO);
+
     // --- Manipuladores Estáticos
     class procedure ManipuladorSolicitarLogout;
     class procedure ManipuladorNavegarParaCriadorTabela;
@@ -66,12 +70,61 @@ uses
   UViewLogin, UViewPrincipal, UViewModalTermos, UViewEditorTabela,
   UViewEditorRelatorio, UViewImprimirRelatorioPronto,
   UViewSalvarAssociacao, UViewSelecionarPlanilhaParaTabela,
-  UViewConfigurarTabela, UViewCriadorTabelaDados;
+  UViewConfigurarTabela, UViewCriadorTabelaDados,
+
+  UViewCriadorRelatorio, UViewCriadorAssociacao, UViewEditorAssociacao;
 { TShowViewService }
 var
   GViewSelecionar: TViewSelecionarPlanilhaParaTabela; //Foram criadas globalmente, pois é necessário passar os dados de quando elas são criadas até quando são destruidas
   GViewConfigurar: TViewConfigurarTabela;
   GViewCriadorDados: TViewCriadorTabelaDados;
+  GViewEditorAssociacao: TViewEditorAssociacao;
+
+procedure TShowViewService.ShowViewCriadorRelatorio(ATabelaBase: TTabelaDTO);
+var
+  LView: TViewCriadorRelatorio;
+begin
+  // A view TViewCriadorRelatorio agora é responsável por criar seu próprio controller
+  // dentro de seu método Create.
+  // O ShowViewService apenas instancia e exibe.
+  LView := TViewCriadorRelatorio.Create(Application, ATabelaBase);
+  try
+    LView.ShowModal; // Exemplo: pode ser Show ou ShowModal dependendo do fluxo desejado
+  finally
+    LView.Free;
+  end;
+end;
+
+procedure TShowViewService.ShowViewCriadorAssociacao(APlanilhaBase: TPlanilhaDTO);
+var
+  LView: TViewCriadorAssociacao;
+begin
+  // A view TViewCriadorAssociacao agora é responsável por criar seu próprio controller
+  // dentro de seu método Create.
+  // O ShowViewService apenas instancia e exibe.
+  LView := TViewCriadorAssociacao.Create(Application, APlanilhaBase);
+  try
+    LView.ShowModal; // Exemplo: pode ser Show ou ShowModal dependendo do fluxo desejado
+  finally
+    LView.Free;
+  end;
+end;
+
+procedure TShowViewService.ShowViewEditorAssociacao(AAssociacao: TAssociacaoDTO);
+begin
+  // A view TViewEditorAssociacao agora é responsável por criar seu próprio controller
+  // dentro de seu método Create.
+  // O ShowViewService apenas instancia e exibe.
+  GViewEditorAssociacao := TViewEditorAssociacao.Create(Application, AAssociacao);
+  try
+    GViewEditorAssociacao.ShowModal; // Exemplo: pode ser Show ou ShowModal dependendo do fluxo desejado
+  finally
+    GViewEditorAssociacao.Free;
+  end;
+end;
+
+// --- Métodos Auxiliares e outros mantidos inalterados ---
+// (Todo o código existente permanece como estava)
 
 class procedure TShowViewService.ManipuladorSolicitarLogout;
 begin

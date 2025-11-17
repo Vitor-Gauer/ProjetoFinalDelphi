@@ -1,7 +1,7 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
         <ProjectGuid>{494112CC-631B-4BF0-810A-FAD61AFA66B8}</ProjectGuid>
-        <ProjectVersion>20.1</ProjectVersion>
+        <ProjectVersion>20.3</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
@@ -181,7 +181,7 @@
         <DCCReference Include="src\Modulos\Tabelas\Visual\View\Editar\UViewEditorTabela.pas">
             <Form>ViewEditorTabela</Form>
         </DCCReference>
-        <DCCReference Include="src\Modulos\Associações\Salvar\UViewSalvarAssociacao.pas">
+        <DCCReference Include="src\Modulos\Associacoes\Salvar\UViewSalvarAssociacao.pas">
             <Form>ViewCompartilhamento</Form>
         </DCCReference>
         <DCCReference Include="src\Modulos\Relatorios\Visual\View\Editar\UViewEditorRelatorio.pas">
@@ -204,6 +204,19 @@
         <DCCReference Include="src\Modulos\Planilhas\Visual\Controller\UPlanilhaController.pas"/>
         <DCCReference Include="src\Modulos\Inicializadores\Principal\Visual\Controller\UPrincipalController.pas"/>
         <DCCReference Include="src\Modulos\Inicializadores\Login\Visual\Controller\ULoginController.pas"/>
+        <DCCReference Include="src\DTO\UAssociacaoDTO.pas"/>
+        <DCCReference Include="src\Modulos\Associacoes\Application\Service\UAssociacaoService.pas"/>
+        <DCCReference Include="src\Modulos\Relatorios\Visual\View\Criar\UViewCriadorRelatorio.pas">
+            <Form>ViewCriadorRelatorio</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="src\DTO\URelatorioConfiguracaoDTO.pas"/>
+        <DCCReference Include="src\Modulos\Associacoes\Criar\View\UViewCriadorAssociacao.pas">
+            <Form>ViewCriadorAssociacao</Form>
+        </DCCReference>
+        <DCCReference Include="src\Modulos\Associacoes\Editar\View\UViewEditorAssociacao.pas">
+            <Form>ViewEditorAssociacao</Form>
+        </DCCReference>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -230,12 +243,7 @@
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="4">
-                <DeployFile LocalName="Win32\Debug\GridFlow.exe" Configuration="Debug" Class="ProjectOutput">
-                    <Platform Name="Win32">
-                        <RemoteName>GridFlow.exe</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
+                <DeployFile LocalName="Win32\Debug\GridFlow.exe" Configuration="Debug" Class="ProjectOutput"/>
                 <DeployFile LocalName="bin\Debug\GridFlow.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win64">
                         <RemoteName>GridFlow.exe</RemoteName>
@@ -369,6 +377,16 @@
                     </Platform>
                     <Platform Name="Android64">
                         <RemoteDir>res\values-v31</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="AndroidSplashStylesV35">
+                    <Platform Name="Android">
+                        <RemoteDir>res\values-v35</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="Android64">
+                        <RemoteDir>res\values-v35</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
