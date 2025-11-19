@@ -8,11 +8,11 @@
 
 ## 🔍 Funcionalidades Principais
 
-✅ **Criação e edição de planilhas**  
-Crie e edite planilhas com estrutura dinâmica (linhas e colunas) e salve os dados em arquivos XML e CSV com hash único para integridade.
+✅ **Criação e edição de tabelas**  
+Crie e edite tabelas com estrutura dinâmica (linhas e colunas) e salve os dados em arquivos XML e CSV.
 
 🔐 **Autenticação com dois modos: público (via servidor) e privado (local)**  
-- **Modo Público**: Conecta-se ao banco de dados PostgreSQL via servidor Docker, validando credenciais e limitando o número de planilhas.  
+- **Modo Público**: Conecta-se ao banco de dados PostgreSQL, validando credenciais e limitando o número de planilhas.  
 - **Modo Privado**: Opera offline, armazenando dados localmente em arquivos XML e CSV, ideal para demonstrações ou uso isolado.
 
 📊 **Geração de relatórios** *(Em desenvolvimento)*  
@@ -26,7 +26,7 @@ Segurança com hashing de senhas (em desenvolvimento) e controle de acesso basea
 
 📂 **Armazenamento híbrido: PostgreSQL (público) e XML/CSV (privado)**  
 - PostgreSQL: Para metadados (usuários, logs de atividade).  
-- Arquivos locais: Dados das planilhas são persistidos em XML e CSV, garantindo privacidade e portabilidade.
+- Arquivos locais: Dados das planilhas são persistidos em XML e CSV, garantindo portabilidade.
 
 ---
 
