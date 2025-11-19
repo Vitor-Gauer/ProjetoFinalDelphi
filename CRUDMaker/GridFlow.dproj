@@ -181,9 +181,7 @@
         <DCCReference Include="src\Modulos\Tabelas\Visual\View\Editar\UViewEditorTabela.pas">
             <Form>ViewEditorTabela</Form>
         </DCCReference>
-        <DCCReference Include="src\Modulos\Associações\Salvar\UViewSalvarAssociacao.pas">
-            <Form>ViewCompartilhamento</Form>
-        </DCCReference>
+        <DCCReference Include="src\Modulos\Associacoes\Salvar\UViewSalvarAssociacao.pas"/>
         <DCCReference Include="src\Modulos\Relatorios\Visual\View\Editar\UViewEditorRelatorio.pas">
             <Form>ViewEditorRelatorio</Form>
         </DCCReference>
