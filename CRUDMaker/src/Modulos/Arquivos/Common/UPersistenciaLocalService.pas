@@ -3,7 +3,7 @@ unit UPersistenciaLocalService;
 interface
 
 uses
-  System.SysUtils, System.Classes, UTabelaDTO, UEditarTabelaService; // Use o record TPreparedData
+  System.SysUtils, System.Classes, UTabelaDTO, UEditarTabelaService;
 
 type
   TPersistenciaLocalService = class
@@ -16,8 +16,8 @@ type
       ACancelCallback: TFunc<Boolean> = nil
       ): Boolean;
 
-    function ObterCaminhosDosArquivos(ATabelaDTO: TTabelaDTO): TArray<string>; // Ex: [XMLPath, CSVPath, PDFPath]
-  end;
+    function ObterCaminhosDosArquivos(ATabelaDTO: TTabelaDTO): TArray<string>;
+    end;
 
 implementation
 
@@ -35,9 +35,8 @@ end;
 
 function TPersistenciaLocalService.ValidarNomeGenerico(const ANome: string): Boolean;
 begin
-  Result := True; // Assume válido inicialmente
+  Result := True;
 
-  // Validação se o nome tem caracteres inválidos para nomes de pastas/arquivos no Windows
   if (Pos('\', ANome) > 0) or (Pos('/', ANome) > 0) or
      (Pos(':', ANome) > 0) or (Pos('*', ANome) > 0) or
      (Pos('?', ANome) > 0) or (Pos('"', ANome) > 0) or
@@ -56,26 +55,24 @@ var
 begin
   Result := False;
   try
-    // Simular processo de geração
     if Assigned(AProgressCallback) then AProgressCallback('Iniciando geração de arquivos...');
 
-    for i := 1 to 3 do // Simula 3 etapas
+    for i := 1 to 3 do
     begin
       if Assigned(ACancelCallback) and ACancelCallback() then
       begin
         if Assigned(AProgressCallback) then AProgressCallback('Processo cancelado pelo usuário.');
-        Exit(False); // Retorna False se cancelado
+        Exit(False);
       end;
       case i of
         1: if Assigned(AProgressCallback) then AProgressCallback('Gerando XML...');
         2: if Assigned(AProgressCallback) then AProgressCallback('Gerando CSV...');
         3: if Assigned(AProgressCallback) then AProgressCallback('Gerando PDF...');
       end;
-      Sleep(1000); // Simula trabalho
     end;
 
     if Assigned(AProgressCallback) then AProgressCallback('Arquivos gerados com sucesso.');
-    Result := True; // Indica sucesso
+    Result := True;
   except
     on E: Exception do
     begin
@@ -87,8 +84,6 @@ end;
 
 function TPersistenciaLocalService.ObterCaminhosDosArquivos(ATabelaDTO: TTabelaDTO): TArray<string>;
 begin
-  // Implementar lógica para determinar os caminhos dos arquivos gerados
-  // Exemplo:
   SetLength(Result, 3);
   Result[0] := ChangeFileExt(ATabelaDTO.CaminhoArquivoXML, '.xml');
   Result[1] := ChangeFileExt(ATabelaDTO.CaminhoArquivoXML, '.csv');

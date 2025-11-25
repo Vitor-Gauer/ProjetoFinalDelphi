@@ -4,12 +4,8 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, UTabelaConfiguracaoDTO; // DTO auxiliar
-
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, UTabelaConfiguracaoDTO;
 type
-  /// <summary>
-  /// View para configurar as dimensões iniciais e o tipo de cabeçalho da nova tabela.
-  /// </summary>
   TViewConfigurarTabela = class(TForm)
     PainelBotoes: TPanel;
     BotaoAvancar: TButton;
@@ -28,7 +24,7 @@ type
     procedure EditNumColunasChange(Sender: TObject);
   private
     FConfiguracao: TConfiguracaoTabelaDTO;
-    FOnAvancar: TProc<TConfiguracaoTabelaDTO>; // Evento para passar a configuração
+    FOnAvancar: TProc<TConfiguracaoTabelaDTO>;
     FOnVoltar: TNotifyEvent;
     FOnCancelar: TNotifyEvent;
     procedure AtualizarEstadoBotoes;
@@ -54,20 +50,19 @@ begin
   inherited Create(AOwner);
   FConfiguracao := TConfiguracaoTabelaDTO.Create;
   FConfiguracao.PlanilhaNome := ANomePlanilha;
-  // Inicializa com valores padrão ou vazios
+
   EditNumLinhas.Text := '10';
   EditNumColunas.Text := '5';
-  RadioGroupCabecalho.ItemIndex := 0; // Assume Linha como padrão
+  RadioGroupCabecalho.ItemIndex := 0;
 end;
 
 destructor TViewConfigurarTabela.Destroy;
 begin
-//  FConfiguracao.Free;
 end;
 
 procedure TViewConfigurarTabela.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-  Action := caFree; // Esta linha garante que o formulário será destruído
+  Action := caFree;
 end;
 
 procedure TViewConfigurarTabela.FormCreate(Sender: TObject);
@@ -89,7 +84,7 @@ procedure TViewConfigurarTabela.AtualizarEstadoBotoes;
 var
   Dummy: string;
 begin
-  BotaoAvancar.Enabled := ValidarEntradas(Dummy); // Verifica se pode avançar
+  BotaoAvancar.Enabled := ValidarEntradas(Dummy);
 end;
 
 function TViewConfigurarTabela.ValidarEntradas(out AMensagemErro: string): Boolean;

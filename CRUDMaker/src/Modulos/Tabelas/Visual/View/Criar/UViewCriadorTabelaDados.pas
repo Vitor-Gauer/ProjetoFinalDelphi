@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.ComCtrls,
   Vcl.DBCtrls, Data.DB, Data.FMTBcd, Datasnap.DBClient,
-  UTabelaDTO, UTabelaConfiguracaoDTO, UCriadorTabelaController, Math, UFormBaseMinTopoCentro; // Inclui os novos DTOs e Controller
+  UTabelaDTO, UTabelaConfiguracaoDTO, UCriadorTabelaController, Math, UFormBaseMinTopoCentro;
 
 type
   TViewCriadorTabelaDados = class(TFormBaseMinTopoCentro)
@@ -26,13 +26,12 @@ type
     procedure DBGridDadosMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure DBGridDadosExit(Sender: TObject);
   private
-    FTabela: TTabelaDTO; // DTO para a tabela sendo criada
-    FConfiguracao: TConfiguracaoTabelaDTO; // Configuração inicial (dimensões, cabeçalho, planilha)
-    FController: TCriadorTabelaController; // Controller específico para criação
+    FTabela: TTabelaDTO;
+    FConfiguracao: TConfiguracaoTabelaDTO;
+    FController: TCriadorTabelaController;
     procedure ConfigurarClientDataSet(const AConfig: TConfiguracaoTabelaDTO);
     procedure AtualizarTabelaDoInterface;
   public
-    // Construtor para a view de criação.
     constructor Create(AOwner: TComponent; const AConfiguracao: TConfiguracaoTabelaDTO); reintroduce;
     destructor Destroy; override;
   end;
@@ -47,20 +46,15 @@ implementation
 constructor TViewCriadorTabelaDados.Create(AOwner: TComponent; const AConfiguracao: TConfiguracaoTabelaDTO);
 begin
   inherited Create(AOwner);
-  // Assume posse do objeto AConfiguracao
   FConfiguracao := AConfiguracao;
-  // Cria um novo DTO para a tabela que está sendo criada
   FTabela := TTabelaDTO.Create;
-  // Instancia o controller específico para criação
   FController := TCriadorTabelaController.Create;
 end;
 
 destructor TViewCriadorTabelaDados.Destroy;
 begin
-  // Libera os recursos alocados
   FreeandNil(FController);
   FreeandNil(FTabela);
-  // FConfiguracao é liberada aqui pois foi passada no construtor
   if Assigned(FConfiguracao) then
     FConfiguracao.Free;
   inherited;
@@ -68,11 +62,9 @@ end;
 
 procedure TViewCriadorTabelaDados.FormCreate(Sender: TObject);
 begin
-  // Configura o ClientDataSet com base na configuração passada
   if Assigned(FConfiguracao) then
   begin
     ConfigurarClientDataSet(FConfiguracao);
-    // Sugere um título baseado na planilha (pode ser melhorado)
     EditarTitulo.Text := 'NovaTabela' + FConfiguracao.PlanilhaNome;
   end
   else
@@ -94,19 +86,17 @@ begin
   ClientDataSetDados.Close;
   ClientDataSetDados.FieldDefs.Clear;
 
-  // Cria campos (colunas) conforme AConfig.NumColunas
   for i := 1 to AConfig.NumColunas do
   begin
     FieldDef := ClientDataSetDados.FieldDefs.AddFieldDef;
     FieldDef.Name := 'Coluna' + IntToStr(i);
     FieldDef.DataType := ftString;
-    FieldDef.Size := 300; // Tamanho padrão, conforme a view original
+    FieldDef.Size := 300;
   end;
 
   ClientDataSetDados.CreateDataSet;
   ClientDataSetDados.Open;
 
-  // Insere registros (linhas) conforme AConfig.NumLinhas
   ClientDataSetDados.DisableControls;
   try
     for i := 1 to AConfig.NumLinhas do
@@ -125,8 +115,7 @@ begin
   if not ClientDataSetDados.IsEmpty then
     ClientDataSetDados.First;
 
-  // Ajusta largura das colunas do DBGrid para melhor visualização
-  for i := 0 to Min(DBGridDados.Columns.Count - 1, 19) do // Limita a 20 colunas para ajuste
+  for i := 0 to Min(DBGridDados.Columns.Count - 1, 19) do
   begin
     DBGridDados.Columns[i].Width := 80;
   end;
@@ -134,7 +123,6 @@ end;
 
 procedure TViewCriadorTabelaDados.AtualizarTabelaDoInterface;
 begin
-  // Atualiza o DTO da tabela com o título inserido pelo usuário
   if Assigned(FTabela) then
     FTabela.Titulo := EditarTitulo.Text;
 end;
@@ -146,14 +134,11 @@ begin
   if Assigned(FController) and Assigned(FTabela) and Assigned(ClientDataSetDados) and Assigned(FConfiguracao) then
   begin
     try
-      // Chama o controller de criação, passando a configuração, o DTO da tabela e o dataset com os dados
       if FController.ExecutarCriarTabela(FConfiguracao, FTabela, ClientDataSetDados) then
       begin
-        // Sucesso na criação
         ShowMessage('Tabela criada com sucesso!');
-        Self.ModalResult := mrOk; // Fecha o form como sucesso
+        Self.ModalResult := mrOk;
       end;
-      // Se não for sucesso, o controller já mostra a mensagem de erro
     except
       on E: Exception do
       begin
@@ -169,7 +154,6 @@ end;
 
 procedure TViewCriadorTabelaDados.BotaoCancelarClick(Sender: TObject);
 begin
-  // Fecha o form sem salvar
   Self.ModalResult := mrCancel;
 end;
 
@@ -182,13 +166,11 @@ begin
   ColIndex := Coord.X;
   RowIndex := Coord.Y;
 
-  // Verifica se o mouse está sobre uma célula válida
   if (ColIndex >= 0) and (ColIndex < DBGridDados.Columns.Count) and
      (RowIndex >= 0) and (RowIndex <= ClientDataSetDados.RecordCount) and
      (ClientDataSetDados.Active) and not (ClientDataSetDados.IsEmpty) then
   begin
     try
-      // Mostra informações sobre a célula na barra de status
       if RowIndex = 0 then
       begin
          BarraStatus.SimpleText := Format('Coluna: %s', [DBGridDados.Columns[ColIndex].Title.Caption]);
@@ -203,14 +185,12 @@ begin
     end;
   end else
   begin
-    // Se não estiver sobre uma célula válida, mostra mensagem padrão
     BarraStatus.SimpleText := 'Pronto - Nova Tabela';
   end;
 end;
 
 procedure TViewCriadorTabelaDados.DBGridDadosExit(Sender: TObject);
 begin
-  // Reseta a barra de status quando o DBGrid perde o foco
   BarraStatus.SimpleText := 'Pronto - Nova Tabela';
 end;
 

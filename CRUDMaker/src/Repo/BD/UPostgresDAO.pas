@@ -35,7 +35,6 @@ var
   SQL: string;
 begin
   Result := False;
-  // Opcional: Hash da senha aqui ou na camada superior
   SQL := 'SELECT "id" FROM "Usuario" WHERE "Usuario" = :pUsuario AND "Senha" = :pSenha AND "Ativo" = TRUE';
 
   Query := TFDQuery.Create(nil);
@@ -43,7 +42,7 @@ begin
     Query.Connection := FConnection;
     Query.SQL.Text := SQL;
     Query.Params.ParamByName('pUsuario').AsString := AUsuario;
-    Query.Params.ParamByName('pSenha').AsString := ASenha; // Use o hash se tiver
+    Query.Params.ParamByName('pSenha').AsString := ASenha;
     Query.Open;
     Result := not Query.IsEmpty;
     Query.Close;

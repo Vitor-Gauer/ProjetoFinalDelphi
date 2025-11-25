@@ -11,8 +11,8 @@ type
     FTitulo: string;
     FCaminhoArquivoXML: string;
     FCaminhoArquivoCSV: string;
-    FHashXML: string;          // Hash único para o conteúdo XML (20 chars, 5+++ letras)
-    FHashCSV: string;          // Hash único para o conteúdo CSV (20 números)
+    FHashXML: string;
+    FHashCSV: string;
   public
     constructor Create; overload;
     constructor Create(const ATitulo: string; const ACaminhoArquivoXML: string = ''; const ACaminhoArquivoCSV: string = ''; const AHashXML: string = ''; const AHashCSV: string = ''); overload;

@@ -6,12 +6,10 @@ uses
   System.Classes, System.SysUtils, UTabelaDTO, URelatorioDTO;
 
 type
-  // DTO para representar o vínculo entre uma Tabela e um Relatório.
-  // Armazena o hash da tabela (XML ou CSV) e o ID do relatório a ser aplicado.
   TTabelasRelatoriosDTO = class
   private
     FHashTabelaOrigem: string;
-    FIdRelatorio: string;      // ID do relatório aplicado (de TRelatorioDTO.Id)
+    FIdRelatorio: string;
   public
     constructor Create; overload;
     constructor Create(const AHashTabelaOrigem, AIdRelatorio: string); overload;
@@ -21,7 +19,7 @@ type
 
 implementation
 
-constructor TTabelasRelatoriosDTO.Create;  // Criar um DTO do zero, ex. nova rel
+constructor TTabelasRelatoriosDTO.Create;
 begin
   inherited Create;
   FHashTabelaOrigem := '';
@@ -29,7 +27,6 @@ begin
 end;
 
 constructor TTabelasRelatoriosDTO.Create(const AHashTabelaOrigem, AIdRelatorio: string);
-                                           // Cria um DTO com algo
 begin
   inherited Create;
   FHashTabelaOrigem := AHashTabelaOrigem;

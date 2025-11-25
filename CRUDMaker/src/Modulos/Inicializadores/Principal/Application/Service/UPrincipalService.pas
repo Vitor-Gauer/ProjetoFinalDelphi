@@ -38,28 +38,22 @@ var
 begin
   Result := TStringList.Create;
   try
-    // Caminho da pasta 'Planilhas' relativo ao executável
     DiretorioPlanilhas := IncludeTrailingPathDelimiter(ExtractFilePath(Application.ExeName)) + 'Planilhas';
     if TDirectory.Exists(DiretorioPlanilhas) then
     begin
-      // Obter todos os subdiretórios
       Diretorios := TDirectory.GetDirectories(DiretorioPlanilhas);
       for i := Low(Diretorios) to High(Diretorios) do
       begin
-        // Extrair apenas o nome da pasta
         NomePasta := ExtractFileName(Diretorios[i]);
-        // Adicionar à lista se o nome não for vazio
         if NomePasta <> '' then
           Result.Add(NomePasta);
       end;
     end;
-    // Resultado pode estar vazio se a pasta não existir ou estiver vazia, o que é aceitável.
   except
     on E: Exception do
     begin
-      Result.Clear; // Limpa qualquer dado parcial
-      Result.Add('Erro ao ler pastas de planilhas: ' + E.Message); // Adiciona mensagem de erro
-      // Poderia logar a exceção também, se TLogService estivesse disponível e configurado aqui
+      Result.Clear;
+      Result.Add('Erro ao ler pastas de planilhas: ' + E.Message);
     end;
   end;
 end;
@@ -85,9 +79,7 @@ begin
 
     for i := Low(SubDirs) to High(SubDirs) do
       begin
-        // Extrair apenas o nome da pasta
         NomeTabela := ExtractFileName(SubDirs[i]);
-        // Adicionar à lista se o nome não for vazio
         if NomeTabela <> '' then
           Result.Add(NomeTabela);
       end;
@@ -95,9 +87,8 @@ begin
   except
     on E: Exception do
     begin
-      Result.Clear; // Limpa qualquer dado parcial
-      Result.Add('Erro ao ler pastas de tabelas: ' + E.Message); // Adiciona mensagem de erro
-      // Poderia logar a exceção também, se TLogService estivesse disponível e configurado aqui
+      Result.Clear;
+      Result.Add('Erro ao ler pastas de tabelas: ' + E.Message);
     end;
   end;
 end;
@@ -110,7 +101,6 @@ begin
             'Planilhas' + PathDelim + APlanilhaNome;
   if TDirectory.Exists(CaminhoDiretorio) then
   begin
-    // Exclui o diretório e todo o seu conteúdo (arquivos e subdiretórios)
     TDirectory.Delete(CaminhoDiretorio, True);
     Result := true;
   end
@@ -128,7 +118,6 @@ begin
             'Planilhas' + PathDelim + APlanilhaNome + PathDelim + 'Tabelas' + PathDelim + ATabelaNome;
   if TDirectory.Exists(CaminhoDiretorio) then
   begin
-    // Exclui o diretório e todo o seu conteúdo (arquivos e subdiretórios)
     TDirectory.Delete(CaminhoDiretorio, True);
     Result := true;
   end

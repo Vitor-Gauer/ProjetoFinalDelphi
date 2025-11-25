@@ -6,10 +6,7 @@ uses
   System.Classes, System.SysUtils;
 
 type
-  // Enum para definir o tipo de cabeçalho da tabela.
   TTipoCabecalho = (tcLinha, tcColuna);
-
-  // DTO para transportar as configurações iniciais da tabela durante o processo de criação.
   TConfiguracaoTabelaDTO = class
   private
     FNumLinhas: Integer;
@@ -18,7 +15,6 @@ type
     FPlanilhaNome: string;
   public
     constructor Create; overload;
-    // constructor Create(AConfig: TConfiguracaoTabela); overload; // Se precisar copiar de outra config
     property NumLinhas: Integer read FNumLinhas write FNumLinhas;
     property NumColunas: Integer read FNumColunas write FNumColunas;
     property TipoCabecalho: TTipoCabecalho read FTipoCabecalho write FTipoCabecalho;
@@ -35,14 +31,5 @@ begin
   FTipoCabecalho := tcLinha;
   FPlanilhaNome := '';
 end;
-
-// constructor TConfiguracaoTabelaDTO.Create(AConfig: TConfiguracaoTabela);
-// begin
-//   inherited Create;
-//   FNumLinhas := AConfig.NumLinhas;
-//   FNumColunas := AConfig.NumColunas;
-//   FTipoCabecalho := AConfig.TipoCabecalho;
-//   FPlanilhaNome := AConfig.PlanilhaNome;
-// end;
 
 end.

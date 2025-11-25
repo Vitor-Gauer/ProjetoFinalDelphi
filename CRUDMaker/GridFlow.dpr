@@ -51,7 +51,6 @@ uses
 {$R *.res}
 
 begin
-  ReportMemoryLeaksOnShutdown := True;
   Application.Initialize;
   TShowViewService.Instance.IniciarAplicacao;
   Application.Run;

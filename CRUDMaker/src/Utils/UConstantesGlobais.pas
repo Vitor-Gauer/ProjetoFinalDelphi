@@ -1,6 +1,4 @@
-unit UConstantesGlobais;         // Armazena constantes globais
-                           // Que podem ser usadas em
-                          // Qualquer lugar da aplicação
+unit UConstantesGlobais;
 
 interface
 

@@ -36,12 +36,12 @@ implementation
 
 procedure TViewModalTermos.BotaoAceitarClick(Sender: TObject);
 begin
-  ModalResult := mrOK; // Chamado o resultado no UShowViewController para abrir a view certa
+  ModalResult := mrOK;
 end;
 
 procedure TViewModalTermos.BotaoRecusarClick(Sender: TObject);
 begin
-  ModalResult := mrCancel; // Chamado o resultado no UShowViewController para abrir a view certa
+  ModalResult := mrCancel;
 end;
 
 procedure TViewModalTermos.FormCreate(Sender: TObject);

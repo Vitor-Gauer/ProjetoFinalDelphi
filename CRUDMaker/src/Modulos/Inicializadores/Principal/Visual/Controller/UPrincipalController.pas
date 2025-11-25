@@ -11,7 +11,6 @@ uses
   UCSVService;
 
 type
-  // --- Tipos de Evento (POObj)
   TNavegarParaCriadorTabelaEvent = procedure of object;
   TNavegarParaEditorTabelaEvent = procedure(const APlanilhaNome, ATabelaNome: string) of object;
   TNavegarParaNovoRelatorioComBaseEvent = procedure(const ATabelaBase: TTabelaDTO) of object;
@@ -32,7 +31,6 @@ type
     FPlanilhaService: TPlanilhaService;
     FCSVService: TCSVService;
 
-    // --- Métodos Manipuladores (renomeados de handlers) ---
     procedure ManipuladorNavegarParaCriadorTabela;
     procedure ManipuladorNavegarParaEditorTabela(const APlanilhaNome, ATabelaNome: string);
     procedure ManipuladorNavegarParaNovoRelatorioComBase(const ATabelaBase: TTabelaDTO);
@@ -40,19 +38,15 @@ type
     procedure ManipuladorNavegarParaVisualizadorRelatorio(const ARelatorio: TRelatorioDTO);
     procedure ManipuladorSolicitarLogout;
     procedure ManipuladorAbrirSalvarAssociacao;
-
-    // --- MÉTODOS MANIPULADORES EXISTENTES (renomeados) ---
     procedure ManipuladorExcluirPlanilha(const APlanilha:string);
     procedure ManipuladorExcluirTabela(const ATabela: string; APlanilha:string);
     procedure ManipuladorSolicitarAtualizacaoPlanilha(const APlanilha: TPlanilhaDTO);
-    procedure ManipuladorCriarPlanilha(const ANomeSugerido: string); // Este manipulador já existia, mas foi renomeado
+    procedure ManipuladorCriarPlanilha(const ANomeSugerido: string);
 
   public
-    // --- Campos para DTOs selecionados ---
     FTabelaSelecionada: TTabelaDTO;
     FPlanilhaSelecionada: TPlanilhaDTO;
     FRelatorioSelecionado: TRelatorioDTO;
-    // --- POObj (Propriedades de Objetos de Eventos) ---
     FOnListaPlanilhasAtualizada: TListaPlanilhasAtualizadaEvent;
     FOnGradeTabelasAtualizada: TGradeTabelasAtualizadaEvent;
     ListaInfoTabelas: TStringList;
@@ -71,7 +65,6 @@ type
     constructor Create(AService: TPrincipalService; APersistenciaService: TPersistenciaLocalService; APlanilhaService: TPlanilhaService);
     destructor Destroy; override;
 
-    // --- Propriedades que ativem ShowViewService ---
     property OnNavegarParaCriadorTabela: TNavegarParaCriadorTabelaEvent read FOnNavegarParaCriadorTabela write FOnNavegarParaCriadorTabela;
     property OnNavegarParaEditorTabela: TNavegarParaEditorTabelaEvent read FOnNavegarParaEditorTabela write FOnNavegarParaEditorTabela;
     property OnNavegarParaNovoRelatorioComBase: TNavegarParaNovoRelatorioComBaseEvent read FOnNavegarParaNovoRelatorioComBase write FOnNavegarParaNovoRelatorioComBase;
@@ -80,19 +73,16 @@ type
     property OnSolicitarLogout: TOnSolicitarLogoutEvent read FOnSolicitarLogout write FOnSolicitarLogout;
     property OnAbrirSalvarAssociacao: TOnAbrirSalvarAssociacaoEvent read FOnAbrirSalvarAssociacao write FOnAbrirSalvarAssociacao;
 
-    // --- Propriedades que ativem PrincipalService ---
     property OnListaPlanilhasAtualizada: TListaPlanilhasAtualizadaEvent read FOnListaPlanilhasAtualizada write FOnListaPlanilhasAtualizada;
     property OnGradeTabelasAtualizada: TGradeTabelasAtualizadaEvent read FOnGradeTabelasAtualizada write FOnGradeTabelasAtualizada;
     property OnCriarPlanilha: TCriarPlanilhaEvent read FOnCriarPlanilha write FOnCriarPlanilha;
     property OnExcluirPlanilha: TExcluirPlanilhaEvent read FOnExcluirPlanilha write FOnExcluirPlanilha;
     property OnExcluirTabela: TExcluirTabelaEvent read FOnExcluirTabela write FOnExcluirTabela;
 
-    // --- Propriedades para DTOs selecionados ---
     property TabelaSelecionada: TTabelaDTO read FTabelaSelecionada write FTabelaSelecionada;
     property PlanilhaSelecionada: TPlanilhaDTO read FPlanilhaSelecionada write FPlanilhaSelecionada;
     property RelatorioSelecionado: TRelatorioDTO read FRelatorioSelecionado write FRelatorioSelecionado;
 
-    // --- MÉTODOS EXISTENTES ---
     procedure AtualizarListaPlanilhas;
     function ExcluirPlanilha(const ANomePlanilha: string): Boolean;
     function ExcluirTabela(const ANomeTabela: string; ANomePlanilha: string): boolean;
@@ -117,15 +107,13 @@ begin
   if not Assigned(APersistenciaService) then
     raise Exception.Create('TPersistenciaLocalService não pode ser nulo.');
   if not Assigned(APlanilhaService) then
-    raise Exception.Create('TPlanilhaService não pode ser nulo.'); // Nova validação
+    raise Exception.Create('TPlanilhaService não pode ser nulo.');
 
   FService := AService;
   FPersistenciaService := APersistenciaService;
-  FPlanilhaService := APlanilhaService; // Atribuição do serviço injetado
+  FPlanilhaService := APlanilhaService;
 
-  // Conectar os manipuladores (métodos) aos eventos (POObj)
   FOnNavegarParaCriadorTabela := ManipuladorNavegarParaCriadorTabela;
-  // Conectar o novo manipulador ao evento alterado
   FOnNavegarParaEditorTabela := ManipuladorNavegarParaEditorTabela;
   FOnNavegarParaNovoRelatorioComBase := ManipuladorNavegarParaNovoRelatorioComBase;
   FOnNavegarParaEditorRelatorio := ManipuladorNavegarParaEditorRelatorio;
@@ -135,24 +123,18 @@ begin
   FOnExcluirPlanilha := ManipuladorExcluirPlanilha;
   FOnCriarPlanilha := ManipuladorCriarPlanilha;
   FOnExcluirTabela := ManipuladorExcluirTabela;
-  // FOnListaPlanilhasAtualizada := ManipuladorListaPlanilhasAtualizada; // Exemplo - A View conecta diretamente
-  // FOnGradeTabelasAtualizada := ManipuladorGradeTabelasAtualizada; // Exemplo - A View conecta diretamente
-end;
+  end;
 
 destructor TPrincipalController.Destroy;
 begin
-  // Liberar DTOs se necessário (geralmente não são liberados aqui, a menos que sejam criados internamente)
-  // FTabelaSelecionada.Free; // Exemplo, depende da origem do DTO
-  // FPlanilhaSelecionada.Free;
-  // FRelatorioSelecionado.Free;
-  // Os serviços injetados não são liberados aqui (FService, FPersistenciaService, FPlanilhaService)
   inherited;
 end;
 
 // --- Implementação dos Manipuladores ---
+
 procedure TPrincipalController.ManipuladorNavegarParaCriadorTabela;
 begin
-  TShowViewService.Instance.ShowViewCriadorTabela; // Chamada direta ao serviço
+  TShowViewService.Instance.ShowViewCriadorTabela;
 end;
 
 procedure TPrincipalController.ManipuladorNavegarParaEditorTabela(const APlanilhaNome, ATabelaNome: string);
@@ -163,100 +145,83 @@ var
 begin
   CaminhoCSV := FService.ObterCaminhoCSV(APlanilhaNome, ATabelaNome);
 
-  // Criar o DTO e preencher com as informações básicas
   TabelaDTO := TTabelaDTO.Create;
   try
     TabelaDTO.Titulo := ATabelaNome;
     TabelaDTO.CaminhoArquivoCSV := CaminhoCSV;
-    // Outros campos do DTO podem ser preenchidos aqui futuramente se necessários
 
-    DataSetCarregado := TClientDataSet.Create(nil); // Criar um DataSet temporário para carregar os dados
+    DataSetCarregado := TClientDataSet.Create(nil);
     try
-      FCSVService.LerCSV(DataSetCarregado, CaminhoCSV); // O serviço lê o CSV e preenche o DataSet
-
-      // Agora, o DataSetCarregado contém os dados do CSV.
-
-      // --- Chamar o TShowViewService para mostrar a View ---
-      // Passa o DTO e o DataSet carregado
+      FCSVService.LerCSV(DataSetCarregado, CaminhoCSV);
       TShowViewService.Instance.ShowViewEditorTabela(APlanilhaNome, TabelaDTO, DataSetCarregado);
 
     except
       on E: Exception do
       begin
         ShowMessage('Erro ao carregar dados CSV para edição: ' + E.Message);
-        // Garantir que o DTO e o DataSet temporário sejam liberados em caso de erro
-        DataSetCarregado.Free; // Libera o DataSet temporário
-        TabelaDTO.Free;        // Libera o DTO temporário
+        DataSetCarregado.Free;
+        TabelaDTO.Free;
         raise;
       end;
     end;
-    DataSetCarregado.Free; // Libera o DataSet temporário após passar para o ShowViewService
+    DataSetCarregado.Free;
 
   except
     on E: Exception do
     begin
       ShowMessage('Erro ao preparar DTO para edição: ' + E.Message);
-      TabelaDTO.Free; // Garante a liberação em caso de erro na inicialização do DTO
-      raise; // Relevanta a exceção se necessário
+      TabelaDTO.Free;
+      raise;
     end;
   end;
 end;
 
 procedure TPrincipalController.ManipuladorNavegarParaNovoRelatorioComBase(const ATabelaBase: TTabelaDTO);
 begin
-  // Chamada direta ao serviço, passando DTO
-  TShowViewService.ManipuladorNavegarParaNovoRelatorioComBase(ATabelaBase); // Pode chamar manipulador estático ou outro método do serviço
+  TShowViewService.ManipuladorNavegarParaNovoRelatorioComBase(ATabelaBase);
 end;
 
 procedure TPrincipalController.ManipuladorNavegarParaEditorRelatorio(const ARelatorio: TRelatorioDTO);
 begin
-  TShowViewService.Instance.ShowViewEditorRelatorio(ARelatorio); // Chamada direta ao serviço, passando DTO
+  TShowViewService.Instance.ShowViewEditorRelatorio(ARelatorio);
 end;
 
 procedure TPrincipalController.ManipuladorNavegarParaVisualizadorRelatorio(const ARelatorio: TRelatorioDTO);
 begin
-  // Chamada direta ao serviço, passando DTO
-  TShowViewService.ManipuladorNavegarParaVisualizadorRelatorio(ARelatorio); // Pode chamar manipulador estático ou outro método do serviço
+  TShowViewService.ManipuladorNavegarParaVisualizadorRelatorio(ARelatorio);
 end;
 
 procedure TPrincipalController.ManipuladorSolicitarLogout;
 begin
-  // Chamada direta ao serviço de navegação para logout
-  TShowViewService.ManipuladorSolicitarLogout; // Chama o manipulador estático que encapsula a lógica de logout e navegação
+  TShowViewService.ManipuladorSolicitarLogout;
 end;
 
 procedure TPrincipalController.ManipuladorAbrirSalvarAssociacao;
 begin
-  TShowViewService.Instance.ShowViewSalvarAssociacao; // Chamada direta ao serviço
+  TShowViewService.Instance.ShowViewSalvarAssociacao;
 end;
 
 procedure TPrincipalController.ManipuladorExcluirPlanilha(const APlanilha: string);
 begin
-    // Log de exclusão
   if ExcluirPlanilha(APlanilha) then
   begin
     ShowMessage('A Planilha: ' + APlanilha + ' foi excluida');
-    // Log que excluiu
   end
   else
   begin
     showmessage('Deu algo errado no serviço de excluir planilha');
-    // Log de erro
   end;
 end;
 
 procedure TPrincipalController.ManipuladorExcluirTabela(const ATabela: string; APlanilha:string);
 begin
-    // Log de exclusão
   if ExcluirTabela(ATabela, APlanilha) then
   begin
     ShowMessage('A Tabela: ' + ATabela + ' foi excluida');
-    // Log que excluiu
   end
   else
   begin
     showmessage('Deu algo errado no serviço de excluir tabela');
-    // Log de erro
   end;
 end;
 
@@ -269,9 +234,7 @@ procedure TPrincipalController.ManipuladorCriarPlanilha(const ANomeSugerido: str
 begin
   if Assigned(FPlanilhaService) then
   begin
-    // A chamada ao serviço encapsula a lógica e a mensagem de sucesso/erro
     FPlanilhaService.CriarNovaPlanilha(ANomeSugerido);
-    // Após criar, atualizar a lista de planilhas para refletir a nova planilha
     AtualizarListaPlanilhas;
   end
   else
@@ -280,16 +243,13 @@ begin
   end;
 end;
 
-// Método chamado pela View
 procedure TPrincipalController.AtualizarListaPlanilhas;
 begin
   AtualizarListaPlanilhasInterna;
 end;
 
-// Método chamado pela View na inicialização (pode ser o mesmo que AtualizarListaPlanilhas)
 procedure TPrincipalController.PopularListaPlanilhasNaView;
 begin
-  // Este método também delega a atualização interna
   AtualizarListaPlanilhasInterna;
 end;
 

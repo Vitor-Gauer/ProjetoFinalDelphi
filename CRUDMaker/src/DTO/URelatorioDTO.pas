@@ -6,13 +6,11 @@ uses
   System.Classes, System.SysUtils;
 
 type
-  // DTO Armazena apenas o identificador único do relatório.
-  // As configurações reais (layout, formatação) são gerenciadas externamente
   TRelatorioDTO = class
   private
-    FId: string;      // Identificador único do relatório (ex: hash)
-    FTitulo: string;  // Nome/Título do relatório para exibição
-    FDescricao: string; // Caso for necessário no futuro implementar uma view disso
+    FId: string;
+    FTitulo: string;
+    FDescricao: string;
   public
     constructor Create; overload;
     constructor Create(const AId, ATitulo: string; const ADescricao: string = ''); overload;
@@ -23,8 +21,7 @@ type
 
 implementation
 
-constructor TRelatorioDTO.Create;  // Criar DTO vazio, exemplo quando
-                                   // é criado um novo relatório
+constructor TRelatorioDTO.Create;
 begin
   inherited Create;
   FId := '';
@@ -33,7 +30,7 @@ begin
 end;
 
 constructor TRelatorioDTO.Create(const AId, ATitulo: string; const ADescricao: string = '');
-begin                              // Criar DTO com dados
+begin
   inherited Create;
   FId := AId;
   FTitulo := ATitulo;

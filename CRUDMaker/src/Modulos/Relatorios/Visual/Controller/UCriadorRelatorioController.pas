@@ -5,53 +5,35 @@ interface
 uses
   System.Classes, System.SysUtils, Data.DB, Datasnap.DBClient,
   URelatorioDTO, UTabelaDTO, UTabelasRelatoriosDTO,
-  UXMLService, UCSVService, // Para carregar dados da tabela quando necessário
-  UPDFService, // Para geração final (simulada por agora)
+  UXMLService, UCSVService,
+  UPDFService,
   Vcl.Dialogs;
 
 type
-  // Controller responsável pela lógica de vinculação de relatórios a tabelas.
-  // As configurações reais são gerenciadas pelo UPDFService ou outros serviços.
   TCriadorRelatorioController = class
   private
     FXMLService: TXMLService;
     FCSVService: TCSVService;
     FPDFService: TPDFService;
-    // Gera um ID único simples para o relatório (ex: hash baseado em título e timestamp).
+
     function GerarIdRelatorio(const ATitulo: string): string;
   public
     constructor Create;
     destructor Destroy; override;
-
-    // Inicia o processo de criação de um novo relatório.
-    // Solicita título/descrição.
     function CriarNovoRelatorio: TRelatorioDTO;
-
-    // Aplica um relatório existente (identificado pelo TRelatorioDTO) a uma tabela existente.
-    // Solicita a tabela de origem e cria o vínculo.
-    // <param name="ARelatorio">O DTO do relatório a ser aplicado (contém o ID).</param>
-    // <param name="ATabela">O DTO da tabela de origem (para obter o hash).</param>
-    // <returns>TTabelasRelatoriosDTO representando o vínculo.</returns>
     function AplicarRelatorio(const ARelatorio: TRelatorioDTO; const ATabela: TTabelaDTO): TTabelasRelatoriosDTO;
 
-    // Gera o arquivo PDF com uma tabela vinculada a relatório.
-    // Usa o TTabelasRelatoriosDTO para encontrar a tabela (via hash) e o ID do relatório.
-    // O serviço de PDF usa o ID para aplicar as formatações/configurações.
-    // <param name="ACaminhoArquivoPDF">Caminho de destino para o PDF.</param>
     function GerarPDF(const ATabelasRelatorios: TTabelasRelatoriosDTO; const ACaminhoArquivoPDF: string): Boolean;
 
-    // Salva o vínculo Tabela-Relatório (TTabelasRelatoriosDTO) em um arquivo próprio (ex: XML).
     procedure SalvarVinculo(const ATabelasRelatorios: TTabelasRelatoriosDTO; const ACaminhoArquivo: string);
-
-    /// Carrega um vínculo Tabela-Relatório (TTabelasRelatoriosDTO) de um arquivo.
     function CarregarVinculo(const ACaminhoArquivo: string): TTabelasRelatoriosDTO;
   end;
 
 implementation
 
 uses
-  System.Hash, // Para gerar hashes
-  windows; // Para gettickcount64
+  System.Hash,
+  windows;
 
 constructor TCriadorRelatorioController.Create;
 begin
@@ -75,8 +57,8 @@ var
 begin
   HashMD5 := THashMD5.Create;
   HashMD5.Update(ATitulo);
-  HashMD5.Update(IntToStr(GetTickCount64)); // Adiciona algo único
-  Result := Copy(HashMD5.HashAsString, 1, 20); // Pega os primeiros 20 caracteres
+  HashMD5.Update(IntToStr(GetTickCount64));
+  Result := Copy(HashMD5.HashAsString, 1, 20);
 end;
 
 function TCriadorRelatorioController.CriarNovoRelatorio: TRelatorioDTO;
@@ -85,15 +67,12 @@ var
   InputResult: Boolean;
 begin
   Result := nil;
-  // Simulação de entrada de dados pelo usuário
   InputResult := InputQuery('Novo Relatório', 'Título do Relatório:', Titulo);
   if InputResult and (Trim(Titulo) <> '') then
   begin
     InputQuery('Novo Relatório', 'Descrição (opcional):', Descricao);
     Result := TRelatorioDTO.Create(GerarIdRelatorio(Titulo), Titulo, Descricao);
     ShowMessage('Relatório "' + Titulo + '" criado com ID: ' + Result.Id + '.');
-    // As configurações reais do layout seriam definidas/gerenciadas em outro lugar,
-    // possivelmente em um serviço ou interface dedicada de design de relatórios.
   end
   else
   begin
@@ -112,7 +91,6 @@ begin
     Exit;
   end;
 
-  // Determina qual hash usar (pode haver lógica para preferir XML ou CSV)
   if ATabela.HashXML <> '' then
     HashTabela := ATabela.HashXML
   else if ATabela.HashCSV <> '' then
@@ -123,7 +101,6 @@ begin
     Exit;
   end;
 
-  // Cria o DTO de vinculo usando o ID do relatório
   Result := TTabelasRelatoriosDTO.Create(HashTabela, ARelatorio.Id);
   ShowMessage(Format('Relatório "%s" (ID: %s) aplicado à tabela com hash "%s".',
     [ARelatorio.Titulo, ARelatorio.Id, HashTabela]));

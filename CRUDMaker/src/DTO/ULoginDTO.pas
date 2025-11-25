@@ -1,4 +1,4 @@
-unit ULoginDTO;    // Do "usuario" pro banco
+unit ULoginDTO;
 
 interface
 

@@ -14,10 +14,7 @@ type
     constructor Create;
     destructor Destroy; override;
 
-    // Inicia o processo de carregamento de uma tabela.
     function CarregarTabela(ATabelaDTO: TTabelaDTO): TTabelaDTO;
-
-    // Inicia o processo de salvamento de uma tabela.
     function ExecutarSalvarTabela(ADataSet: TDataSet; ACaminhoArquivo: string; ATabelaDTO: TTabelaDTO): Boolean;
   end;
 
@@ -32,7 +29,7 @@ constructor TEditorTabelaController.Create;
 begin
   inherited Create;
   FCSVService := TCSVService.Create;
-  FService := TEditarTabelaService.Create(FCSVService); // Injeta o XMLService
+  FService := TEditarTabelaService.Create(FCSVService);
 end;
 
 destructor TEditorTabelaController.Destroy;
@@ -51,14 +48,11 @@ function TEditorTabelaController.ExecutarSalvarTabela(ADataSet: TDataSet; ACamin
 begin
   Result := False;
   try
-    // 1. Chama o service para validar os dados
     if FService.ValidarDados(ADataSet) then
     begin
-      // 2. Se válido, chama o service para salvar (inicia o processo)
       FService.Salvar(ADataSet, ACaminhoArquivo, ATabelaDTO);
-      Result := True; // Indica que a etapa de validação/salvamento inicial foi bem
+      Result := True;
     end;
-    // Se não for válido, o service já mostrou o erro. O controller retorna False.
   except
     on E: Exception do
     begin

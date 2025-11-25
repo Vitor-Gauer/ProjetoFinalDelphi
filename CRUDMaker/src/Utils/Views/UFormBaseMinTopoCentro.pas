@@ -28,7 +28,7 @@ type
 implementation
 
 uses
-  System.Types; // Para TRect, TPoint
+  System.Types;
 
 var
   ListaFormsMinimizados: TList;
@@ -39,36 +39,29 @@ constructor TFormBaseMinTopoCentro.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
   FEstaMinimizadoNoTopo := False;
-  // Inicializa a lista global se ainda não estiver sido
   if not Assigned(ListaFormsMinimizados) then
     ListaFormsMinimizados := TList.Create;
 end;
 
 destructor TFormBaseMinTopoCentro.Destroy;
 begin
-  // Remove este formulário da lista global ao ser destruído
   if FEstaMinimizadoNoTopo and Assigned(ListaFormsMinimizados) then
   begin
     ListaFormsMinimizados.Remove(Self);
     FEstaMinimizadoNoTopo := False;
-    AtualizarLayoutFormsMinimizados; // Atualiza layout após remover
+    AtualizarLayoutFormsMinimizados;
   end;
   inherited;
 end;
 
 procedure TFormBaseMinTopoCentro.WMNCLButtonDblClk(var Message: TMessage);
 begin
-  // A mensagem WM_NCLBUTTONDBLCLK é enviada com o Hittest Code no parâmetro WParam.
-  // Se o clique duplo foi na barra de título, o código será HTCAPTION.
   if (Message.WParam = HTCAPTION) and FEstaMinimizadoNoTopo then
   begin
-    Message.Result := 0; // Consome a mensagem para evitar comportamento padrão
+    Message.Result := 0;
     DoRestaurarParaTopo;
     Exit;
   end;
-
-  // Se não for clique duplo na barra de título, ou não estiver minimizado,
-  // permite que o processamento padrão (ex: maximizar) ocorra.
   inherited;
 end;
 
@@ -76,11 +69,8 @@ class procedure TFormBaseMinTopoCentro.LimparListaGlobalMinimizados;
 begin
   if Assigned(ListaFormsMinimizados) then
   begin
-    // Limpa os itens da lista (não destrói os forms, apenas remove as referências)
     ListaFormsMinimizados.Clear;
-    // Libera o objeto TList
     ListaFormsMinimizados.Free;
-    // Atribui nil à variável global para indicar que a lista foi liberada
     ListaFormsMinimizados := nil;
   end;
 end;
@@ -97,7 +87,7 @@ begin
   if IsIconic(Handle) then
   begin
     FEstaMinimizadoNoTopo := True;
-    if Assigned(ListaFormsMinimizados) then // Verifica se a lista foi criada
+    if Assigned(ListaFormsMinimizados) then
     begin
        ListaFormsMinimizados.Add(Self);
        DoMinimizarParaTopo;
@@ -107,7 +97,6 @@ end;
 
 procedure TFormBaseMinTopoCentro.WMSysCommand(var Message: TWMSysCommand);
 begin
-  // O valor do CmdType deve ser mascarado com $FFF0 para ignorar bits de posição.
   case Message.CmdType and $FFF0 of
     SC_MINIMIZE:
     begin
@@ -116,15 +105,11 @@ begin
       Exit;
     end;
 
-    // Foca apenas no RESTORE
     SC_MAXIMIZE:
     begin
-      // VERIFICA SE O FORMULÁRIO ESTÁ NA SUA LISTA PERSONALIZADA
       if Assigned(ListaFormsMinimizados) and (ListaFormsMinimizados.IndexOf(Self) <> -1) then
       begin
-        // A flag interna FEstaMinimizadoNoTopo deve ser True se ele está na lista,
-        // mas usar a lista é mais seguro
-        Message.Result := 0; // Consome a mensagem
+        Message.Result := 0;
         DoRestaurarParaTopo;
         Exit;
       end;
@@ -143,7 +128,7 @@ begin
   FAlturaOriginal := Height;
   SendToback;
   FEstaMinimizadoNoTopo := True;
-  if Assigned(ListaFormsMinimizados) then // Verifica se a lista foi criada
+  if Assigned(ListaFormsMinimizados) then
   begin
     ListaFormsMinimizados.Add(Self);
     AtualizarLayoutFormsMinimizados;
@@ -165,21 +150,11 @@ begin
 
   Width := FLarguraOriginal;
   Height := FAlturaOriginal;
-
-  // Centralização: (Largura da Área de Trabalho - Altura do Formulário) / 2
   NovaPosicaoLeft := (Screen.WorkAreaWidth - Width) div 2;
-
-  // Centralização: (Altura da Área de Trabalho - Altura do Formulário) / 2
   NovaPosicaoTop := (Screen.WorkAreaHeight - Height) div 2;
-
-  // 3. Define a nova posição (o VCL usará SendMessage/SetWindowPos internamente)
   Left := NovaPosicaoLeft;
   Top := NovaPosicaoTop;
-
-  // Tira o formulário do estado de minimizado e o restaura para a posição e tamanho normais
   ShowWindow(Handle, SW_RESTORE);
-
-  // Traz para frente e atualiza a lista de minimizados restantes
   BringToFront;
   AtualizarLayoutFormsMinimizados;
 end;

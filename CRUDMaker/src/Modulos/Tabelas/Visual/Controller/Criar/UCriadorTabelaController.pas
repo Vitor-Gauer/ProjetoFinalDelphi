@@ -3,10 +3,9 @@ unit UCriadorTabelaController;
 interface
 
 uses
-  // Units padrão do Delphi
   System.SysUtils, System.Classes, System.IOUtils,
   Data.DB, Datasnap.DBClient, Vcl.Dialogs, Vcl.Forms,
-  // Units do projeto
+
   UTabelaDTO, UTabelaConfiguracaoDTO,
   UXMLService, UCSVService, UPDFService;
 
@@ -52,17 +51,15 @@ begin
   if ATexto = '' then
     Exit;
 
-  Palavras := ATexto.Split([' ']); // Divide por espaços
+  Palavras := ATexto.Split([' ']);
   for i := Low(Palavras) to High(Palavras) do
   begin
     if Palavras[i] <> '' then
     begin
-      // Converte a primeira letra para maiúscula e o resto para minúscula
       Palavras[i] := UpperCase(Copy(Palavras[i], 1, 1)) + LowerCase(Copy(Palavras[i], 2, MaxInt));
     end;
     Result := Result + Palavras[i] + ' ';
   end;
-  // Remove o espaço extra no final
   Result := Trim(Result);
 end;
 
@@ -81,7 +78,6 @@ var
 begin
   Result := False;
 
-  // 1. Validar parâmetros de entrada
   if not Assigned(AConfiguracao) then
   begin
     ShowMessage('Erro: Configuração da tabela não fornecida.');
@@ -100,13 +96,11 @@ begin
     Exit;
   end;
 
-  // 2. Formatar nomes
   try
     TituloFormatado := CapitalizarPrimeiraLetra(ATabela.Titulo);
     PlanilhaFormatada := CapitalizarPrimeiraLetra(AConfiguracao.PlanilhaNome);
     NomeBaseArquivo := TituloFormatado;
 
-  // 3. Determinar caminho do executável e diretórios de destino
     ExePath := IncludeTrailingPathDelimiter(ExtractFilePath(Application.ExeName));
     for i := 0 to 1 do
     begin
@@ -119,7 +113,6 @@ begin
         DiretorioBase := ExePath + 'Planilhas'
         + PathDelim + AConfiguracao.PlanilhaNome + PathDelim + 'Tabelas';
 
-      // Garante que o diretório base exista
       if not ForceDirectories(DiretorioBase) then
       begin
         ShowMessage('Erro: Falha ao criar o diretório base para tabelas: ' + DiretorioBase);
@@ -127,7 +120,6 @@ begin
       end;
 
       DiretorioTabelaEspecifica := IncludeTrailingPathDelimiter(DiretorioBase) + TituloFormatado;
-      // Garante que o diretório específico da tabela exista
       if not ForceDirectories(DiretorioTabelaEspecifica) then
       begin
         ShowMessage('Erro: Falha ao criar o diretório específico da tabela: ' + DiretorioTabelaEspecifica);
@@ -136,45 +128,35 @@ begin
 
       if i = 0 then
       begin
-        // 4. Definir caminhos completos dos arquivos (Principal)
         CaminhoCompletoBase := IncludeTrailingPathDelimiter(DiretorioTabelaEspecifica) + NomeBaseArquivo;
         CaminhoXML := CaminhoCompletoBase + '.xml';
         CaminhoCSV := CaminhoCompletoBase + '.csv';
 
-        // Salvar os caminhos e diretório para uso posterior
         CaminhosPrincipais := [CaminhoXML, CaminhoCSV];
         DiretorioPrincipal := DiretorioTabelaEspecifica;
 
-        // 5. Salvar XML
         FXMLService.GravarXML(AClientDataSet, CaminhoXML, ATabela, AConfiguracao);
-
-        // 6. Salvar CSV
         FCSVService.GravarCSV(AClientDataSet, CaminhoCSV, ATabela);
       end;
 
       if i = 1 then
       begin
-        // 4. Definir caminhos completos dos arquivos (Backup)
         HojeTempo := Now;
         HojeString := FormatDateTime(' yyyy-mm-dd hh_nn_ss ', HojeTempo);
         NomeBaseArquivoBackup := TituloFormatado + HojeString;
         CaminhoCompletoBase := IncludeTrailingPathDelimiter(DiretorioTabelaEspecifica) + NomeBaseArquivoBackup;
         CaminhoXML := CaminhoCompletoBase + '.xml';
         CaminhoCSV := CaminhoCompletoBase + '.csv';
-        // CaminhoPDF não é salvo no backup, então não precisa ser definido aqui, a menos que você queira salvá-lo também
 
-        // Salvar os caminhos e diretório para uso posterior
-        CaminhosBackup := [CaminhoXML, CaminhoCSV]; // CaminhoPDF omitido se não for salvo no backup
+        CaminhosBackup := [CaminhoXML, CaminhoCSV];
         DiretorioBackup := DiretorioTabelaEspecifica;
 
-        // Salvar XML e CSV no backup
         FXMLService.GravarXML(AClientDataSet, CaminhoXML, ATabela, AConfiguracao);
         FCSVService.GravarCSV(AClientDataSet, CaminhoCSV, ATabela);
       end;
-      Result := True; // Marca como sucesso após cada iteração bem-sucedida
+      Result := True;
     end;
 
-  // Exibe a mensagem de sucesso com os arquivos do diretório principal
   ShowMessage(Format('Tabela "%s" criada com sucesso!' + sLineBreak +
                      'Arquivos gerados em: %s' + sLineBreak +
                      'XML: %s' + sLineBreak +
@@ -186,7 +168,7 @@ begin
     on E: Exception do
     begin
       ShowMessage('Erro ao criar/salvar a tabela: ' + E.Message);
-      Result := False; // Garante que o resultado seja False em caso de exceção
+      Result := False;
     end;
   end;
 end;

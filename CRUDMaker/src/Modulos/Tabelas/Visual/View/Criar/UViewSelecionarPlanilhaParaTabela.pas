@@ -7,7 +7,6 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, UFormBaseMinTopoCentro;
 
 type
-  // View para selecionar a planilha onde a nova tabela será criada.
   TViewSelecionarPlanilhaParaTabela = class(TFormBaseMinTopoCentro)
     PainelBotoes: TPanel;
     BotaoAvancar: TButton;
@@ -20,8 +19,8 @@ type
     procedure ListBoxPlanilhasClick(Sender: TObject);
   private
     FPlanilhaSelecionada: string;
-    FOnAvancar: TNotifyEvent; // Evento para notificar a seleção e avanço
-    FOnCancelar: TNotifyEvent; // Evento para notificar o cancelamento
+    FOnAvancar: TNotifyEvent;
+    FOnCancelar: TNotifyEvent;
     procedure PopularListaPlanilhas;
     procedure AtualizarEstadoBotoes;
   public
@@ -38,7 +37,7 @@ implementation
 {$R *.dfm}
 
 uses
-  System.IOUtils; // Para manipular diretórios
+  System.IOUtils;
 
 procedure TViewSelecionarPlanilhaParaTabela.FormCreate(Sender: TObject);
 begin
@@ -55,7 +54,6 @@ var
   NomePasta: string;
 begin
   ListBoxPlanilhas.Items.Clear;
-  // Caminho base para as planilhas (ajuste conforme a estrutura real do seu projeto)
   DiretorioPlanilhas := IncludeTrailingPathDelimiter(ExtractFilePath(Application.ExeName)) + 'Planilhas';
 
   if TDirectory.Exists(DiretorioPlanilhas) then
@@ -72,8 +70,7 @@ begin
   if ListBoxPlanilhas.Items.Count = 0 then
   begin
     ShowMessage('Nenhuma planilha encontrada em: ' + DiretorioPlanilhas + '. Crie uma planilha primeiro.');
-    // Talvez desabilite o botão Avançar ou feche este form?
-  end;
+    end;
 end;
 
 procedure TViewSelecionarPlanilhaParaTabela.ListBoxPlanilhasClick(Sender: TObject);

@@ -7,34 +7,31 @@ uses
   UTabelaDTO, UCSVService;
 
 type
-  // Record para representar uma célula válida
   TCellData = record
     Row: Integer;
-    Col: Integer; // Base 1
+    Col: Integer;
     Value: string;
   end;
 
-  // Record para representar uma linha válida
   TRowData = record
     Number: Integer;
     Cells: TArray<TCellData>;
   end;
 
-  // Tipo para os dados preparados para transformação
   TPreparedData = TArray<TRowData>;
 
   TEditarTabelaService = class
   private
     FCSVService: TCSVService;
     function ContemConteudoPerigoso(const ATexto: string): Boolean;
-    function ExtrairTextoParaValidacao(const ATexto: string): string; // Remove espaços para validação
+    function ExtrairTextoParaValidacao(const ATexto: string): string;
   public
     constructor Create(ACSVService: TCSVService);
     destructor Destroy; override;
 
     function Carregar(ATabelaDTO: TTabelaDTO): TTabelaDTO;
     function ValidarDados(ADataSet: TDataSet): Boolean;
-    function PrepararParaTransformacao(ADataSet: TClientDataSet): TPreparedData; // Novo método
+    function PrepararParaTransformacao(ADataSet: TClientDataSet): TPreparedData;
     procedure Salvar(ADataSet: TDataSet; ACaminhoArquivo: string; ATabelaDTO: TTabelaDTO);
   end;
 
@@ -50,7 +47,6 @@ end;
 
 destructor TEditarTabelaService.Destroy;
 begin
-  // FXMLService é injetado, não deve ser destruído aqui
   inherited;
 end;
 
@@ -64,16 +60,12 @@ begin
   Result := ATabelaDTO;
 
   TempDataSet := TClientDataSet.Create(nil);
-  try
-//    FXMLService.LerArquivoXML(Result, TempDataSet);
-  finally
-    TempDataSet.Free;
-  end;
+
+  TempDataSet.Free;
 end;
 
 function TEditarTabelaService.ExtrairTextoParaValidacao(const ATexto: string): string;
 begin
-  // Remove espaços iniciais e finais para validação
   Result := Trim(ATexto);
 end;
 
@@ -90,7 +82,6 @@ begin
   if (Pos('delete', TextoLower) > 0) and (Pos('from', TextoLower) > 0) then Exit(True);
   if (Pos('drop', TextoLower) > 0) or (Pos('create', TextoLower) > 0) then Exit(True);
   if (Pos('http://', TextoLower) > 0) or (Pos('https://', TextoLower) > 0) then Exit(True);
-  // Adicione mais verificações conforme necessário
 end;
 
 function TEditarTabelaService.ValidarDados(ADataSet: TDataSet): Boolean;
@@ -106,7 +97,7 @@ begin
   HasInvalidData := False;
   MsgErro := '';
 
-  if not Assigned(ADataSet) or not ADataSet.Active then // Se ADataSet Nao existir ou Se o DataSet estiver Inativo,
+  if not Assigned(ADataSet) or not ADataSet.Active then
   begin
     MsgErro := 'DataSet inválido ou inativo.';
     ShowMessage(MsgErro);
@@ -123,7 +114,7 @@ begin
         if ADataSet.Fields[j] is TStringField then
         begin
           CellValue := ADataSet.Fields[j].AsString;
-          TrimmedValueForValidation := ExtrairTextoParaValidacao(CellValue); // Usa o valor sem espaços para validação
+          TrimmedValueForValidation := ExtrairTextoParaValidacao(CellValue);
 
           if TrimmedValueForValidation <> '' then
           begin
@@ -160,7 +151,6 @@ begin
   end;
 end;
 
-// Novo método para preparar dados para transformação
 function TEditarTabelaService.PrepararParaTransformacao(ADataSet: TClientDataSet): TPreparedData;
 var
   RowIndex: Integer;
@@ -171,34 +161,34 @@ var
   CurrentRow: TRowData;
   CurrentCell: TCellData;
 begin
-  SetLength(Result, 0); // Inicializa array vazio
+  SetLength(Result, 0);
   if not Assigned(ADataSet) or not ADataSet.Active or ADataSet.IsEmpty then
     Exit;
 
   ADataSet.DisableControls;
   try
     ADataSet.First;
-    RowIndex := 1; // Começa da linha 1
+    RowIndex := 1;
     while not ADataSet.Eof do
     begin
       HasRowData := False;
-      SetLength(CurrentRow.Cells, 0); // Inicializa array de células vazio
+      SetLength(CurrentRow.Cells, 0);
 
       for ColIndex := 0 to ADataSet.FieldCount - 1 do
       begin
         if ADataSet.Fields[ColIndex] is TStringField then
         begin
           CellValue := ADataSet.Fields[ColIndex].AsString;
-          TrimmedValue := Trim(CellValue); // Verifica se tem conteúdo
+          TrimmedValue := Trim(CellValue);
 
           if TrimmedValue <> '' then
           begin
             HasRowData := True;
-            // Adiciona célula válida ao array temporário da linha
+
             SetLength(CurrentRow.Cells, Length(CurrentRow.Cells) + 1);
             CurrentCell.Row := RowIndex;
-            CurrentCell.Col := ColIndex + 1; // Converte para base 1
-            CurrentCell.Value := CellValue; // Passa o valor original (com espaços)
+            CurrentCell.Col := ColIndex + 1;
+            CurrentCell.Value := CellValue;
             CurrentRow.Cells[High(CurrentRow.Cells)] := CurrentCell;
           end;
         end;
@@ -207,7 +197,6 @@ begin
       if HasRowData then
       begin
         CurrentRow.Number := RowIndex;
-        // Adiciona linha válida ao array de resultado
         SetLength(Result, Length(Result) + 1);
         Result[High(Result)] := CurrentRow;
       end;

@@ -1,5 +1,4 @@
-﻿// UShowViewService.pas
-unit UShowViewService;
+﻿unit UShowViewService;
 
 interface
 
@@ -41,6 +40,7 @@ type
     procedure CloseViewPrincipal;
     class procedure FreeInstance;
     procedure IniciarAplicacao;
+
     procedure ShowViewSalvarAssociacao;
     procedure ShowViewEditorRelatorio(ARelatorio: TRelatorioDTO = nil; APlanilhaBase: TPlanilhaDTO = nil);
     procedure ShowViewEditorTabela(const APlanilhaNome:string ; ATabela: TTabelaDTO; ADataSet: TDataSet);
@@ -50,7 +50,6 @@ type
     class procedure ShowViewCriadorTabela;
     procedure ShowViewImprimirRelatorioPronto(ARelatorio: TRelatorioDTO);
 
-    // --- Manipuladores Estáticos
     class procedure ManipuladorSolicitarLogout;
     class procedure ManipuladorNavegarParaCriadorTabela;
     class procedure ManipuladorNavegarParaNovoRelatorioComBase(const ATabelaBase: TTabelaDTO);
@@ -69,42 +68,37 @@ uses
   UViewConfigurarTabela, UViewCriadorTabelaDados;
 { TShowViewService }
 var
-  GViewSelecionar: TViewSelecionarPlanilhaParaTabela; //Foram criadas globalmente, pois é necessário passar os dados de quando elas são criadas até quando são destruidas
+  GViewSelecionar: TViewSelecionarPlanilhaParaTabela;
   GViewConfigurar: TViewConfigurarTabela;
   GViewCriadorDados: TViewCriadorTabelaDados;
 
 class procedure TShowViewService.ManipuladorSolicitarLogout;
 begin
-//  // Chama a lógica de logout e navegação
-//  ShowViewLogin(False); // Abre login não modal
-//  CloseViewPrincipal; // Fecha a principal
 end;
 
 class procedure TShowViewService.ManipuladorNavegarParaCriadorTabela;
 begin
-  Instance.ShowViewCriadorTabela; // Chama o serviço via instância
+  Instance.ShowViewCriadorTabela;
 end;
 
 class procedure TShowViewService.ManipuladorNavegarParaNovoRelatorioComBase(const ATabelaBase: TTabelaDTO);
 begin
   ShowMessage('Navegação para Novo Relatório com Base solicitada (DTO: ' + ATabelaBase.Titulo + ').');
-  // Implementar chamada real ao serviço de criação de relatório com base em uma tabela
 end;
 
 class procedure TShowViewService.ManipuladorNavegarParaEditorRelatorio(const ARelatorio: TRelatorioDTO);
 begin
-  Instance.ShowViewEditorRelatorio(ARelatorio); // Chama o serviço via instância, passando DTO
+  Instance.ShowViewEditorRelatorio(ARelatorio);
 end;
 
 class procedure TShowViewService.ManipuladorNavegarParaVisualizadorRelatorio(const ARelatorio: TRelatorioDTO);
 begin
   ShowMessage('Navegação para Visualizador de Relatório solicitada (DTO: ' + ARelatorio.Titulo + ').');
-  // Implementar chamada real ao visualizador de relatório
 end;
 
 class procedure TShowViewService.ManipuladorAbrirSalvarAssociacao;
 begin
-  Instance.ShowViewSalvarAssociacao; // Chama o serviço via instância
+  Instance.ShowViewSalvarAssociacao;
 end;
 
 class procedure TShowViewService.ManipuladorLogin(const AUsuario, ASenha: string; AModoPublico: Boolean);
@@ -123,80 +117,64 @@ end;
 
 class procedure TShowViewService.AuxFluxoCriarTabela_Iniciar;
 begin
-  // Cria a primeira View do fluxo
   GViewSelecionar := TViewSelecionarPlanilhaParaTabela.Create(Application);
-  // Conecta os eventos da ViewSelecionar
   GViewSelecionar.OnAvancar := AuxFluxoCriarTabela_Selecionar_Avancar;
   GViewSelecionar.OnCancelar := AuxFluxoCriarTabela_Selecionar_Cancelar;
-  // Exibe a ViewSelecionar MODALMENTE
-  GViewSelecionar.ShowModal; // <-- O fluxo espera aqui até ViewSelecionar fechar
+  GViewSelecionar.ShowModal;
 end;
 
-// --- Etapa 1: Selecionar Planilha -> Configurar Tabela ---
 class procedure TShowViewService.AuxFluxoCriarTabela_Selecionar_Avancar(Sender: TObject);
 begin
   if Sender is TViewSelecionarPlanilhaParaTabela then
   begin
     try
       GViewSelecionar := TViewSelecionarPlanilhaParaTabela(Sender);
-      // Cria a próxima View (Configurar)
       GViewConfigurar := TViewConfigurarTabela.Create(Application, GViewSelecionar.PlanilhaSelecionada);
-        // Conecta os eventos da ViewConfigurar
-        GViewConfigurar.OnAvancar := AuxFluxoCriarTabela_Configurar_Avancar; // Chama o próximo passo
-        GViewConfigurar.OnVoltar := AuxFluxoCriarTabela_Configurar_Voltar;   // Chama o passo anterior
-        GViewConfigurar.OnCancelar := AuxFluxoCriarTabela_Configurar_Cancelar; // Fecha a ViewConfigurar
-        // Exibe ViewConfigurar MODALMENTE
-        GViewConfigurar.ShowModal; // <-- O fluxo espera aqui até ViewConfigurar fechar
+        GViewConfigurar.OnAvancar := AuxFluxoCriarTabela_Configurar_Avancar;
+        GViewConfigurar.OnVoltar := AuxFluxoCriarTabela_Configurar_Voltar;
+        GViewConfigurar.OnCancelar := AuxFluxoCriarTabela_Configurar_Cancelar;
+        GViewConfigurar.ShowModal;
     finally
     end;
   end;
 end;
 
-// --- Etapa 1: Cancelar Selecionar Planilha ---
 class procedure TShowViewService.AuxFluxoCriarTabela_Selecionar_Cancelar(Sender: TObject);
 begin
   if Sender is TViewSelecionarPlanilhaParaTabela then
   begin
-     TViewSelecionarPlanilhaParaTabela(Sender).Close; // Fecha a ViewSelecionar
+     TViewSelecionarPlanilhaParaTabela(Sender).Close;
   end;
 end;
 
-// --- Etapa 2: Configurar Tabela -> Criador Dados ---
 class procedure TShowViewService.AuxFluxoCriarTabela_Configurar_Avancar(AConfiguracao: UTabelaConfiguracaoDTO.TConfiguracaoTabelaDTO);
 begin
-  // Cria a próxima View (CriadorDados)
   GViewCriadorDados := TViewCriadorTabelaDados.Create(Application, AConfiguracao);
   try
     GViewCriadorDados.OnClose := AuxFluxoCriarTabela_Dados_Fechar;
-    // Exibe ViewCriadorDados MODALMENTE
-    GViewCriadorDados.ShowModal; // <-- O fluxo espera aqui até ViewCriadorDados fechar
+    GViewCriadorDados.ShowModal;
   finally
   end;
 end;
 
-// --- Etapa 2: Cancelar Configurar Tabela ---
 class procedure TShowViewService.AuxFluxoCriarTabela_Configurar_Cancelar(Sender: TObject);
 begin
   if Sender is TViewConfigurarTabela then
   begin
-     TViewConfigurarTabela(Sender).Close; // Fecha a ViewConfigurar
+     TViewConfigurarTabela(Sender).Close;
   end;
 end;
 
-// --- Etapa 2: Voltar Configurar Tabela -> Selecionar Planilha ---
 class procedure TShowViewService.AuxFluxoCriarTabela_Configurar_Voltar(Sender: TObject);
 begin
   if Sender is TViewConfigurarTabela then
   begin
     GViewConfigurar := TViewConfigurarTabela(Sender);
-    // Cria a View anterior (Selecionar)
     GViewSelecionar := TViewSelecionarPlanilhaParaTabela.Create(Application);
     try
-      // Conecta os eventos da ViewSelecionar
       GViewSelecionar.OnAvancar := AuxFluxoCriarTabela_Selecionar_Avancar;
       GViewSelecionar.OnCancelar := AuxFluxoCriarTabela_Selecionar_Cancelar;
-      // Exibe ViewSelecionar MODALMENTE
-      GViewSelecionar.ShowModal; // <-- O fluxo espera aqui até ViewSelecionar fechar
+      GViewSelecionar.ShowModal;
     finally
     end;
   end;
@@ -266,23 +244,20 @@ var
 begin
   LView := TViewPrincipal.Create(Application);
 
-  //Criadores
-  LPlanilhaService := TPlanilhaService.Create(nil {DAO}, nil {XMLService}, nil {CSVService}); // Ajustar injeção real após BD
+  LPlanilhaService := TPlanilhaService.Create(nil {DAO}, nil {XMLService}, nil {CSVService});
   LPrincipalController := TPrincipalController.Create(TPrincipalService.Create, TPersistenciaLocalService.Create, LPlanilhaService);;
   LView.FController := LPrincipalController;
 
-  // Conectar os manipuladores estáticos do serviço aos eventos do novo controller
   LPrincipalController.OnNavegarParaCriadorTabela := Self.ManipuladorNavegarParaCriadorTabela;
   LPrincipalController.OnSolicitarLogout := Self.ManipuladorSolicitarLogout;
   LPrincipalController.OnAbrirSalvarAssociacao := Self.ManipuladorAbrirSalvarAssociacao;
-  // LPrincipalController.OnNavegarParaEditorTabela := Self.ManipuladorNavegarParaEditorTabela; // Conectar quando for chamado
-
+  
   try
     LView.DefinirNomeUsuario(AUsuarioNome);
     LView.ShowModal;
   finally
-    LPrincipalController.Free; // Libera o controller
-    LPlanilhaService.Free; // Libera o serviço
+    LPrincipalController.Free;
+    LPlanilhaService.Free;
     LView.Free;
   end;
 end;
@@ -308,17 +283,16 @@ begin
   LView.Show;
 end;
 
-procedure TShowViewService.ShowViewEditorTabela(const APlanilhaNome:string ; ATabela: TTabelaDTO; ADataSet: TDataSet); // <- Novo parâmetro
+procedure TShowViewService.ShowViewEditorTabela(const APlanilhaNome:string ; ATabela: TTabelaDTO; ADataSet: TDataSet);
 var
   LView: TViewEditorTabela;
 begin
   try
-    LView := TViewEditorTabela.CreateEditorComDados(APlanilhaNome, ATabela, ADataSet); // <- Novo construtor estático, sem LController
+    LView := TViewEditorTabela.CreateEditorComDados(APlanilhaNome, ATabela, ADataSet);
     try
-      // Exibir a view
       LView.ShowModal;
     finally
-      LView.Free; // Libera a view
+      LView.Free;
     end;
   except
     on E: Exception do
@@ -349,20 +323,17 @@ var
 begin
   LView := TViewLogin.Create(Application);
 
-  // Conectar os eventos da ViewLogin ao manipulador estático do serviço
-  LView.OnLogin := TShowViewService.ManipuladorLogin; // Conecta o evento
-  LView.OnCancelarLogin := TShowViewService.ManipuladorCancelarLogin; // Conecta o evento
+  LView.OnLogin := TShowViewService.ManipuladorLogin;
+  LView.OnCancelarLogin := TShowViewService.ManipuladorCancelarLogin;
 
   LView.ConectarEventosController;
 
   if AModal then
   begin
     LView.ShowModal;
-    // --- DESCOMENTE AS LINHAS ABAIXO ---
     if FTempLoginSucesso then
     begin
-      // Abre a tela principal
-      ShowViewPrincipalModal(FTempNomeUsuario); // Passa o nome do usuário logado
+      ShowViewPrincipalModal(FTempNomeUsuario);
     end
     else
     begin

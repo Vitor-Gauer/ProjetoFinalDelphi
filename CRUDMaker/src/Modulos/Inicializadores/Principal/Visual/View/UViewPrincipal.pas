@@ -90,17 +90,13 @@ begin
   FController.FPlanilhaSelecionada := nil;
   FController.FRelatorioSelecionado := nil;
 
-  // Conectar os eventos do Controller para atualizar a View (tem de ser refeito para o próprio controller redirecionar)
   if Assigned(FController) then
   begin
-    // Conecta o evento do Controller para atualizar a lista de planilhas
     FController.OnListaPlanilhasAtualizada := HandleListaPlanilhasAtualizada;
 
-    // Chama o Controller para atualizar a lista na inicialização
     FController.PopularListaPlanilhasNaView;
   end;
 
-  // Atualiza status
   BarraStatusPrincipal.SimpleText := 'Pronto - Nenhum arquivo carregado. Use "Carregar".';
 end;
 
@@ -130,12 +126,10 @@ var
   NomeTabelaSelecionada: string;
   NomePlanilhaSelecionada: string;
 begin
-  // Obter o nome da tabela selecionada na ListBox
   if ListaTabelas.ItemIndex >= 0 then
   begin
     NomeTabelaSelecionada := ListaTabelas.Items[ListaTabelas.ItemIndex];
 
-    // Obter o nome da planilha selecionada
     if ListaPlanilhas.ItemIndex >= 0 then
     begin
       NomePlanilhaSelecionada := ListaPlanilhas.Items[ListaPlanilhas.ItemIndex];
@@ -143,13 +137,11 @@ begin
     else
     begin
       ShowMessage('Nenhuma planilha selecionada. Selecione uma planilha primeiro.');
-      Exit; // Interrompe a execução se nenhuma planilha estiver selecionada
+      Exit;
     end;
 
-    // Chamar o evento do controller, passando os nomes
     if Assigned(FController.FOnNavegarParaEditorTabela) then
     begin
-      // Passa os nomes diretamente
       FController.FOnNavegarParaEditorTabela(NomePlanilhaSelecionada, NomeTabelaSelecionada);
     end
     else
@@ -173,25 +165,20 @@ end;
 
 procedure TViewPrincipal.HandleListaPlanilhasAtualizada(const ALista: TStringList);
 begin
-  // Atualiza o TListBox com a nova lista recebida do Controller
-  ListaPlanilhas.Items.Assign(ALista); // Atribui diretamente os itens da lista recebida
+  ListaPlanilhas.Items.Assign(ALista);
 end;
 
 procedure TViewPrincipal.AtualizarExibicaoPlanilha;
 begin
   if Assigned(FController) then
   begin
-    // Chama diretamente o método do Controller responsável por atualizar a lista
-    // Este método (AtualizarListaPlanilhas) irá chamar o Service e disparar o evento.
     FController.AtualizarListaPlanilhas;
     ListaPlanilhas.Items.Assign(FController.ListaPlanilhas);
     PopularGradeTabelas('Tirar tudo da grade tabelas');
   end
   else
   begin
-    // Tratamento de erro caso o Controller não esteja disponível
     ShowMessage('Erro: Controller não está disponível para atualizar a lista de planilhas.');
-    // Log de erro
   end;
 end;
 
@@ -202,7 +189,6 @@ end;
 
 procedure TViewPrincipal.AtualizarExibicaoRelatorio;
 begin
-  // Lógica para atualizar MemoVisualizadorRelatorio com base na seleção em ListaRelatorios
 end;
 
 procedure TViewPrincipal.ListaPlanilhasClick(Sender: TObject);
@@ -216,7 +202,6 @@ begin
   end
   else
   begin
-    // Atualiza a grade se nenhuma planilha estiver selecionada
     AtualizarExibicaoPlanilha;
   end;
 end;
@@ -237,37 +222,20 @@ end;
 procedure TViewPrincipal.BotaoEditarRelatorioClick(Sender: TObject);
 begin
   if Assigned(FController.FOnNavegarParaEditorRelatorio) then
-    FController.FOnNavegarParaEditorRelatorio(FController.FRelatorioSelecionado) // Passa DTO
+    FController.FOnNavegarParaEditorRelatorio(FController.FRelatorioSelecionado)
   else
     ShowMessage('Método: FOnNavegarParaEditorRelatorio não está sendo criado!');
 end;
 
 procedure TViewPrincipal.BotaoExcluirRelatorioClick(Sender: TObject);
 begin
-  // Exemplo de como seria com um evento de exclusão no controller (ainda não existe no UPrincipalService/Controller atualizado)
-  // if Assigned(FController.FRelatorioSelecionado) then
-  // begin
-  //   if MessageDlg('Tem certeza que deseja excluir o relatório "' + FController.FRelatorioSelecionado.Titulo + '"?',
-  //     mtConfirmation, [mbYes, mbNo], 0) = mrYes then
-  //   begin
-  //     if Assigned(FController.FOnExcluirRelatorio) then
-  //       FController.FOnExcluirRelatorio(FController.FRelatorioSelecionado)
-  //     else
-  //       ShowMessage('Evento OnExcluirRelatorio não está conectado.');
-  //   end;
-  // end
-  // else
-  // begin
-  //   ShowMessage('Nenhum relatório selecionado para exclusão.');
-  // end;
-
   ShowMessage('Exclusão de relatório ainda não implementada via novo padrão.');
 end;
 
 procedure TViewPrincipal.BotaoVisualizarRelatorioClick(Sender: TObject);
 begin
   if Assigned(FController.FOnNavegarParaVisualizadorRelatorio) then
-    FController.FOnNavegarParaVisualizadorRelatorio(FController.FRelatorioSelecionado) // Passa DTO
+    FController.FOnNavegarParaVisualizadorRelatorio(FController.FRelatorioSelecionado)
   else
     ShowMessage('Método: FOnNavegarParaVisualizadorRelatorio não está sendo criado!');
 end;
@@ -285,9 +253,9 @@ begin
 
     Resultado := MessageDlg(
       'Você selecionou a tabela: ' + NomeTabelaSelecionada + ' para exclusão.' + slinebreak + slinebreak +
-      'Clique "Sim" se você quer continuar com essa tabela, "Não" se você quiser deletar a planilha dessa tabela e "Cancelar" para sair dessa caixa', // Sua pergunta
-      mtConfirmation, // Tipo de mensagem (ícone de confirmação)
-      [mbYes, mbNo, mbCancel], // Botões: Sim, Não, Cancelar
+      'Clique "Sim" se você quer continuar com essa tabela, "Não" se você quiser deletar a planilha dessa tabela e "Cancelar" para sair dessa caixa',
+      mtConfirmation,
+      [mbYes, mbNo, mbCancel],
       0
     );
     case Resultado of
@@ -295,7 +263,7 @@ begin
         begin
           Resultado := MessageDlg(
             'Opção selecionada: excluir a tabela: ' + NomeTabelaSelecionada + slinebreak + slinebreak +
-            'Clique "Sim" se você quer continuar com essa exclusão e "Cancelar" se você não quiser deletar', // Sua pergunta
+            'Clique "Sim" se você quer continuar com essa exclusão e "Cancelar" se você não quiser deletar',
             mtConfirmation,
             [mbYes, mbCancel],
             0
@@ -303,7 +271,6 @@ begin
           case Resultado of
             mrYes:
               begin
-                // Log + Deletação Lógica no BD
                 FController.FOnExcluirTabela(NomeTabelaSelecionada, NomePlanilhaSelecionada);
                 PopularGradeTabelas(NomePlanilhaSelecionada);
                 Exit;
@@ -323,7 +290,7 @@ begin
           end;
           Resultado := MessageDlg(
             'Opção selecionada: excluir a planilha associada: ' + NomePlanilhaSelecionada + slinebreak + slinebreak +
-            'Clique "Sim" se você quer continuar com a exclusão da planilha: '+ NomePlanilhaSelecionada + ' e "Cancelar" se você não quiser deletar', // Sua pergunta
+            'Clique "Sim" se você quer continuar com a exclusão da planilha: '+ NomePlanilhaSelecionada + ' e "Cancelar" se você não quiser deletar',
             mtConfirmation,
             [mbYes, mbCancel],
             0
@@ -331,7 +298,6 @@ begin
           case Resultado of
             mrYes:
             begin
-              // Log + Deletação Lógica no BD
               FController.FOnExcluirPlanilha(NomePlanilhaSelecionada);
               PopularGradeTabelas(NomePlanilhaSelecionada);
               AtualizarExibicaoPlanilha;
@@ -364,22 +330,19 @@ var
   NomeNovaPlanilha: string;
   InputResult: Boolean;
 begin
-  // Gera um nome sugerido
   NomeNovaPlanilha := 'NovaPlanilha_' + FormatDateTime('yyyymmdd_hhnnss', Now);
-  // Solicita o nome ao usuário
   InputResult := InputQuery('Criar Planilha', 'Digite o nome da nova planilha:', NomeNovaPlanilha);
 
   if InputResult and (Trim(NomeNovaPlanilha) <> '') then
   begin
-    // Dispara o evento de criação no Controller, passando o nome sugerido
     if Assigned(FController.FOnCriarPlanilha) then
-      FController.FOnCriarPlanilha(Trim(NomeNovaPlanilha)) // Passa o nome
+      FController.FOnCriarPlanilha(Trim(NomeNovaPlanilha))
     else
       ShowMessage('Evento OnCriarPlanilha não está conectado.');
   end
   else
   begin
-    if InputResult then // Se o InputQuery foi cancelado, InputResult é False
+    if InputResult then
       ShowMessage('Nome da planilha não pode ser vazio.');
   end;
 end;

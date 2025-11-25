@@ -1,5 +1,4 @@
-unit UServerPinger;     // verificar se um servidor está online
-                        // em qualquer parte do código
+unit UServerPinger;
 
 interface
 

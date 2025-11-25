@@ -4,23 +4,16 @@ interface
 
 uses
   System.Classes, System.SysUtils, Data.DB, Datasnap.DBClient, System.IOUtils,
-  System.StrUtils, System.Math, VCL.Forms,  // Para Random, StringReplace, TryStrToInt, CharInSet etc.
-  XMLDoc, XMLIntf, MSXML, UTabelaDTO, UTabelaConfiguracaoDTO; // Adiciona unidades XML
+  System.StrUtils, System.Math, VCL.Forms,
+  XMLDoc, XMLIntf, MSXML, UTabelaDTO, UTabelaConfiguracaoDTO;
 
 type
   TXMLService = class
   private
-    // Gera uma string hash aleat�ria de 20 caracteres.
-    // Os primeiros 5 caracteres s�o letras, os restantes s�o letras ou n�meros.
     function GerarHashXML: string;
   public
-    // Carrega os dados de um arquivo XML personalizado para o ClientDataSet.
     procedure LerXML(const AClientDataSet: TClientDataSet; const ACaminhoArquivo: string);
-
-    // Salva os dados do ClientDataSet em um arquivo XML personalizado.
     procedure GravarXML(const AClientDataSet: TClientDataSet; const ACaminhoArquivo: string; ATabelaDTO: TTabelaDTO; const AConfiguracao: TConfiguracaoTabelaDTO);
-
-    // Fun��o auxiliar para obter o hash gerado (se necess�rio fora do GravarXML).
     function ObterUltimoHashGerado: string;
 
     function ObterDimensoesDoXML(const ACaminhoArquivo: string): string;
@@ -38,15 +31,13 @@ var
   i: Integer;
 begin
   Result := '';
-  Randomize; // Inicializa o gerador de n�meros aleat�rios
+  Randomize;
 
-  // Gera os primeiros 5 caracteres como letras
   for i := 1 to 5 do
   begin
     Result := Result + Letras[Random(Length(Letras)) + 1];
   end;
 
-  // Gera os pr�ximos 15 caracteres como letras ou n�meros
   for i := 6 to 20 do
   begin
     Result := Result + Alfanumericos[Random(Length(Alfanumericos)) + 1];
@@ -55,7 +46,7 @@ end;
 
 function TXMLService.ObterUltimoHashGerado: string;
 begin
-  Result := GerarHashXML; // Vol�til, pegando da mem�ria, tem que salvar no arquivo depois
+  Result := GerarHashXML;
 end;
 
 procedure TXMLService.LerXML(const AClientDataSet: TClientDataSet; const ACaminhoArquivo: string);
@@ -83,35 +74,31 @@ begin
     XMLDoc.LoadFromFile(ACaminhoArquivo);
     XMLDoc.Active := True;
 
-    // Encontra o primeiro n� <Tabela>
     TabelaNode := XMLDoc.DocumentElement.ChildNodes.FindNode('Redor');
     if Assigned(TabelaNode) then
-      TabelaNode := TabelaNode.ChildNodes.FindNode('Redor'); // Navega para o segundo Redor
+      TabelaNode := TabelaNode.ChildNodes.FindNode('Redor');
     if Assigned(TabelaNode) then
       TabelaNode := TabelaNode.ChildNodes.FindNode('Tabela');
 
     if not Assigned(TabelaNode) then
       raise Exception.Create('Estrutura XML inv�lida: n� <Tabela> n�o encontrado.');
 
-    // Determina o n�mero m�ximo de colunas olhando todas as linhas
     MaxColunas := 0;
-    LinhasNodeList := TabelaNode.ChildNodes.FindNode('Linha').ChildNodes.FindNode('Colunas').ChildNodes; // Assume pelo menos uma linha
+    LinhasNodeList := TabelaNode.ChildNodes.FindNode('Linha').ChildNodes.FindNode('Colunas').ChildNodes;
     if Assigned(LinhasNodeList) then
       MaxColunas := LinhasNodeList.Count;
 
-    // Cria campos no ClientDataSet com base no n�mero m�ximo de colunas
     for i := 1 to MaxColunas do
     begin
       FieldDef := AClientDataSet.FieldDefs.AddFieldDef;
       FieldDef.Name := 'Coluna' + IntToStr(i);
       FieldDef.DataType := ftString;
-      FieldDef.Size := 300; // Tamanho padr�o, pode ser ajustado
+      FieldDef.Size := 300;
     end;
 
     AClientDataSet.CreateDataSet;
     AClientDataSet.Open;
 
-    // Itera pelas linhas
     LinhasNodeList := TabelaNode.ChildNodes;
     if Assigned(LinhasNodeList) then
     begin
@@ -139,7 +126,6 @@ begin
                     AClientDataSet.FieldByName('Coluna' + IntToStr(j + 1)).AsString := ValorCelula;
                   except
                     on E: EDatabaseError do
-                      // Ignora campos inexistentes ou erros de convers�o
                   end;
                 end;
               end;
@@ -154,7 +140,7 @@ begin
       AClientDataSet.First;
 
   finally
-    XMLDoc := nil; // Libera a interface
+    XMLDoc := nil;
   end;
 end;
 
@@ -180,7 +166,6 @@ begin
 
   XMLDoc := TXMLDocument.Create(nil);
   try
-    // Cria a estrutura básica do XML
     XMLDoc.Active := True;
     XMLDoc.Version := '1.0';
     XMLDoc.Encoding := 'UTF-8';
@@ -197,7 +182,7 @@ begin
       end;
     end;
     RootNode := XMLDoc.CreateNode('xml-stylesheet', ntProcessingInstr, FEstilocss);
-    XMLDoc.ChildNodes.Insert(1, RootNode); // lembre-se: 0-index
+    XMLDoc.ChildNodes.Insert(1, RootNode);
     CorpoNode := XMLDoc.AddChild('Corpo');
     Redor1Node := CorpoNode.AddChild('Redor');
     Redor2Node := Redor1Node.AddChild('Redor');
@@ -232,13 +217,12 @@ begin
 
     XMLDoc.SaveToFile(ACaminhoArquivo);
 
-    // Gera hash e atualiza DTO
     NovoHashXML := GerarHashXML();
     ATabelaDTO.HashXML := NovoHashXML;
-    ATabelaDTO.CaminhoArquivoXML := ACaminhoArquivo; // Garante que o caminho est� atualizado
+    ATabelaDTO.CaminhoArquivoXML := ACaminhoArquivo;
 
   finally
-    XMLDoc := nil; // Freeandnil não funciona, mas nil funciona
+    XMLDoc := nil;
   end;
 end;
 
@@ -261,16 +245,13 @@ begin
       Self.LerXML(TempClientDataSet, ACaminhoArquivo);
       if TempClientDataSet.Active and not TempClientDataSet.IsEmpty then
       begin
-        // Número de registros de dados (linhas)
         NumLinhas := TempClientDataSet.RecordCount;
-        // Número de campos (colunas)
         NumColunas := TempClientDataSet.FieldCount;
 
         Result := Format('%dx%d', [NumLinhas, NumColunas]);
       end
       else
       begin
-        // Dataset vazio ou não ativado corretamente
         Result := '0x0 (dataset vazio ou inativo)';
       end;
     except

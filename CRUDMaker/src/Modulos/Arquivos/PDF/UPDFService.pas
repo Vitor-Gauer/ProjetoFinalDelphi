@@ -6,25 +6,17 @@ uses
   System.Classes, System.SysUtils;
 
 type
-  // Service responsável por gerar um arquivo PDF.
-  // Pode gerar a partir de um vínculo Tabela-Relatório (Hash + ID) ou diretamente de um arquivo XML e CSS.
-  // NOTA: A implementação real exigiria uma biblioteca de geração de PDF.
-  // A versão atual contém simulações.
   TPDFService = class
   public
-    // Gera um arquivo PDF a partir do hash da tabela e do ID do relatório.
     // Esta implementação é uma SIMULAÇÃO.
     procedure GerarAPartirDeHashEId(const AHashTabelaOrigem, AIdRelatorio: string; const ACaminhoArquivoPDF: string);
-
-    // Gera um arquivo PDF a partir de um arquivo XML de dados e um arquivo CSS de estilo.
-    // Esta implementação é uma SIMULAÇÃO.
     procedure GerarAPartirDeXML(const ACaminhoArquivoXML, ACaminhoArquivoCSS: string; const ACaminhoArquivoPDF: string);
   end;
 
 implementation
 
 uses
-  System.IOUtils; // Para TFile
+  System.IOUtils;
 
 { TPDFService }
 

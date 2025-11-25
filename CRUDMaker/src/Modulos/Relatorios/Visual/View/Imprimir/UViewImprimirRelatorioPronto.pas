@@ -16,11 +16,9 @@ type
     PainelVisualizadorRodape: TPanel;
     BarraStatusVisualizador: TStatusBar;
     procedure BotaoImprimirClick(Sender: TObject);
-    //procedure FormCreate(Sender: TObject);
   private
   public
     FRelatorio: TRelatorioDTO;
-    //procedure ExibirRelatorioNaInterface;
     constructor Create(AOwner: TComponent); reintroduce; overload;
     constructor Create(AOwner: TComponent; ARelatorio: TRelatorioDTO); reintroduce; overload;
     destructor Destroy; override;

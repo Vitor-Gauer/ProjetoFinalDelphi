@@ -80,10 +80,9 @@ begin
   inherited Create(AOwner);
   FTabela := ATabela;
   FSendoEditada := Assigned(ATabela);
-  // Cria uma nova instância do controller
   FController := TEditorTabelaController.Create;
   DataSourceEditor.DataSet := ClientDataSetEditor;
-  // O ClientDataSet permanece fechado até que o usuário carregue um arquivo
+
   BarraStatusEditor.SimpleText := 'Pronto - Nenhum arquivo carregado. Use "Carregar".';
   ClientDataSetEditor.Close;
   if Assigned(FTabela) then
@@ -93,20 +92,16 @@ end;
 class function TViewEditorTabela.CreateEditorComDados(const APlanilhaNome:string; ATabelaDTO: TTabelaDTO; ADataSetCarregado: TDataSet): TViewEditorTabela;
 begin
   booleana := false;
-  NewView := TViewEditorTabela.Create(nil); // Cria a instância da view
-  NewController := TEditorTabelaController.Create; // Cria o Controller *dentro* do construtor da View
+  NewView := TViewEditorTabela.Create(nil);
+  NewController := TEditorTabelaController.Create;
   try
-    // Injeta o DTO
-    NewView.FTabela := ATabelaDTO; // Armazena referência ao DTO (cuidado com posse!)
-    // Injeta o Controller
-    NewView.FController := NewController; // Armazena referência ao Controller criado
-    // Associa o DataSet carregado ao DataSource da View (e consequentemente ao DBGrid)
+    NewView.FTabela := ATabelaDTO;
+    NewView.FController := NewController;
     if not assigned(ADataSetCarregado) then
         showmessage('ita porr');
 
 
-    NewView.DataSourceEditor.DataSet := ADataSetCarregado; // O DataSet carregado é associado diretamente
-
+    NewView.DataSourceEditor.DataSet := ADataSetCarregado;
     if Assigned(ATabelaDTO) then
     begin
       NomeTabela := ATabelaDTO.Titulo;
@@ -121,16 +116,15 @@ begin
       NewView.BarraStatusEditor.SimpleText := 'Dados carregados (origem desconhecida).';
 
     if Assigned(ADataSetCarregado) and not ADataSetCarregado.Active then
-      ADataSetCarregado.Open; // Abrir o DataSet se necessário
+      ADataSetCarregado.Open;
 
-    Result := NewView; // Retorna a view pronta com seu controller e dados
+    Result := NewView;
   except
     on E: Exception do
     begin
-      // Se ocorrer erro, liberar o Controller criado e a View parcialmente criada
-      NewController.Free; // Libera o controller em caso de erro
-      NewView.Free; // Libera a view em caso de erro
-      raise; // Relevanta a exceção
+      NewController.Free;
+      NewView.Free;
+      raise;
     end;
   end;
 end;
@@ -149,7 +143,6 @@ var
   Resposta: Boolean;
   DataSetOrigem: TDataSet;
 begin
-  // Garante que qualquer edição pendente no DBGrid seja aplicada ao DataSet
   DataSetOrigem := NewView.DataSourceEditor.DataSet;
   if assigned(DataSetOrigem) and DataSetOrigem.Active then
     DataSetOrigem.CheckBrowseMode;
@@ -223,18 +216,15 @@ procedure TViewEditorTabela.DBGridEditorMouseMove(Sender: TObject; Shift: TShift
 var
   Coord: TGridCoord;
   ColIndex, RowIndex: Integer;
-  DataSetAtivo: TDataSet; // Referência local para o DataSet do DataSource
+  DataSetAtivo: TDataSet;
 begin
   Coord := DBGridEditor.MouseCoord(X, Y);
   ColIndex := Coord.X;
   RowIndex := Coord.Y;
-
-  // Obter referência ao DataSet do DataSource para evitar acessos diretos ao componente DFM
   DataSetAtivo := DataSourceEditor.DataSet;
 
-  // Verificar primeiro se o DataSet está ativo e se os índices são válidos
-  if Assigned(DataSetAtivo) and // Verificar se o DataSet está associado
-     DataSetAtivo.Active and   // Verificar se está aberto ANTES de acessar RecordCount ou IsEmpty
+  if Assigned(DataSetAtivo) and
+     DataSetAtivo.Active and
      (ColIndex >= 0) and (ColIndex < DBGridEditor.Columns.Count) and
      (RowIndex >= 0) and (RowIndex <= DataSetAtivo.RecordCount) and
      not DataSetAtivo.IsEmpty then
@@ -275,7 +265,6 @@ begin
   FLabel.Width := Self.ClientWidth-20;
   FLabel.Left := 10;
   FLabel.Top := 10;
-  // Armazena o título para uso no Timer/Execute
   FLabel.Caption := NomeTabela;
 
   FYesButton := TButton.Create(Self);
@@ -284,7 +273,7 @@ begin
   FYesButton.ModalResult := mrYes;
   FYesButton.Left := (Self.ClientWidth div 2) - FYesButton.Width - 10;
   FYesButton.Top := FLabel.Top + FLabel.Height + 20;
-  FYesButton.Enabled := False; // Desabilita inicialmente
+  FYesButton.Enabled := False;
   FYesButton.OnClick := SalvarVerdadeiroClick;
 
   FNoButton := TButton.Create(Self);
@@ -296,7 +285,7 @@ begin
   FNoButton.OnClick := SalvarFalsoClick;
 
   FTimer := TTimer.Create(Self);
-  FTimer.Interval := 1000; // 1 segundo
+  FTimer.Interval := 1000;
   FTimer.Enabled := False;
   FTimer.OnTimer := TimerTimer;
 
@@ -323,16 +312,11 @@ var
 begin
   FSecondsLeft := 5;
 
-  // Atualiza o caption com o título da tabela
   FLabel.Caption := Format('Tem certeza que deseja salvar as alterações na tabela: "%s"?', [FLabel.Caption]);
   FYesButton.Caption := Format('Sim (%d)', [FSecondsLeft]);
   FYesButton.Enabled := False;
   FTimer.Enabled := True;
-
-  // O ShowModal exibe a janela e o código PAUSA até o usuário clicar em Sim ou Não
   ResultadoModal := Self.ShowModal;
-
-  // Desabilita o timer após o retorno do modal, caso o usuário feche a janela ou clique
   FTimer.Enabled := False;
   if ResultadoModal = mrYes then
   Result:=True
